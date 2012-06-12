@@ -4,7 +4,6 @@
 //#include <fstream>
 //#include <string>
 #include <cstdlib>
-#include <kcstashdb.h>
 #include "Instancia.h"
 #include "Propiedad.h"
 
@@ -14,29 +13,32 @@ using namespace kyotocabinet;
 class OA{
 
 	private:
-		int cant_clases;
-		int cant_instancias;
-		int cant_propiedades;
-		Clase *(clases[C]);
-		Instancia *(instancias[I]);
-		Propiedad *(propiedades[P]);
-		StashDB bd, ins, prop;
+		int cant_clases;//Cantidad de clases
+		int cant_instancias;//Cantidad de instancias
+		int cant_propiedades;//Cantidad de propiedades
+		Clase *(clases[C]); //Todas las clases existentes en la BD
+		Instancia *(instancias[I]);//Todas las instancias en la BD
+		Propiedad *(propiedades[P]);//Todas las propiedades de la BD
+		StashDB *bd, *ins, *prop;//Indices de las clases, instancias y propiedades
 
 	public:
 		OA(); //Constructor 
 		void crear_clase(string nombre);
 		void crear_instancia(string n, string c);
 		Clase* get_clase(int n); //La uso solo para pruebas
-		Clase* get_clase(string nombre);
+		Clase* get_clase(string nombre);//Retorna la clase con proporcionar su nombre
 		//bool existe_clase(string nombre);
 		Instancia* get_instancia(int n);
 		Instancia* get_instancia(string nombre);
 		int num_clases();
 		int num_instancias();
 		int num_propiedades();
+		// n_clase sera subclase de n_padre
 		bool agregar_subclase(string n_clase, string n_padre);
+		//Ver si c es subclase de p
 		bool es_subclase_de(string c, string p);
-		//void agregar_propiedad(Clase c, String nombre_prop_nueva);
+		bool crear_propiedad(string c, string p);
+		//void agregar_propiedad(Clase c, string nombre_prop_nueva);
 		
 };
   
@@ -45,14 +47,19 @@ class OA{
 		cant_clases = 0;
 		cant_instancias = 0;
 		cant_propiedades = 0;
-		if(!bd.open("cofre.kch", StashDB::OWRITER | StashDB::OCREATE)){
-			cout << "Error al crear el cofre: " << bd.error().name() << endl;
+		
+		bd = new StashDB();
+		ins = new StashDB();
+		prop = new StashDB();
+		
+		if( !bd->open("cofre.kch", StashDB::OWRITER | StashDB::OCREATE) ){
+			cout << "Error al crear el cofre: " << bd->error().name() << endl;
 		}
-		if(!ins.open("instancias.kch", StashDB::OWRITER | StashDB::OCREATE)){
-			cout << "Error al crear el cofre: " << ins.error().name() << endl;
+		if(!ins->open("instancias.kch", StashDB::OWRITER | StashDB::OCREATE)){
+			cout << "Error al crear el cofre: " << ins->error().name() << endl;
 		}
-		if(!prop.open("propiedades.kch", StashDB::OWRITER | StashDB::OCREATE)){
-			cout << "Error al crear el cofre: " << prop.error().name() << endl;
+		if(!prop->open("propiedades.kch", StashDB::OWRITER | StashDB::OCREATE)){
+			cout << "Error al crear el cofre: " << prop->error().name() << endl;
 		}
 	}
 
@@ -61,8 +68,8 @@ class OA{
 	void OA::crear_clase(string nombre){
 		stringstream ss;
 		ss << cant_clases;
-		if( !bd.set(nombre, ss.str() )){
-			cout << "Error creando clase: " << bd.error().name() << endl;
+		if( !(bd->set(nombre, ss.str() )) ){
+			cout << "Error creando clase: " << bd->error().name() << endl;
 		}
 		else{
 			clases[cant_clases] = new Clase(nombre);
@@ -76,8 +83,8 @@ class OA{
 		Clase *cl = get_clase(c);
 
 		if(cl != NULL){
-			if( !ins.set(n, ss.str() ) ){
-				cout << "Error creando clase: " << ins.error().name() << endl;
+			if( !ins->set(n, ss.str() ) ){
+				cout << "Error creando clase: " << ins->error().name() << endl;
 			}
 			else{
 				instancias[cant_instancias] = new Instancia( n, cl );
@@ -89,14 +96,17 @@ class OA{
 	//Ver si la clase existe
 	//No la uso
 	Clase* OA::get_clase(int n){
-		return clases[n];
+		if( n < cant_clases ){
+			return clases[n];
+		}
+		return NULL;
 	}
 
 	
 	Clase* OA::get_clase(string nombre){
 		Clase *r;
 		string valor;
-		if( bd.get(nombre, &valor) ){
+		if( bd->get(nombre, &valor) ){
 			int n ;
 			istringstream ( valor ) >> n;//Transformo el string en int
 			r = clases[n];
@@ -116,7 +126,7 @@ class OA{
 	Instancia* OA::get_instancia(string nombre){
 		Instancia *i;
 		string valor;
-		if( ins.get(nombre, &valor) ){
+		if( ins->get(nombre, &valor) ){
 			int n;
 			istringstream ( valor ) >> n;//Transformo el string en int
 			i = instancias[n];
@@ -206,5 +216,26 @@ class OA{
 		return todo_bien;
 	}
 
+	bool OA::crear_propiedad(string c, string p){
+		stringstream ss;
+		ss << cant_propiedades;
+		bool band = false;
 
+		Clase *cl = get_clase(c);
+		
+		if(cl != NULL){
+			if( !prop->set(p, ss.str() ) ){
+				cout << "Error creando clase: " << prop->error().name() << endl;
+			}
+			else{
+				propiedades[cant_propiedades] = new Propiedad( p, cl );
+				cant_propiedades+=1;
+			}
+		
+			cl->agregar_propiedad(p, ss.str());
+			band = true;
+		}
+		
+		return band;
+	}
 # endif

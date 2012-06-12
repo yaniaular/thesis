@@ -1,20 +1,20 @@
 #ifndef Instancia_H_
 #define Instancia_H_
-//#include <iostream>
-//#include <fstream>
 #define CP 5000
+//#include "Tabla.h"
+#include "evaluate.h"
 #include "Clase.h"
 
-//#include "evaluate.h"
+
 //using namespace std;
 
 class Instancia{
 
 	private:
-		string nombre;
+		string nombre;//Nombre de la clase
 		Clase *clase; //Clase a la que pertenece la instancia
-//		struct vartable *vt;
-//		struct val *(valores[CP]);
+		struct vartable *vt;
+		struct val *(valores[CP]);
 				
 	public:
 		Instancia(string n, Clase *c);
@@ -23,14 +23,15 @@ class Instancia{
 };
  
  	Instancia::Instancia(string n, Clase *c){
+ 		
 		nombre = n;
 		clase = c;
-		//vt = create_vartable();
-		/*	
+		vt = create_vartable();
+			
 		for(int i = 0; i < CP; i++){
-			put_var(vt, " ", valores[i]);
+			put_var(vt, "NULL", valores[i]);
 		}
-		*/
+		
 		//y.type = T_INT; y.ival = 7;
 		//nom.type = T_CHAR; nom.cval = "yanina aular";
 		//n.type = T_CHAR; n.cval = "yani";
@@ -44,6 +45,7 @@ class Instancia{
 
 	Clase* Instancia::get_clase(){
 		return clase;
+		
 	}
 
 #endif
