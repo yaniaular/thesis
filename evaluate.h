@@ -8,6 +8,8 @@
 #include <string.h>
 #include <stddef.h>
 #include <stdlib.h> /******************************Antes era stdlib, daba problemas con la funcion getenv()
+*/
+#define P 15000 //Cantidad de propiedades en Tabla.h
 
 using namespace std;
 
@@ -144,7 +146,7 @@ int scan_number(char **stringptr, struct val *valptr);
 int scan_string(char **stringptr, struct val *valptr); /***************************/
 int precedence(struct tok *t);
 int eval(struct memh *mh, struct tok *list, struct vartable *vt,
-  struct val *result);
+  struct val *result, string variables[1000], int *c_v);/********************/
 void prt_tok(struct tok *t);
 void prt_lst(struct tok *t);
 
@@ -155,7 +157,7 @@ int evaluate(char *expr, struct val *result, struct vartable *vartable) {
   int error = RESULT_OK, madevar = 0;
   struct tok *list;
   char *str;
-
+	
   /* ensure we have a variable table */
   if (!vartable) madevar = 1, vartable = create_vartable();
   if (!vartable) return ERROR_NOMEM;
@@ -167,7 +169,8 @@ int evaluate(char *expr, struct val *result, struct vartable *vartable) {
       strcpy(str, expr); //Copia la expresion en str
       while (*str) {
 	if ((error = tokenize(mh, &str, &list)) != RESULT_OK) break;
-	if ((error = eval(mh, list, vartable, result)) != RESULT_OK) break;
+	if ((error = eval(mh, list, vartable, result, NULL, NULL)) != RESULT_OK)/**************/ break;
+         	   	
       }
 
       
@@ -179,8 +182,38 @@ int evaluate(char *expr, struct val *result, struct vartable *vartable) {
   return error;
 }
 
+//Otro evaluate, que recibe una tabla de string para guardar las variables que esten presentes en la expresion y utilizarlas para guardar los eventos en cada una de esas propiedades
+int evaluate(char *expr, struct val *result, struct vartable *vartable,string variables[P] ,int *c_v) {
+  struct memh *mh = NULL;
+  int error = RESULT_OK, madevar = 0;
+  struct tok *list;
+  char *str;
 
+  *c_v = 0;
+	
+  /* ensure we have a variable table */
+  if (!vartable) madevar = 1, vartable = create_vartable();
+  if (!vartable) return ERROR_NOMEM;
 
+  init_scantable();
+
+  if ((mh = create_mem())) {
+    if (expr && (str = (char *) mem_alloc(mh, strlen(expr)+1)) ) {
+      strcpy(str, expr); //Copia la expresion en str
+      while (*str) {
+	if ((error = tokenize(mh, &str, &list)) != RESULT_OK) break;
+	if ((error = eval(mh, list, vartable, result, variables, c_v)) != RESULT_OK)/**************/ break;
+         	   	
+      }
+
+      
+    } else error = ERROR_NOMEM;
+  } else error = ERROR_NOMEM;
+
+  free_mem(mh);
+  if (madevar) free_vartable(vartable);
+  return error;
+}
 
 /**** TOKENIZATION ***/
 
@@ -291,6 +324,7 @@ int tokenize(struct memh *mh, char **string, struct tok **listptr) {
       break;
 
     case TK_VAR:
+    	
       list[idx].name = name = s;
       while (scantable[s[1]] == TK_VAR) s++; /* skip to end of string */
       list[idx].name_end = s+1;
@@ -305,7 +339,9 @@ int tokenize(struct memh *mh, char **string, struct tok **listptr) {
           break;
         }
       }
+      
       idx++;
+      
       break;
     }
   }
@@ -320,6 +356,7 @@ int tokenize(struct memh *mh, char **string, struct tok **listptr) {
       list[i].next = &list[i+1];
       if (list[i].token == TK_VAR || list[i].token == TK_ASSN)
         *(list[i].name_end) = '\0';
+           
     }
     list[idx-1].next = NULL;
     *listptr = list;
@@ -328,8 +365,7 @@ int tokenize(struct memh *mh, char **string, struct tok **listptr) {
     *listptr = NULL;
   }
 	
-
-  return RESULT_OK;
+	return RESULT_OK;
 }
 
 
@@ -427,7 +463,7 @@ int precedence(struct tok *t) {
 
 
 int eval(struct memh *mh, struct tok *list, struct vartable *vt,
-  struct val *result) {
+  struct val *result, string variables[P], int *c_v) {
 
   struct val newval = { T_INT, 0, NULL , 0.0 }, env, *valstk, *x, *y; /************************/
   struct tok open, close, *l, *r, *t, **opstk;
@@ -435,6 +471,8 @@ int eval(struct memh *mh, struct tok *list, struct vartable *vt,
   int vstk, ostk, vcnt = 0, ocnt = 0, error;
   double xr, yr, rr = 0;
   long xi, yi, ri = 0;
+  
+ 
 
   /* clear result before we do anything - and no tokens is no result */
   *result = newval;
@@ -472,10 +510,10 @@ int eval(struct memh *mh, struct tok *list, struct vartable *vt,
   vcnt = ocnt = 0;
   for (t = list; t; t = t->next) {
     lt = t->token;
-
+	
     /* count the number of values and operators */
     if (lt == TK_VAR || lt == TK_VAL || lt == TK_COMI) vcnt++; else ocnt++; /**********************/
-
+          
     /* if assigned variables don't exist, create a new blank one */
     if (lt == TK_ASSN) {
       if (!(t->var = get_var(vt, t->name)))
@@ -491,6 +529,7 @@ int eval(struct memh *mh, struct tok *list, struct vartable *vt,
         if (!(t->var = put_var(vt, t->name, &env))) return ERROR_NOMEM;
       }
     }
+  		 
   }
 
   /* ALLOCATE STACKS */
@@ -507,7 +546,7 @@ int eval(struct memh *mh, struct tok *list, struct vartable *vt,
   /* MAIN EVALUATION LOOP */
   prt_lst(list);
   for (t = list; t; t=t->next) {
-    printf("tol: ");
+    //printf("tol: "); /*********************************/
     prt_tok(t);
     
     switch (t->token) {
@@ -528,6 +567,14 @@ int eval(struct memh *mh, struct tok *list, struct vartable *vt,
 
     /* variables go straight on the value stack */
     case TK_VAR:
+    	if(variables != NULL){
+    		variables[*c_v] = string(t->name);/***********************/
+    		(*c_v)+=1;/*********************************/
+    	}
+    	
+    	//strcpy(variable, t->name);
+    	//*variable = t->name;
+    	//printf("*%s*\n", t->name); /************************************/
       valstk[++vstk] = t->var->val;
       break;
 		
@@ -779,7 +826,7 @@ int eval(struct memh *mh, struct tok *list, struct vartable *vt,
 #if 1
 /* expression printer */
 void prt_tok(struct tok *t) {
-  switch(t->token)  {
+ /* switch(t->token)  {
   case TK_OPEN:  printf("( ");  break;
   case TK_CLOSE: printf(") ");  break;
     
@@ -816,27 +863,27 @@ void prt_tok(struct tok *t) {
                  else if(t->val.type == T_REAL)
                    printf("%g ", t->val.rval);
                  break;
-	case TK_COMI: /***************************************/
+	case TK_COMI: //***************************************
 		 printf("\"%s\" ", t->val.cval);break;	
 
   case TK_VAR:   printf("%s ", t->name); break;
   default:       printf("??(%d)", t->token); break;
-  }
+  }*/
 }
 
 void prt_stk(struct tok *stk, int depth) {
   do { prt_tok(&stk[depth]); } while (depth-- > 0);
-  printf("\n");
+ // printf("\n");
 }
 
 void prt_lst(struct tok *t) {
   for (; t; t=t->next) prt_tok(t);
-  printf("\n");
+ // printf("\n");
 }
 
 /* variables dumper */
 void dump_vars(struct vartable *vt) {
-  struct var *v;
+ /* struct var *v;
   if (!vt) printf("no vars\n");
   else for (v=vt->first; v; v=v->next) {
     if (v->val.type == T_INT)
@@ -844,9 +891,9 @@ void dump_vars(struct vartable *vt) {
     else if(v->val.type == T_REAL)
       printf("'%s'=%g ", v->name, v->val.rval);
     else
-    	printf("'%s'=%s ", v->name, v->val.cval); /************************************/
+    	printf("'%s'=%s ", v->name, v->val.cval); //************************************
   }
-  printf("\n");
+  printf("\n");*/
 }
 #endif
 

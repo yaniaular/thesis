@@ -1,23 +1,38 @@
 #ifndef Tabla_H_
 #define Tabla_H_
+#define C 15000
+#define I 15000
+#define P 15000
+#define E 15000
 #include <iostream>
-#include "evaluate.h"
-//using namespace std;
+#include <kcstashdb.h>
+
+using namespace kyotocabinet;
+using namespace std;
 
 class Tabla{
 
 	private:
-		int n;
-		
+			
 	public:
 		Tabla();
-		
+		string EnteroAString(int a);
+		char* StringAChar(string a);
 };
  
  	Tabla::Tabla(){
-		n = 0;
-		
+			
 	}
 
+	string EnteroAString(int a){
+		stringstream ss;
+		ss << a;
+		return ss.str();
+	}
+	
+	char* StringAChar(string a){
+	
+		return &a[0];
+	}
 
 # endif

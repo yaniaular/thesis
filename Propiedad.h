@@ -1,9 +1,7 @@
 #ifndef Propiedad_H_
 #define Propiedad_H_
-//#include <iostream>
 #include "Clase.h"
-
-//using namespace std;
+#include "Evento.h"
 
 class Propiedad{
 
@@ -12,23 +10,32 @@ class Propiedad{
 		int num_clases;
 		int num_padres;
 		int num_hijos;
+		int num_eventos;
 		Clase *(clases_a_la_que_pertenece[C]);
 		Propiedad *(prop_padres[P]);//Propiedades padre
 		Propiedad *(prop_hijas[P]);//Propiedades hijas
+		Evento *(eventos[E]);
 		
 	public:
 		Propiedad(string n, Clase *c);
+		bool agregar_evento(Evento *e);
 		string get_nombre();
+		Evento* get_evento(int pos);
+		int get_num_eventos();
+
 };
  
  	Propiedad::Propiedad(string n, Clase *c){
 		nombre = n;
-		num_clases = 1;
+		num_clases = 0;
 		num_padres = 0;
 		num_hijos = 0;
-		clases_a_la_que_pertenece[0] = c;
+		num_eventos = 0;
 		
-		int n_hijos_clase = c->get_numhijos();
+		clases_a_la_que_pertenece[num_clases] = c;
+		num_clases+=1;
+		
+		int n_hijos_clase = c->get_num_hijos();
 		
 		for(int i = 0; i < n_hijos_clase ; i++){
 			clases_a_la_que_pertenece[num_clases] = c->get_hijo(i);
@@ -37,8 +44,22 @@ class Propiedad{
 		
 	}
 
+	bool Propiedad::agregar_evento(Evento *e){
+		eventos[num_eventos] = e;
+		num_eventos+=1;
+	}
+
 	string Propiedad::get_nombre(){
 		return nombre;
+	}
+	
+	Evento* Propiedad::get_evento(int pos){
+		return eventos[pos];
+	
+	}
+	
+	int Propiedad::get_num_eventos(){
+		return num_eventos;
 	}
 
 # endif

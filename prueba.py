@@ -3,7 +3,7 @@ import sys
 
 # create the database object
 db = DB()
-'''
+
 # open the database
 if not db.open("casket.kch", DB.OWRITER | DB.OCREATE):
     print >>sys.stderr, "open error: " + str(db.error())
@@ -32,4 +32,4 @@ cur.disable()
 if not db.close():
     print >>sys.stderr, "close error: " + str(db.error())
     
-    ''''
+    
