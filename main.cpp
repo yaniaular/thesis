@@ -8,17 +8,41 @@
 //#include <cstdlib>
 #include <limits.h>
 
+#include <sys/types.h>
+#include <regex.h>
+#include <fstream>
+
+//#include <boost/regex.hpp>
+
 #include "OA.h"
 
-using namespace std;
+//using namespace std;
+
+
+string Trim(string::const_iterator i, string::const_iterator f)
+{
+     string::const_iterator it;
+     string buff;
+     for (it = i; it != f; ++it)
+     {
+         if (*it != ' ') buff += *it;
+     }
+
+     return buff;    
+}
+
+
 
 int main(){
 	typedef int T;
 	int i, j, n;
 	string c, c2, h1, h2;
 	Clase *x;
-
+	Instancia *is;
+	string buffer;
+	 
 	OA *oa_bd = new OA();
+
 /*
 	oa_bd->crear_clase( "fenMeteorologico" );
 	oa_bd->crear_clase( "fenAtmosferico" );
@@ -60,8 +84,13 @@ int main(){
 
 
 	//Cuando se consulta una instancia o una clase y no existe, devuelve NULL, y al imprimir NULL crea violacion del segmento
-	cout << "Instancia: "  << oa_bd->get_instancia("Clase3", "Instancia1")->get_nombre() << endl;
-	
+	is = oa_bd->get_instancia("Clase3", "Instancia1");
+	if( is != NULL ){
+		cout << "Instancia: " << is->get_nombre() << endl;
+	}
+	else{
+		cout << "No existe la instancia" << endl;
+	}
 	
 	x = oa_bd->get_clase(14999);
 	if( x != NULL ){
@@ -81,11 +110,10 @@ int main(){
 	
 	
 
-/*
-	for(i = 0; i < n; i++ ){
-		cout << "La clase " << i << " tiene por nombre "<< (oa_bd->get_clase(i))->get_nombre() << endl;
-	}
-*/
+
+//	for(i = 0; i < n; i++ ){
+//		cout << "La clase " << i << " tiene por nombre "<< (oa_bd->get_clase(i))->get_nombre() << endl;	}
+
 
 //	cout << "El nombre es: ";
 //	cout << (oa_bd->get_clase("Clase14000"))->get_nombre() << endl;
@@ -122,7 +150,7 @@ int main(){
 	cout << oa_bd->crear_propiedad("Clase2", "Velocidad") << endl;
 	cout << oa_bd->crear_propiedad("Clase2", "AlertarA")<< endl << endl;
 	
-	//No acepta variables con "_"
+	//No acepta nombre de variables con "_"
 	cout << oa_bd->agregar_subclase("Clase50", "Clase2") << endl << endl;//subclase - clasepadre
 
 	cout << oa_bd->es_subclase_de("Clase1000","Clase6789") << endl;
@@ -142,32 +170,95 @@ int main(){
 	
 	
 	//INICIALIZAR LOS VALORES DE LAS INSTANCIAS,para poder evaluar las expresiones
-	oa_bd->agregar_valorApropiedad("Clase2", "Instancia1", "NumMuertes", -1);
-	oa_bd->agregar_valorApropiedad("Clase2","Instancia1", "Velocidad", -1);
-	oa_bd->agregar_valorApropiedad("Clase2","Instancia1", "AlertarA", -1);
+cout << "Inicializando NumMuertes ";
+cout << oa_bd->agregar_valorApropiedad("Clase2", "Instancia1", "NumMuertes", -1) << endl;
+cout << "Inicializando Velocidad ";
+cout << oa_bd->agregar_valorApropiedad("Clase2","Instancia1", "Velocidad", -1) << endl;
+cout << "Inicializando AlertarA ";
+cout << oa_bd->agregar_valorApropiedad("Clase2","Instancia1", "AlertarA", -1) << endl << endl;
 	
+	//CONSULTAR VALORES
+	cout << "Consultando AlertarA = ";
+	cout << oa_bd->consultar_propiedad_instancia("Clase2", "Instancia1", "AlertarA") << endl << endl;
+
+	//CAMBIANDO VALORES	
+	cout << "Asignando valores a las propiedades:" << endl;
 	
-	cout << "Consultando " << oa_bd->consultar_propiedad_instancia("Clase2", "Instancia1", "AlertarA") << endl;
+	cout << "Velocidad en 5: ";
+	cout << oa_bd->agregar_valorApropiedad("Clase2", "Instancia1", "Velocidad", 5)<< endl;
 	
-	cout << "Agregando valores a las propiedades" << endl;
-	cout << "(" << oa_bd->agregar_valorApropiedad("Clase2", "Instancia1", "Velocidad", 5)<< endl;
-	cout << "( " << oa_bd->agregar_valorApropiedad("Clase2", "Instancia1", "Velocidad", 89)<< endl;
+	cout << "Velocidad en 89: ";
+	cout << oa_bd->agregar_valorApropiedad("Clase2", "Instancia1", "Velocidad", 89)<< endl;
 	
-	cout << "( " << oa_bd->agregar_valorApropiedad("Clase2", "Instancia1", "NumMuertes", 2)<< endl;
+	cout << "NumMuertes en 2: ";
+	cout << oa_bd->agregar_valorApropiedad("Clase2", "Instancia1", "NumMuertes", 2)<< endl;
+	
+	cout << "NumMuertes en 56: ";
 	cout << "( " << oa_bd->agregar_valorApropiedad("Clase2", "Instancia1", "NumMuertes", 56)<< endl;
-	cout << "( " << oa_bd->agregar_valorApropiedad("Clase2", "Instancia1", "NumMuertes", 0)<< endl;
+	
+	cout << "NumMuertes en 0: ";
+	cout << oa_bd->agregar_valorApropiedad("Clase2", "Instancia1", "NumMuertes", 0)<< endl;
+	
+	cout << "Velocidad en 13: ";
 	cout << "( " << oa_bd->agregar_valorApropiedad("Clase2", "Instancia1", "Velocidad", 13)<< endl<< endl;
 	
+	cout << "Propiedadqnoexiste en 34: ";
+	cout << oa_bd->agregar_valorApropiedad("Clase2", "Instancia1", "Propiedadqnoexiste", 34)<< endl<< endl;
+
+	//MAS CONSULTA DE VALORES
+	cout << "Consultando NumMuertes = " << oa_bd->consultar_propiedad_instancia("Clase2", "Instancia1", "NumMuertes") << endl;
+	cout << "Consultando Velocidad = " << oa_bd->consultar_propiedad_instancia("Clase2", "Instancia1", "Velocidad") << endl; //Hay que Comprobar que existe la propiedad y la propiedad existe en esa instancias
+	cout << "Consultando AlertarA = " << oa_bd->consultar_propiedad_instancia("Clase2", "Instancia1", "AlertarA") << endl;
+
+
+
+
+ifstream entrada("exp.txt");
+int reti;
+regex_t regex; //Variable para la expresion regular
+string exp;
+char * pattern ="^\\((S|s|p|P),\\[([A-Za-z0-9])+(([,])([A-Za-z0-9])+)*\\],([A-Za-z0-9])+\\)$"; //Patron de la expresion regular
+/*
+^ Indica el inicio de la frase
+\\(   Agrega el parentesis
+(S|s|p|P) debe haber cualquiera de las letras que esta entre parentesis
+, Debe haber siempre una coma
+\\[ Agrega el corchete
+([A-Za-z0-9])+ 1 o mas palabras que contengan letras y numeros
+(([,])([A-Za-z0-9])+)* expresion formada por una coma seguido y 1 palabra que contenga letras y numeros (Puede haber 0 o mas expresiones)
+\\] Agrega corchete
+, Debe haber siempre una coma
+([A-Za-z0-9])+ 1 o mas palabras que contengas letras y numeros
+\\) Agrega el parentesis
+$ indica el final de la frase
+*/
+
+
+	reti = regcomp (&regex, pattern, REG_EXTENDED);//Agrego el patron a regex
 	
-	cout << "( " << oa_bd->agregar_valorApropiedad("Clase2", "Instancia1", "Propiedadqnoexiste", 34)<< endl<< endl;
+	while( getline (entrada,exp) ){//Leo una linea del archivo
+	
+		exp = Trim(exp.begin(), exp.end());//Quitar espacios de la expresion
+		cout << exp << " ";
+	
+		reti = regexec (&regex, &exp[0], (size_t)0, NULL, 0);
+		
+		if( reti == REG_NOMATCH ){ //Si es 1, hay error de sintaxis
+			puts("Error de sintaxis");
+		}
+		else{ //Si es 0, esta todo bien
+			puts("Bien");
+		}		 
+	}
+	regfree (&regex);
+	entrada.close();
 
+	
 
-	cout << "Consultando " << oa_bd->consultar_propiedad_instancia("Clase2", "Instancia1", "NumMuertes") << endl;
-	cout << "Consultando " << oa_bd->consultar_propiedad_instancia("Clase2", "Instancia1", "Velocidad") << endl << endl; //Comprobar que existe la propiedad y la propiedad existe en esa instancias
-	cout << "Consultando " << oa_bd->consultar_propiedad_instancia("Clase2", "Instancia1", "AlertarA") << endl;
+	
+
 
 	//oa_bd->crear_propiedad("Clase16000", "HuboPerdidaHumanaa");
-	
 /*	list<Clase> lst;	
 	Clase c("yani");
 	cout << c.get_nombre();
