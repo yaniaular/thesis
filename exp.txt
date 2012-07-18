@@ -1,6 +1,6 @@
 (s,  [eve1,eve2,eve3],tabla)
 (p, [eve1,eve2],tabla)
-(s,[eve1  ,eve2eve3],tabla)
+(s,[eve1  ,e],tabla)
 (P,[eve1],  tabla)
 (P,[eve1,  eve2] ,tabla)
 (S,[eve1, eve2, eve3, eve4, eve5, eve6, eve7] ,tabla)

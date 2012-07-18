@@ -43,6 +43,28 @@ int main(){
 	 
 	OA *oa_bd = new OA();
 
+
+/*
+		int     retval = 0;
+        regex_t   re;
+        char *patter = ",";
+        string ex = "(s,[eve1,eve2,eve3],tabla)";
+
+        while( !retval ){
+                       
+		 	if( regcomp( &re, patter, REG_EXTENDED) != 0 ){
+		 		retval = regcomp( &re, patter, REG_EXTENDED);
+		 	}
+		 	else{
+		 		retval = regexec( &re, &ex[0], 0, NULL, 0);
+		 	}
+            
+            
+            if(retval == 0){
+                  printf("Match found \n");
+            }
+        }*/
+
 /*
 	oa_bd->crear_clase( "fenMeteorologico" );
 	oa_bd->crear_clase( "fenAtmosferico" );
@@ -243,19 +265,54 @@ $ indica el final de la frase
 	
 		reti = regexec (&regex, &exp[0], (size_t)0, NULL, 0);
 		
+		
+		
 		if( reti == REG_NOMATCH ){ //Si es 1, hay error de sintaxis
 			puts("Error de sintaxis");
 		}
 		else{ //Si es 0, esta todo bien
-			puts("Bien");
+		
+			int    status;
+			regex_t    re;
+			regmatch_t rm;
+			char *patter = "\\[([A-Za-z0-9])+(([,])([A-Za-z0-9])+)*\\]";
+			string eventos;
+			
+			if (regcomp(&re, patter, REG_EXTENDED) != 0) {
+				cout << "Bad pattern";
+			}
+		
+			status = regexec(&re, &exp[0], 1, &rm, 0);
+			regfree(&re);
+		
+			if (status != 0) {
+				cout << "No Match";
+				cout << status << endl;
+			}
+			else{
+				eventos = exp.substr( (int)rm.rm_so, (int)rm.rm_eo-3);
+				eventos = eventos.substr( 1, eventos.size());
+				eventos[ eventos.size()-1 ] = ',';
+			}
+			
+			do{
+		
+				int f;
+				f = eventos.find(",");
+				
+				cout << eventos.substr( 0, f) << endl;
+				eventos = eventos.substr( f+1, eventos.size()-1);
+				
+			}while( eventos.size() > 1 );
+		
+		
+		
+			//oa_bd->activar_eventos(nom_evento, nom_);
+		
 		}		 
 	}
 	regfree (&regex);
 	entrada.close();
-
-	
-
-	
 
 
 	//oa_bd->crear_propiedad("Clase16000", "HuboPerdidaHumanaa");

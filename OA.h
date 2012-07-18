@@ -49,6 +49,7 @@ class OA{
 		bool es_subclase_de(string nom_clase, string nom_clase_padre); //Ver si n_clase es subclase de n_clase_padre
 		bool agregar_valorApropiedad(string nom_clase, string nom_instancia, string nom_propiedad, int valor);
 		int consultar_propiedad_instancia(string nom_clase, string nom_instancia, string nom_propiedad);
+		bool activar_eventos();
 };
   
 	
@@ -364,7 +365,27 @@ class OA{
 			
 			band = i->agregar_valor_propiedad(nom_propiedad, valor);//Si se agrega el valor correctamente
 			
-			
+
+		}
+		else{
+			cout << "NO existe la propiedad, la instancia o la clase" << endl;
+		}
+		
+		return band;
+	}
+
+	//Pre:Comprobar que existe propiedad i->existe_propiedad()
+	int OA::consultar_propiedad_instancia(string nom_clase, string nom_instancia, string nom_propiedad){
+		Instancia *i;
+		
+		i = get_instancia(nom_clase, nom_instancia);
+		return i->get_valor_propiedad(nom_propiedad);
+	}
+	
+	bool OA::activar_eventos(){
+	
+	bool band = true;
+		/*
 			p = get_propiedad(nom_propiedad);//Obtengo el apuntador a la propiedad
 			n_e = p->get_num_eventos();//Consulto el numero de eventos que tienen a dicha propiedad en su condicion booleana
 			if( band && n_e > 0){ //Si se agrego correctamente el valor a la propiedad de la instancia, y esta propiedad esta en alguna condicion booleana
@@ -398,20 +419,9 @@ class OA{
 			else{
 				cout << "NO esta en ninguna condicion booleana" << endl;
 			}
-		}
-		else{
-			cout << "NO existe la propiedad, la instancia o la clase" << endl;
-		}
-		
-		return band;
-	}
-
-	//Pre:Comprobar que existe propiedad i->existe_propiedad()
-	int OA::consultar_propiedad_instancia(string nom_clase, string nom_instancia, string nom_propiedad){
-		Instancia *i;
-		
-		i = get_instancia(nom_clase, nom_instancia);
-		return i->get_valor_propiedad(nom_propiedad);
+	*/
+	
+	
 	}
 
 # endif
