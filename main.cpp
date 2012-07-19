@@ -88,7 +88,7 @@ int main(){
 	for(j = 1; j <= 50 ; j++){ //7500
 		stringstream ff;
 		ff << j;	
-		for(i = 1; i <= 2 ; i++){
+		for(i = 1; i <= 50 ; i++){
 			stringstream ss;
 			ss << i;
 		
@@ -192,12 +192,13 @@ int main(){
 	
 	
 	//INICIALIZAR LOS VALORES DE LAS INSTANCIAS,para poder evaluar las expresiones
-cout << "Inicializando NumMuertes ";
+/*cout << "Inicializando NumMuertes ";
 cout << oa_bd->agregar_valorApropiedad("Clase2", "Instancia1", "NumMuertes", -1) << endl;
 cout << "Inicializando Velocidad ";
 cout << oa_bd->agregar_valorApropiedad("Clase2","Instancia1", "Velocidad", -1) << endl;
 cout << "Inicializando AlertarA ";
 cout << oa_bd->agregar_valorApropiedad("Clase2","Instancia1", "AlertarA", -1) << endl << endl;
+*/
 	
 	//CONSULTAR VALORES
 	cout << "Consultando AlertarA = ";
@@ -218,11 +219,11 @@ cout << oa_bd->agregar_valorApropiedad("Clase2","Instancia1", "AlertarA", -1) <<
 	cout << "NumMuertes en 56: ";
 	cout << "( " << oa_bd->agregar_valorApropiedad("Clase2", "Instancia1", "NumMuertes", 56)<< endl;
 	
-	cout << "NumMuertes en 0: ";
-	cout << oa_bd->agregar_valorApropiedad("Clase2", "Instancia1", "NumMuertes", 0)<< endl;
+	//cout << "NumMuertes en 0: ";
+	//cout << oa_bd->agregar_valorApropiedad("Clase2", "Instancia1", "NumMuertes", 0)<< endl;
 	
-	cout << "Velocidad en 13: ";
-	cout << "( " << oa_bd->agregar_valorApropiedad("Clase2", "Instancia1", "Velocidad", 13)<< endl<< endl;
+	//cout << "Velocidad en 13: ";
+	//cout << "( " << oa_bd->agregar_valorApropiedad("Clase2", "Instancia1", "Velocidad", 13)<< endl<< endl;
 	
 	cout << "Propiedadqnoexiste en 34: ";
 	cout << oa_bd->agregar_valorApropiedad("Clase2", "Instancia1", "Propiedadqnoexiste", 34)<< endl<< endl;
@@ -272,6 +273,7 @@ $ indica el final de la frase
 		}
 		else{ //Si es 0, esta todo bien
 		
+			// Se obtienen los eventos dentro del corchete
 			int    status;
 			regex_t    re;
 			regmatch_t rm;
@@ -290,11 +292,14 @@ $ indica el final de la frase
 				cout << status << endl;
 			}
 			else{
+				// Extraigo el rango de los eventos
 				eventos = exp.substr( (int)rm.rm_so, (int)rm.rm_eo-3);
 				eventos = eventos.substr( 1, eventos.size());
 				eventos[ eventos.size()-1 ] = ',';
 			}
 			
+			
+			// Se obtienen los nombres de los eventos
 			do{
 		
 				int f;
@@ -314,6 +319,11 @@ $ indica el final de la frase
 	regfree (&regex);
 	entrada.close();
 
+	cout << oa_bd->agregar_valorApropiedad("Clase8", "Instancia1", "Velocidad", 89)<< endl;
+	oa_bd->activar_eventos("Clase8", "OcurreDesastreNatural");
+	
+	
+		cout << "Consultando AlertarA = " << oa_bd->consultar_propiedad_instancia("Clase2", "Instancia1", "AlertarA") << endl;
 
 	//oa_bd->crear_propiedad("Clase16000", "HuboPerdidaHumanaa");
 /*	list<Clase> lst;	
