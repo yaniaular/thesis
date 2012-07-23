@@ -98,12 +98,12 @@ class Clase{
 	}
 
 	bool Clase::existe_propiedad(string p){
-		return (!( ((*propi)[p]-1) == -1) );
+		return ( !( ((*propi)[p]-1) == -1) );
 	
 	}
 
 	bool Clase::existe_instancia(string i){
-		return (!( ((*instancias)[i]-1) == -1) );
+		return ( !( ((*instancias)[i]-1) == -1) );
 	
 	}
 

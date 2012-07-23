@@ -50,6 +50,7 @@ class OA{
 		bool agregar_valorApropiedad(string nom_clase, string nom_instancia, string nom_propiedad, int valor);
 		int consultar_propiedad_instancia(string nom_clase, string nom_instancia, string nom_propiedad);
 		bool activar_eventos(string n_c, string n_i);
+		bool existencia_consulta_reactiva(map<string, string> *eventosHash, int n, string clase);
 };
   
 	
@@ -410,17 +411,13 @@ class OA{
 		valor_r *va;
 		int k;
 	
-		cl = get_clase(n_c);
-	
 		/*if( !cl->existe_instancia(n_i) ){
-		
 			band = false;
-		
-		
 		}*/
-		
-		e = get_evento(n_e);
-		i = get_instancia(n_c, "Instancia1");
+				
+		cl = get_clase(n_c); //Obtengo el apuntador a la clase donde se activarán los eventos
+		e = get_evento(n_e); //Obtengo el apuntador al evento que se activará
+		i = get_instancia(n_c, "Instancia1"); //Obtengo el apuntador a la instancia en donde se investigara si existe el evento
 		
 		if( e != NULL && i != NULL){
 			
@@ -501,6 +498,28 @@ class OA{
 	*/
 	
 	
+	}
+	
+	bool OA::existencia_consulta_reactiva(map<string, string> *eventosHash, int n, string cl){
+		int i = 0;
+		bool band = true;
+		map<string, string>::const_iterator it; //Iterador
+		
+		if(get_clase(cl)== NULL){
+			band = false;
+			cout << "La clase especificada no existe" << endl;		
+		}
+		
+		it = eventosHash->begin();
+		while(it != eventosHash->end() ){ //Recorro todos los eventos nombrados en la consulta reactiva
+			if( get_evento( (string)it->first ) == NULL ){//Si el evento es NULL no existe
+				band = false;
+				cout <<"El evento " << (string)it->first << " no existe" << endl;
+			}
+			++it;
+		}
+		cout << endl;
+		return band;
 	}
 
 # endif

@@ -3,24 +3,21 @@
 	// -Wtrigraphs -Wwrite-strings
 	//Para ver todos los avisos -Wall
 
-//#include <iostream>
-//#include <fstream>
-//#include <cstdlib>
 #include <limits.h>
-
 #include <sys/types.h>
 #include <regex.h>
 #include <fstream>
-
-//#include <boost/regex.hpp>
-
+#include <vector>
+#include <algorithm> //Incluye la función find()
 #include "OA.h"
 
-//using namespace std;
 
-
-string Trim(string::const_iterator i, string::const_iterator f)
+//Funcion que recibe un string, y elimina los espacios en blanco del mismo
+string Trim(string cadena)
 {
+	string::const_iterator i = cadena.begin(); 
+	string::const_iterator f = cadena.end();
+	
      string::const_iterator it;
      string buff;
      for (it = i; it != f; ++it)
@@ -241,6 +238,7 @@ int reti;
 regex_t regex; //Variable para la expresion regular
 string exp;
 char * pattern ="^\\((S|s|p|P),\\[([A-Za-z0-9])+(([,])([A-Za-z0-9])+)*\\],([A-Za-z0-9])+\\)$"; //Patron de la expresion regular
+
 /*
 ^ Indica el inicio de la frase
 \\(   Agrega el parentesis
@@ -255,75 +253,92 @@ char * pattern ="^\\((S|s|p|P),\\[([A-Za-z0-9])+(([,])([A-Za-z0-9])+)*\\],([A-Za
 \\) Agrega el parentesis
 $ indica el final de la frase
 */
-
-
-	reti = regcomp (&regex, pattern, REG_EXTENDED);//Agrego el patron a regex
-	
+	reti = regcomp (&regex, pattern, REG_EXTENDED);//Compilo el patrón
 	while( getline (entrada,exp) ){//Leo una linea del archivo
-	
-		exp = Trim(exp.begin(), exp.end());//Quitar espacios de la expresion
-		cout << exp << " ";
-	
-		reti = regexec (&regex, &exp[0], (size_t)0, NULL, 0);
-		
-		
-		
-		if( reti == REG_NOMATCH ){ //Si es 1, hay error de sintaxis
+		exp = Trim(exp);//Quitar espacios de la expresion
+		cout << exp << " " << endl;
+		reti = regexec (&regex, &exp[0], (size_t)0, NULL, 0); //Se verifica que la consulta reactiva cumpla con el patrón
+		if( reti == REG_NOMATCH ){ //Error de sintaxis en la consulta reactiva
 			puts("Error de sintaxis");
 		}
-		else{ //Si es 0, esta todo bien
+		else{ //Si es 0, entonces la consulta reactiva cumple con el patrón
 		
 			// Se obtienen los eventos dentro del corchete
 			int    status;
 			regex_t    re;
 			regmatch_t rm;
 			char *patter = "\\[([A-Za-z0-9])+(([,])([A-Za-z0-9])+)*\\]";
-			string eventos;
+			string eventos, tipo, tabla;
+			vector<string> Eventos;
+			vector<string>::iterator it;
+			int num_eventos;
+			map<string, string> *eventosHash;//Tabla Hash con los eventos de la consulta-reactiva
+			string eve;
+			bool band;
 			
+			eventosHash = new map<string, string>();
+						
+			//Se compila la expresión regular y se verifica si tiene algún error
 			if (regcomp(&re, patter, REG_EXTENDED) != 0) {
-				cout << "Bad pattern";
+				cout << "Patrón erróneo";
 			}
 		
-			status = regexec(&re, &exp[0], 1, &rm, 0);
-			regfree(&re);
+			status = regexec(&re, &exp[0], 1, &rm, 0); //Se verifica que el grupo de eventos de la consulta reactiva cumpla con el patrón
+			regfree(&re); //Libera la memoria asignada por regcomp()
 		
-			if (status != 0) {
-				cout << "No Match";
+			if (status != 0) { //Si el estado no devuelve 0, entonces no cumple el patrón
+				cout << "No coincide";
 				cout << status << endl;
 			}
 			else{
 				// Extraigo el rango de los eventos
-				eventos = exp.substr( (int)rm.rm_so, (int)rm.rm_eo-3);
+				eventos = exp.substr( (int)rm.rm_so, (int)rm.rm_eo - 3);
+				tipo = exp.substr(1, (int)rm.rm_so - 2);
+				tabla = exp.substr((int)rm.rm_eo + 1 , exp.size() );
+				tabla.erase(tabla.size() - 1 , 2);
 				eventos = eventos.substr( 1, eventos.size());
 				eventos[ eventos.size()-1 ] = ',';
 			}
 			
-			
-			// Se obtienen los nombres de los eventos
+			cout << "Tipo y Clase " << tipo << " " << tabla << endl;
+			// Se obtienen los nombres de los eventos y se verifica que no hayan repetidos
+			num_eventos = 0;
+			band = true;
 			do{
-		
 				int f;
-				f = eventos.find(",");
+				f = eventos.find(","); //Busco la posicion de la coma mas cercana
+				eve = eventos.substr(0, f); //Extraigo un evento de la lista
 				
-				cout << eventos.substr( 0, f) << endl;
-				eventos = eventos.substr( f+1, eventos.size()-1);
-				
-			}while( eventos.size() > 1 );
-		
-		
-		
-			//oa_bd->activar_eventos(nom_evento, nom_);
-		
+				if( (*eventosHash)[eve] != ""  ){//Reviso si es evento es repetido
+					band = false;
+				}
+				else{
+					(*eventosHash)[eve] = eve; //Guardo el evento en la tabla hash
+					num_eventos+=1; //Contador de eventos
+					eventos = eventos.substr( f+1, eventos.size()-1);//Elimino el evento que se agrego de la cadena original
+				}
+			}while( eventos.size() > 1 && band );
+			
+			if(!band){
+				cout << "Hay uno o más eventos repetidos" << endl;
+			}
+			else{
+				//Verificar que existen los eventos y la clase en donde se activaran		
+				if( oa_bd->existencia_consulta_reactiva(eventosHash, num_eventos, tabla) ){
+					//oa_bd->activar_eventos(nom_evento, nom_);
+				}
+			}
+			
 		}		 
 	}
 	regfree (&regex);
 	entrada.close();
-
+	
+	
+	
 	cout << oa_bd->agregar_valorApropiedad("Clase8", "Instancia1", "Velocidad", 89)<< endl;
 	oa_bd->activar_eventos("Clase8", "OcurreDesastreNatural");
-	
-	
-		cout << "Consultando AlertarA = " << oa_bd->consultar_propiedad_instancia("Clase2", "Instancia1", "AlertarA") << endl;
+	cout << "Consultando AlertarA = " << oa_bd->consultar_propiedad_instancia("Clase8", "Instancia1", "AlertarA") << endl;
 
 	//oa_bd->crear_propiedad("Clase16000", "HuboPerdidaHumanaa");
 /*	list<Clase> lst;	
