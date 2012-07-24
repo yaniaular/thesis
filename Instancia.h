@@ -19,13 +19,13 @@ class Instancia{
 		string get_nombre();
 		Clase* get_clase();
 		bool existe_propiedad(string nom_propiedad);
-		int get_valor_propiedad(string nom_propiedad);
+		struct var * get_valor_propiedad(string nom_propiedad);
 		bool validar_expresion(string exp);
 		
 		
-		bool agregar_valor_propiedad(string propiedad, int valor);
-		bool agregar_valor_propiedad(string propiedad, float valor);
-		bool agregar_valor_propiedad(string propiedad, string valor);
+		bool agregar_valor_propiedad(string propiedad, int tipo, int valor);
+		bool agregar_valor_propiedad(string propiedad, int tipo, double valor);
+		bool agregar_valor_propiedad(string propiedad, int tipo, string valor);
 };
  
  	Instancia::Instancia(string n, Clase *c){
@@ -52,10 +52,16 @@ class Instancia{
 		return false;
 	}
 
-	int Instancia::get_valor_propiedad(string nom_propiedad){
+	struct var * Instancia::get_valor_propiedad(string nom_propiedad){
 		struct var *v;
 		v = get_var(vt, StringAChar(nom_propiedad) );
-    	return v->val.ival;
+		if(v->val.type == 0)
+		cout << "VALOR!!" << v->val.ival << endl;
+		if(v->val.type ==1)
+		cout << "VALOR!!" << v->val.rval << endl;
+		if(v->val.type == 2)
+		cout << "VALOR!!" << (v->val.cval) << endl;
+    	return v;
     	
 	}
 	
@@ -80,7 +86,7 @@ class Instancia{
 	//ordenado de la siguiente forma [dia = null, mes = 04] y no como
 	//esta ahorita, lo que se vaya asignando se va a agregando
 	// [mes = 04]
-	bool Instancia::agregar_valor_propiedad(string propiedad, int valor){
+	bool Instancia::agregar_valor_propiedad(string propiedad, int tipo, int valor){
 		struct var *v;
 		bool band = false;
 				
@@ -92,23 +98,64 @@ class Instancia{
 		else{
 			if( clase->existe_propiedad(propiedad) ){ //Si la propiedad pertenece a la clase, se agrega valor por primera vez
 				valores[num_var] = new val(); //Se crea el registro del valor
-				valores[num_var]->type = T_INT; //Se asigna el tipo de dato
+				valores[num_var]->type = tipo; //Se asigna el tipo de dato
 				valores[num_var]->ival = valor; //Se guarda el valor
 				put_var(vt, StringAChar(propiedad), valores[num_var]);//Se introduce el registro en la tabla de valores
 				num_var = num_var + 1; //Se incrementa el contador de valores
 				band = true;
 			}
 		}
-				
 		return band;
 	}
 
-	bool Instancia::agregar_valor_propiedad(string propiedad, float valor){
-		return true;
+	bool Instancia::agregar_valor_propiedad(string propiedad, int tipo, double valor){
+		struct var *v;
+		bool band = false;
+				
+		if( get_var(vt, StringAChar(propiedad) )  ){//Si la propiedad ya existe (ya ha obtenido su primer valor) actualizo su valor
+			v = get_var(vt, StringAChar(propiedad));
+ 			v->val.rval = valor;		   		
+			band = true;
+		}
+		else{
+			if( clase->existe_propiedad(propiedad) ){ //Si la propiedad pertenece a la clase, se agrega valor por primera vez
+				valores[num_var] = new val(); //Se crea el registro del valor
+				valores[num_var]->type = tipo; //Se asigna el tipo de dato
+				valores[num_var]->rval = valor; //Se guarda el valor
+				put_var(vt, StringAChar(propiedad), valores[num_var]);//Se introduce el registro en la tabla de valores
+				num_var = num_var + 1; //Se incrementa el contador de valores
+				band = true;
+			}
+		}
+		return band;
 	}
 	
-	bool Instancia::agregar_valor_propiedad(string propiedad, string valor){
-		return true;
+	bool Instancia::agregar_valor_propiedad(string propiedad, int tipo, string valor){
+		struct var *v;
+		char *aux;
+		
+		bool band = false;
+			//cout << "AQUI DEBERIA DECIR HOLA: " << valor << endl;
+		if( get_var(vt, StringAChar(propiedad) )  ){//Si la propiedad ya existe (ya ha obtenido su primer valor) actualizo su valor
+			v = get_var(vt, StringAChar(propiedad));
+			strcpy(v->val.cval, StringAChar(valor));
+ 			band = true;
+		}
+		else{
+			if( clase->existe_propiedad(propiedad) ){ //Si la propiedad pertenece a la clase, se agrega valor por primera vez
+				valores[num_var] = new val(); //Se crea el registro del valor
+				valores[num_var]->type = tipo; //Se asigna el tipo de dato
+				
+				//PENDIENTE CON ESTA ASIGNACION
+				valores[num_var]->cval = StringAChar(valor); //Se guarda el valor
+				//strcpy( (valores[num_var])->cval, StringAChar(valor) );
+				
+				put_var(vt, StringAChar(propiedad), valores[num_var]);//Se introduce el registro en la tabla de valores
+				num_var = num_var + 1; //Se incrementa el contador de valores
+				band = true;
+			}
+		}
+		return band;
 	}	
 
 #endif

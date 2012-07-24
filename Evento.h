@@ -3,16 +3,16 @@
 #include <iostream>
 #include <map>
 #define P 15000
-#define ENTERO 1
-#define REAL 2
-#define CHAR 3
+#define ENTERO 0
+#define REAL 1
+#define CADENA 2
 //#include "Propiedad.h"
 //#include "Clase.h"
 
 struct valor_r {
 	int ival;
 	double rval;
-	char *cvar;
+	char *cval;
 	int tipo;
 };
 
@@ -51,6 +51,32 @@ class Evento{
 		valores[num_prop_activas] = new valor_r();
 		valores[num_prop_activas]->tipo = ENTERO;
 		valores[num_prop_activas]->ival = valor;
+		num_prop_activas= num_prop_activas + 1;
+		
+	}
+
+ 	Evento::Evento(string nom, string pA, double valor, string e){
+		num_prop_activas = 0;
+		nombre = nom;
+		expresion = e;
+		prop_activas = new map<int, string>();
+		(*prop_activas)[num_prop_activas + 1] = pA;//Le sumo 1 para no generar confusiones, porque cuando la propiedad no existe devuelve un valor de 0, y la posicion 0 tambien existe. Entonces cuando una propiedad no exista, devolvera -1
+		valores[num_prop_activas] = new valor_r();
+		valores[num_prop_activas]->tipo = REAL;
+		valores[num_prop_activas]->rval = valor;
+		num_prop_activas= num_prop_activas + 1;
+		
+	}
+	
+	 Evento::Evento(string nom, string pA, char *valor, string e){
+		num_prop_activas = 0;
+		nombre = nom;
+		expresion = e;
+		prop_activas = new map<int, string>();
+		(*prop_activas)[num_prop_activas + 1] = pA;//Le sumo 1 para no generar confusiones, porque cuando la propiedad no existe devuelve un valor de 0, y la posicion 0 tambien existe. Entonces cuando una propiedad no exista, devolvera -1
+		valores[num_prop_activas] = new valor_r();
+		valores[num_prop_activas]->tipo = CADENA;
+		valores[num_prop_activas]->cval = valor;
 		num_prop_activas= num_prop_activas + 1;
 		
 	}

@@ -4,8 +4,10 @@
 #define I 15000
 #define P 15000
 #define E 15000
+
 #include <iostream>
 #include <kcstashdb.h>
+#include <string.h>
 
 using namespace kyotocabinet;
 using namespace std;

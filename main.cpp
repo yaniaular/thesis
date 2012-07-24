@@ -40,28 +40,6 @@ int main(){
 	 
 	OA *oa_bd = new OA();
 
-
-/*
-		int     retval = 0;
-        regex_t   re;
-        char *patter = ",";
-        string ex = "(s,[eve1,eve2,eve3],tabla)";
-
-        while( !retval ){
-                       
-		 	if( regcomp( &re, patter, REG_EXTENDED) != 0 ){
-		 		retval = regcomp( &re, patter, REG_EXTENDED);
-		 	}
-		 	else{
-		 		retval = regexec( &re, &ex[0], 0, NULL, 0);
-		 	}
-            
-            
-            if(retval == 0){
-                  printf("Match found \n");
-            }
-        }*/
-
 /*
 	oa_bd->crear_clase( "fenMeteorologico" );
 	oa_bd->crear_clase( "fenAtmosferico" );
@@ -81,8 +59,8 @@ int main(){
 		oa_bd->crear_clase( c );
 	}
 
-	//Crear 2 instancias para cada una de las primeras 7500 clases
-	for(j = 1; j <= 50 ; j++){ //7500
+	//Crear 2 instancias para cada una de las primeras 7500 clases, 50
+	for(j = 1; j <= 2 ; j++){ //7500
 		stringstream ff;
 		ff << j;	
 		for(i = 1; i <= 50 ; i++){
@@ -127,27 +105,13 @@ int main(){
 		cout << "No existe la clase" << endl;
 	}
 	
-	
-
-
-//	for(i = 0; i < n; i++ ){
-//		cout << "La clase " << i << " tiene por nombre "<< (oa_bd->get_clase(i))->get_nombre() << endl;	}
-
-
-//	cout << "El nombre es: ";
-//	cout << (oa_bd->get_clase("Clase14000"))->get_nombre() << endl;
-//	cout << (oa_bd->get_clase("Clase10000"))->get_nombre() << endl;
-//	cout << (oa_bd->get_clase("Clase5000"))->get_nombre() << endl;
-//	oa_bd->agregar_padre("Clase4567", "Clase6789");
-//	oa_bd->agregar_padre("Clase1000", "Clase6789");
-
-	
+		
 	//Crear arbol de clases
 	i = 1;
 	
 	// hallar un 2^x ~ cant_clases
 	//7499
-	while(i <= 24){
+	/*while(i <= 24){
 		stringstream ss,s2,s3;
 		ss << i;
 		c = "Clase" + ss.str();
@@ -162,15 +126,15 @@ int main(){
 		oa_bd->agregar_subclase(h2, c);
 		
 		i+=1;
-	}
+	}*/
 
 	//Probar las subclases 
-	cout << oa_bd->crear_propiedad("Clase2", "NumMuertes") << endl;
-	cout << oa_bd->crear_propiedad("Clase2", "Velocidad") << endl;
-	cout << oa_bd->crear_propiedad("Clase2", "AlertarA")<< endl << endl;
+	cout << oa_bd->crear_propiedad("Clase2", "NumMuertes", ENTERO) << endl;
+	cout << oa_bd->crear_propiedad("Clase2", "Velocidad", CADENA) << endl;
+	cout << oa_bd->crear_propiedad("Clase2", "AlertarA", ENTERO)<< endl << endl;
 	
 	//No acepta nombre de variables con "_"
-	cout << oa_bd->agregar_subclase("Clase50", "Clase2") << endl << endl;//subclase - clasepadre
+	/*cout << oa_bd->agregar_subclase("Clase50", "Clase2") << endl << endl;//subclase - clasepadre
 
 	cout << oa_bd->es_subclase_de("Clase1000","Clase6789") << endl;
 	cout << oa_bd->es_subclase_de("Clase1001","Clase6789") << endl;
@@ -183,9 +147,9 @@ int main(){
 	cout << oa_bd->es_subclase_de("Clase37", "Clase2") << endl;
 	cout << oa_bd->es_subclase_de("Clase6537", "Clase1") << endl;
 	cout << oa_bd->es_subclase_de("Clase6537", "Clase2") << endl;
-	cout << oa_bd->es_subclase_de("Clase6537", "Clase3") << endl << endl;
+	cout << oa_bd->es_subclase_de("Clase6537", "Clase3") << endl << endl;*/
 
-	cout << oa_bd->crear_evento("Clase2", "OcurreDesastreNatural", "AlertarA", 1,"NumMuertes > 0 || Velocidad > 35") << endl << endl;
+	cout << oa_bd->crear_evento("Clase2", "OcurreDesastreNatural", "AlertarA", 1,"NumMuertes > 0 || Velocidad == \"HOLA\" ") << endl << endl;
 	
 	
 	//INICIALIZAR LOS VALORES DE LAS INSTANCIAS,para poder evaluar las expresiones
@@ -202,7 +166,7 @@ cout << oa_bd->agregar_valorApropiedad("Clase2","Instancia1", "AlertarA", -1) <<
 	cout << oa_bd->consultar_propiedad_instancia("Clase2", "Instancia1", "AlertarA") << endl << endl;
 
 	//CAMBIANDO VALORES	
-	cout << "Asignando valores a las propiedades:" << endl;
+	/*cout << "Asignando valores a las propiedades:" << endl;
 	
 	cout << "Velocidad en 5: ";
 	cout << oa_bd->agregar_valorApropiedad("Clase2", "Instancia1", "Velocidad", 5)<< endl;
@@ -214,7 +178,7 @@ cout << oa_bd->agregar_valorApropiedad("Clase2","Instancia1", "AlertarA", -1) <<
 	cout << oa_bd->agregar_valorApropiedad("Clase2", "Instancia1", "NumMuertes", 2)<< endl;
 	
 	cout << "NumMuertes en 56: ";
-	cout << "( " << oa_bd->agregar_valorApropiedad("Clase2", "Instancia1", "NumMuertes", 56)<< endl;
+	cout << "( " << oa_bd->agregar_valorApropiedad("Clase2", "Instancia1", "NumMuertes", 56)<< endl;*/
 	
 	//cout << "NumMuertes en 0: ";
 	//cout << oa_bd->agregar_valorApropiedad("Clase2", "Instancia1", "NumMuertes", 0)<< endl;
@@ -222,9 +186,13 @@ cout << oa_bd->agregar_valorApropiedad("Clase2","Instancia1", "AlertarA", -1) <<
 	//cout << "Velocidad en 13: ";
 	//cout << "( " << oa_bd->agregar_valorApropiedad("Clase2", "Instancia1", "Velocidad", 13)<< endl<< endl;
 	
-	cout << "Propiedadqnoexiste en 34: ";
-	cout << oa_bd->agregar_valorApropiedad("Clase2", "Instancia1", "Propiedadqnoexiste", 34)<< endl<< endl;
-
+	//cout << "Propiedadqnoexiste en 34: ";
+	//cout << oa_bd->agregar_valorApropiedad("Clase2", "Instancia1", "Propiedadqnoexiste", 34)<< endl<< endl;
+	cout <<  "****";
+	cout << oa_bd->agregar_valorApropiedad("Clase2", "Instancia1", "Velocidad", (string)"HOLA")<< endl;
+	
+	oa_bd->activar_eventos("Clase2", "OcurreDesastreNatural");
+	
 	//MAS CONSULTA DE VALORES
 	cout << "Consultando NumMuertes = " << oa_bd->consultar_propiedad_instancia("Clase2", "Instancia1", "NumMuertes") << endl;
 	cout << "Consultando Velocidad = " << oa_bd->consultar_propiedad_instancia("Clase2", "Instancia1", "Velocidad") << endl; //Hay que Comprobar que existe la propiedad y la propiedad existe en esa instancias
@@ -232,13 +200,13 @@ cout << oa_bd->agregar_valorApropiedad("Clase2","Instancia1", "AlertarA", -1) <<
 
 
 
-
+/*
 ifstream entrada("exp.txt");
 int reti;
 regex_t regex; //Variable para la expresion regular
 string exp;
 char * pattern ="^\\((S|s|p|P),\\[([A-Za-z0-9])+(([,])([A-Za-z0-9])+)*\\],([A-Za-z0-9])+\\)$"; //Patron de la expresion regular
-
+*/
 /*
 ^ Indica el inicio de la frase
 \\(   Agrega el parentesis
@@ -253,7 +221,7 @@ char * pattern ="^\\((S|s|p|P),\\[([A-Za-z0-9])+(([,])([A-Za-z0-9])+)*\\],([A-Za
 \\) Agrega el parentesis
 $ indica el final de la frase
 */
-	reti = regcomp (&regex, pattern, REG_EXTENDED);//Compilo el patrón
+/*	reti = regcomp (&regex, pattern, REG_EXTENDED);//Compilo el patrón
 	while( getline (entrada,exp) ){//Leo una linea del archivo
 		exp = Trim(exp);//Quitar espacios de la expresion
 		cout << exp << " " << endl;
@@ -333,12 +301,12 @@ $ indica el final de la frase
 	}
 	regfree (&regex);
 	entrada.close();
+	*/
 	
-	
-	
-	cout << oa_bd->agregar_valorApropiedad("Clase8", "Instancia1", "Velocidad", 89)<< endl;
+	/*
+	cout << oa_bd->agregar_valorApropiedad("Clase8", "Instancia1", "Velocidad", "HOLA")<< endl;
 	oa_bd->activar_eventos("Clase8", "OcurreDesastreNatural");
-	cout << "Consultando AlertarA = " << oa_bd->consultar_propiedad_instancia("Clase8", "Instancia1", "AlertarA") << endl;
+	cout << "Consultando AlertarA = " << oa_bd->consultar_propiedad_instancia("Clase8", "Instancia1", "AlertarA") << endl;*/
 
 	//oa_bd->crear_propiedad("Clase16000", "HuboPerdidaHumanaa");
 /*	list<Clase> lst;	
