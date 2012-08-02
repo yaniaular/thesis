@@ -417,6 +417,8 @@ int scan_string(char **stringptr, struct val *valptr) {
  	
  	v.type = T_CHAR;
  	
+ 	v.cval = new char;
+ 	
 	s+=1;
     *stringptr = s; //quito las primeras comillas
      
