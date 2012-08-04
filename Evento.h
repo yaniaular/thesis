@@ -77,6 +77,7 @@ class Evento{
 		valores[num_prop_activas] = new valor_r();
 		valores[num_prop_activas]->tipo = CADENA;
 		valores[num_prop_activas]->cval = valor;
+		
 		num_prop_activas= num_prop_activas + 1;
 		
 	}

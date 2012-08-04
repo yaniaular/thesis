@@ -167,12 +167,15 @@ class OA{
 				for(it = portMap->begin(); it != portMap->end(); ++it){//Iterando
 					
 					if(tipo_propiedad == ENTERO){	
+						cout << "Entero Propiedad " << nom_propiedad << endl;
 						agregar_valorApropiedad(nom_clase, (string)it->first, nom_propiedad, -1);//Inicializo
 					}
 					else if(tipo_propiedad == REAL){
+						cout << "Real Propiedad " << nom_propiedad << endl;
 						agregar_valorApropiedad(nom_clase, (string)it->first, nom_propiedad, -1.0);
 					}
 					else if(tipo_propiedad == CADENA){
+						cout << "Cadena Propiedad " << nom_propiedad << endl;
 						agregar_valorApropiedad(nom_clase, (string)it->first, nom_propiedad, (string)"");}
 				
 				}
@@ -484,7 +487,7 @@ class OA{
 		}
 		
 		if( entrar ){ //Si existe la instancia, la propiedad y la clase
-			
+			cout << "nom_propiedad " << nom_propiedad << " get_propiedad(nom_propiedad)->get_tipo() " << get_propiedad(nom_propiedad)->get_tipo() << " valor " << valor << endl;
 			band = i->agregar_valor_propiedad(nom_propiedad,get_propiedad(nom_propiedad)->get_tipo() , valor);//Si se agrega el valor correctamente
 			//Antes se activaban aqui los eventos			
 		}
@@ -516,7 +519,7 @@ class OA{
 		}
 		
 		if( entrar ){ //Si existe la instancia, la propiedad y la clase
-			
+			cout << "nom_propiedad " << nom_propiedad << " get_propiedad(nom_propiedad)->get_tipo() " << get_propiedad(nom_propiedad)->get_tipo() << " valor " << valor << endl;
 			band = i->agregar_valor_propiedad(nom_propiedad, get_propiedad(nom_propiedad)->get_tipo(),valor );//Si se agrega el valor correctamente
 			//Antes se activaban aqui los eventos			
 		}
@@ -548,8 +551,12 @@ class OA{
 		}
 		
 		if( entrar ){ //Si existe la instancia, la propiedad y la clase
-			cout << "CLase: " << nom_clase << " Propiedad: " << nom_propiedad << " Valor: "<< valor << endl;
-			band = i->agregar_valor_propiedad(nom_propiedad, get_propiedad(nom_propiedad)->get_tipo(), valor);//Si se agrega el valor correctamente
+			
+			cout << "nom_propiedad " << nom_propiedad << " get_propiedad(nom_propiedad)->get_tipo() " << get_propiedad(nom_propiedad)->get_tipo() << " valor " << valor << endl;
+//			band = i->agregar_valor_propiedad(nom_propiedad, get_propiedad(nom_propiedad)->get_tipo(), valor);//Si se agrega el valor correctamente
+
+				band = i->agregar_valor_propiedad(nom_propiedad, get_propiedad(nom_propiedad)->get_tipo(), valor);
+			
 			//Antes se activaban aqui los eventos			
 		}
 		else{

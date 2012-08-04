@@ -34,7 +34,7 @@ class Tabla{
 	
 	char* StringAChar(string a){
 	
-		return &a[0];
+		return &(a[0]);
 	}
 
 # endif

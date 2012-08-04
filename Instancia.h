@@ -55,15 +55,8 @@ class Instancia{
 	struct var * Instancia::get_valor_propiedad(string nom_propiedad){
 		struct var *v;
 		v = get_var(vt, StringAChar(nom_propiedad) );
-		if(v->val.type == 0)
-			cout << nom_propiedad << " VALOR!! "<< v << " " << v->val.ival << endl;
-		if(v->val.type ==1)
-			cout << nom_propiedad << " VALOR!! "<< v << " "  << v->val.rval << endl;
-		if(v->val.type == 2)
-			cout << nom_propiedad << " VALOR!! "<< v << " " << (v->val.cval) << endl;
-    	return v;
-    	
-	}
+	   	return v;
+   }
 	
 	bool Instancia::validar_expresion(string exp){
 		bool band = false;
@@ -134,28 +127,14 @@ class Instancia{
 		struct var *v;
 				
 		bool band = false;
-			//cout << "AQUI DEBERIA DECIR HOLA: " << valor << endl;
+
 		if( get_var(vt, StringAChar(propiedad) )  ){//Si la propiedad ya existe (ya ha obtenido su primer valor) actualizo su valor
-			
-			v = get_var(vt, "AlertarA");
-			cout << "1.1) Con propiedad: AlertarA" << " la direccion es " << v << " Valor es " << (v->val).cval <<endl;
-			v = get_var(vt, "Nombre");
-cout << "1.2) Con propiedad: Nombre" << " la direccion es " << v << " Valor es " << (v->val).cval <<endl;
 
 			v = get_var(vt, StringAChar(propiedad));
-			
-			cout << "Con propiedad: " << propiedad << " la direccion es " << v << " el size es " << valor.size() <<endl;
-			(v->val).type = tipo;
-			//strcpy( (v->val).cval, StringAChar(valor));
-			//(v->val).cval[valor.size()] = '\0';
- 			 (v->val).cval = "HOLA";
- 			
- 			
- 			v = get_var(vt, "AlertarA");
-			cout << "2.1) Con propiedad: AlertarA" << " la direccion es " << v << " Valor es " << (v->val).cval <<endl;
-			v = get_var(vt, "Nombre");
-cout << "2.2) Con propiedad: Nombre" << " la direccion es " << v << " Valor es " << (v->val).cval <<endl;
- 			
+			char *i,*p = &valor[0];
+			i = new char[strlen(p)+1];
+			strcpy(i, p);
+			(v->val).cval = i;
  			
  			band = true;
 		}
@@ -163,16 +142,8 @@ cout << "2.2) Con propiedad: Nombre" << " la direccion es " << v << " Valor es "
 			if( clase->existe_propiedad(propiedad) ){ //Si la propiedad pertenece a la clase, se agrega valor por primera vez
 				valores[num_var] = new val(); //Se crea el registro del valor
 				valores[num_var]->type = tipo; //Se asigna el tipo de dato
-				cout << "Con propiedad: " << propiedad << " la direccion es " << valores[num_var] << " Numero de registro "<< num_var << endl;
-				//PENDIENTE CON ESTA ASIGNACION
-				//valores[num_var]->ival = num_var;//Guardo la posicion de una
-				
-				(valores[num_var])->cval = StringAChar(valor); //Se guarda el valor
-				valores[num_var]->cval[ valor.size()-1 ] = '\0';
-				
-				
-				//cout << "VACIO: *" << valores[num_var]->cval << "*" << endl;
-				//strcpy( (valores[num_var])->cval, StringAChar(valor) );
+		
+				(valores[num_var])->cval = ""; //Se guarda el valor
 				
 				put_var(vt, StringAChar(propiedad), valores[num_var]);//Se introduce el registro en la tabla de valores
 				num_var = num_var + 1; //Se incrementa el contador de valores
