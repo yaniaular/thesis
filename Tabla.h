@@ -1,13 +1,18 @@
 #ifndef Tabla_H_
 #define Tabla_H_
+#include <iostream>
+#include <kcstashdb.h>
+#include <string.h>
+#include <map>
+
 #define C 15000
 #define I 15000
 #define P 15000
 #define E 15000
 
-#include <iostream>
-#include <kcstashdb.h>
-#include <string.h>
+#define ENTERO 0
+#define REAL 1
+#define CADENA 2
 
 using namespace kyotocabinet;
 using namespace std;
@@ -34,7 +39,13 @@ class Tabla{
 	
 	char* StringAChar(string a){
 	
-		return &(a[0]);
+		char *i,*p = &a[0];
+		i = new char[strlen(p)+1];
+		strcpy(i, p);
+		return i;
+	
+	
+		//return &(a[0]);
 	}
 
 # endif

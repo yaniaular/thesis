@@ -1,13 +1,6 @@
 #ifndef Evento_H_
 #define Evento_H_
-#include <iostream>
-#include <map>
-#define P 15000
-#define ENTERO 0
-#define REAL 1
-#define CADENA 2
-//#include "Propiedad.h"
-//#include "Clase.h"
+#include "Tabla.h"
 
 struct valor_r {
 	int ival;
@@ -31,7 +24,7 @@ class Evento{
 	public:
 		Evento(string nom, string pA, int valor, string e);
 		Evento(string nom, string pA, double valor, string e);
-		Evento(string nom, string pA, char *valor, string e);
+		Evento(string nom, string pA, string valor, string e);
 		int get_num_prop_act();
 		string get_expresion();
 		string get_nombre();
@@ -68,7 +61,7 @@ class Evento{
 		
 	}
 	
-	 Evento::Evento(string nom, string pA, char *valor, string e){
+	 Evento::Evento(string nom, string pA, string valor, string e){
 		num_prop_activas = 0;
 		nombre = nom;
 		expresion = e;
@@ -76,7 +69,7 @@ class Evento{
 		(*prop_activas)[num_prop_activas + 1] = pA;//Le sumo 1 para no generar confusiones, porque cuando la propiedad no existe devuelve un valor de 0, y la posicion 0 tambien existe. Entonces cuando una propiedad no exista, devolvera -1
 		valores[num_prop_activas] = new valor_r();
 		valores[num_prop_activas]->tipo = CADENA;
-		valores[num_prop_activas]->cval = valor;
+		valores[num_prop_activas]->cval = StringAChar(valor);
 		
 		num_prop_activas= num_prop_activas + 1;
 		

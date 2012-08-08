@@ -6,9 +6,7 @@
 #include <limits.h>
 #include <sys/types.h>
 #include <regex.h>
-#include <fstream>
 #include <vector>
-#include <algorithm> //Incluye la función find()
 #include "OA.h"
 
 
@@ -131,7 +129,7 @@ int main(){
 	
 	//ACTIVAR EVENTO
 	//cout << "/***************************************************************/" <<endl << endl << endl;
-	//oa_bd->activar_eventos("Clase2", "OcurreDesastreNatural");
+	oa_bd->activar_eventos("Clase2", "OcurreDesastreNatural");
 	
 	//MAS CONSULTA DE VALORES
 	cout << "/***************************************************************/" <<endl << endl << endl;

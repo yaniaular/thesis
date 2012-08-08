@@ -225,7 +225,6 @@ class OA{
 			else{
 				//validar que la expresion sea correcta							
 				if( cl->comprobar_expresion(expresion, variables, &c_v)==0 ){
-				
 					
 					eventos[num_eventos] = new Evento(nom_evento, nom_propActiva, valor_futuro, expresion);
 					//Descomponer expresion y ver que variables tiene para agregar el evento a esas propiedades
@@ -240,7 +239,6 @@ class OA{
 			}
 	
 		}
-		
 		return band;
 	}
 
@@ -294,19 +292,16 @@ class OA{
 				//validar que la expresion sea correcta							
 				if( cl->comprobar_expresion(expresion, variables, &c_v)==0 ){
 				
-				
-					eventos[num_eventos] = new Evento(nom_evento, nom_propActiva, StringAChar(valor_futuro), expresion);
+					eventos[num_eventos] = new Evento(nom_evento, nom_propActiva, valor_futuro, expresion);
 					//Descomponer expresion y ver que variables tiene para agregar el evento a esas propiedades
 					for(int i = 0; i < c_v; i++){
 						cout << "La propiedad " << variables[i]<< " esta en la condicion" << endl;
 						(get_propiedad( variables[i] ))->agregar_evento( eventos[num_eventos] );
-					
 					}
 					num_eventos = num_eventos + 1;
 					band = true;
 				}
 			}
-	
 		}
 		
 		return band;
@@ -600,6 +595,8 @@ class OA{
 				
 		cl = get_clase(n_c); //Obtengo el apuntador a la clase donde se activarán los eventos
 		e = get_evento(n_e); //Obtengo el apuntador al evento que se activará
+		
+		/**********Se tiene que activar para todas las instancias debo hacer ese ciclo ******/
 		i = get_instancia(n_c, "Instancia1"); //Obtengo el apuntador a la instancia en donde se investigara si existe el evento
 		
 		if( e != NULL && i != NULL){

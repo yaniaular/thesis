@@ -2,7 +2,6 @@
 #define Clase_H_
 #include "evaluate.h"
 #include "Tabla.h"
-#include <map> //Hash
 
 class Clase{
 

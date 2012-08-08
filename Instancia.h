@@ -131,10 +131,12 @@ class Instancia{
 		if( get_var(vt, StringAChar(propiedad) )  ){//Si la propiedad ya existe (ya ha obtenido su primer valor) actualizo su valor
 
 			v = get_var(vt, StringAChar(propiedad));
-			char *i,*p = &valor[0];
+			/*char *i,*p = &valor[0];
 			i = new char[strlen(p)+1];
 			strcpy(i, p);
 			(v->val).cval = i;
+ 			*/
+ 			(v->val).cval = StringAChar(valor);
  			
  			band = true;
 		}
