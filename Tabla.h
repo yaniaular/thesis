@@ -24,6 +24,7 @@ class Tabla{
 	public:
 		Tabla();
 		string EnteroAString(int a);
+		string DoubleAString(double a);
 		char* StringAChar(string a);
 };
  
@@ -36,6 +37,12 @@ class Tabla{
 		ss << a;
 		return ss.str();
 	}
+
+	string DoubleAString(double a){
+		stringstream ss;
+		ss << a;
+		return ss.str();
+	}
 	
 	char* StringAChar(string a){
 	
@@ -43,9 +50,7 @@ class Tabla{
 		i = new char[strlen(p)+1];
 		strcpy(i, p);
 		return i;
-	
-	
-		//return &(a[0]);
+
 	}
 
 # endif

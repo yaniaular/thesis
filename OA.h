@@ -51,9 +51,9 @@ class OA{
 		bool agregar_valorApropiedad(string nom_clase, string nom_instancia, string nom_propiedad, double valor);
 	bool agregar_valorApropiedad(string nom_clase, string nom_instancia, string nom_propiedad, string valor);
 		
-		int consultar_propiedad_instancia(string nom_clase, string nom_instancia, string nom_propiedad);
+		string consultar_propiedad_instancia(string nom_clase, string nom_instancia, string nom_propiedad);
 		
-		bool activar_eventos(string n_c, string n_i);
+		bool activar_eventos(string nom_clase, string nom_evento);
 		bool existencia_consulta_reactiva(map<string, string> *eventosHash, int n, string clase);
 };
   
@@ -167,15 +167,15 @@ class OA{
 				for(it = portMap->begin(); it != portMap->end(); ++it){//Iterando
 					
 					if(tipo_propiedad == ENTERO){	
-						cout << "Entero Propiedad " << nom_propiedad << endl;
+						//~ cout << "Entero Propiedad " << nom_propiedad << endl;
 						agregar_valorApropiedad(nom_clase, (string)it->first, nom_propiedad, -1);//Inicializo
 					}
 					else if(tipo_propiedad == REAL){
-						cout << "Real Propiedad " << nom_propiedad << endl;
+						//~ cout << "Real Propiedad " << nom_propiedad << endl;
 						agregar_valorApropiedad(nom_clase, (string)it->first, nom_propiedad, -1.0);
 					}
 					else if(tipo_propiedad == CADENA){
-						cout << "Cadena Propiedad " << nom_propiedad << endl;
+						//~ cout << "Cadena Propiedad " << nom_propiedad << endl;
 						agregar_valorApropiedad(nom_clase, (string)it->first, nom_propiedad, (string)"");}
 				
 				}
@@ -229,7 +229,7 @@ class OA{
 					eventos[num_eventos] = new Evento(nom_evento, nom_propActiva, valor_futuro, expresion);
 					//Descomponer expresion y ver que variables tiene para agregar el evento a esas propiedades
 					for(int i = 0; i < c_v; i++){
-						cout << "La propiedad " << variables[i]<< " esta en la condicion" << endl;
+						//~ cout << "La propiedad " << variables[i]<< " esta en la condicion" << endl;
 						(get_propiedad( variables[i] ))->agregar_evento( eventos[num_eventos] );
 					
 					}
@@ -262,7 +262,7 @@ class OA{
 					eventos[num_eventos] = new Evento(nom_evento, nom_propActiva, valor_futuro, expresion);
 					//Descomponer expresion y ver que variables tiene para agregar el evento a esas propiedades
 					for(int i = 0; i < c_v; i++){
-						cout << "La propiedad " << variables[i]<< " esta en la condicion" << endl;
+						//~ cout << "La propiedad " << variables[i]<< " esta en la condicion" << endl;
 						(get_propiedad( variables[i] ))->agregar_evento( eventos[num_eventos] );
 					
 					}
@@ -295,7 +295,7 @@ class OA{
 					eventos[num_eventos] = new Evento(nom_evento, nom_propActiva, valor_futuro, expresion);
 					//Descomponer expresion y ver que variables tiene para agregar el evento a esas propiedades
 					for(int i = 0; i < c_v; i++){
-						cout << "La propiedad " << variables[i]<< " esta en la condicion" << endl;
+						//~ cout << "La propiedad " << variables[i]<< " esta en la condicion" << endl;
 						(get_propiedad( variables[i] ))->agregar_evento( eventos[num_eventos] );
 					}
 					num_eventos = num_eventos + 1;
@@ -482,7 +482,7 @@ class OA{
 		}
 		
 		if( entrar ){ //Si existe la instancia, la propiedad y la clase
-			cout << "nom_propiedad " << nom_propiedad << " get_propiedad(nom_propiedad)->get_tipo() " << get_propiedad(nom_propiedad)->get_tipo() << " valor " << valor << endl;
+			//~ cout << "nom_propiedad " << nom_propiedad << " get_propiedad(nom_propiedad)->get_tipo() " << get_propiedad(nom_propiedad)->get_tipo() << " valor " << valor << endl;
 			band = i->agregar_valor_propiedad(nom_propiedad,get_propiedad(nom_propiedad)->get_tipo() , valor);//Si se agrega el valor correctamente
 			//Antes se activaban aqui los eventos			
 		}
@@ -514,7 +514,7 @@ class OA{
 		}
 		
 		if( entrar ){ //Si existe la instancia, la propiedad y la clase
-			cout << "nom_propiedad " << nom_propiedad << " get_propiedad(nom_propiedad)->get_tipo() " << get_propiedad(nom_propiedad)->get_tipo() << " valor " << valor << endl;
+			//~ cout << "nom_propiedad " << nom_propiedad << " get_propiedad(nom_propiedad)->get_tipo() " << get_propiedad(nom_propiedad)->get_tipo() << " valor " << valor << endl;
 			band = i->agregar_valor_propiedad(nom_propiedad, get_propiedad(nom_propiedad)->get_tipo(),valor );//Si se agrega el valor correctamente
 			//Antes se activaban aqui los eventos			
 		}
@@ -547,10 +547,8 @@ class OA{
 		
 		if( entrar ){ //Si existe la instancia, la propiedad y la clase
 			
-			cout << "nom_propiedad " << nom_propiedad << " get_propiedad(nom_propiedad)->get_tipo() " << get_propiedad(nom_propiedad)->get_tipo() << " valor " << valor << endl;
-//			band = i->agregar_valor_propiedad(nom_propiedad, get_propiedad(nom_propiedad)->get_tipo(), valor);//Si se agrega el valor correctamente
-
-				band = i->agregar_valor_propiedad(nom_propiedad, get_propiedad(nom_propiedad)->get_tipo(), valor);
+			//~ cout << "nom_propiedad " << nom_propiedad << " get_propiedad(nom_propiedad)->get_tipo() " << get_propiedad(nom_propiedad)->get_tipo() << " valor " << valor << endl;
+			band = i->agregar_valor_propiedad(nom_propiedad, get_propiedad(nom_propiedad)->get_tipo(), valor);
 			
 			//Antes se activaban aqui los eventos			
 		}
@@ -562,25 +560,36 @@ class OA{
 	}
 
 	//Pre:Comprobar que existe propiedad i->existe_propiedad()
-	int OA::consultar_propiedad_instancia(string nom_clase, string nom_instancia, string nom_propiedad){
+	string OA::consultar_propiedad_instancia(string nom_clase, string nom_instancia, string nom_propiedad){
 		Instancia *i;
-		//NO SE COMO DEVOLVER DISTINTOS VALORES :(
+		string v = "";
 		i = get_instancia(nom_clase, nom_instancia);
-		struct var *valor;
-		valor = i->get_valor_propiedad(nom_propiedad);
-		
-		if(valor->val.type == ENTERO)
-			cout << "Valor de "<< nom_propiedad << " " << valor->val.ival << endl;
-		if(valor->val.type == REAL)
-			cout << "Valor de "<< nom_propiedad << " " << valor->val.rval << endl;
-		if(valor->val.type == CADENA)
-			cout << "Valor de "<< nom_propiedad << " " << valor->val.cval << endl;
-		
-		return valor->val.ival;
+		//Retornar los valores de las propiedad que se consulten, pero en formato string
+		if( i->existe_propiedad(nom_propiedad) ){
+			struct var *valor;
+			valor = i->get_valor_propiedad(nom_propiedad);
+			
+			if(valor->val.type == ENTERO){
+				//~ cout << "Valor de "<< nom_propiedad << " " << valor->val.ival << endl;
+				v = EnteroAString( valor->val.ival  );
+				
+				}
+			if(valor->val.type == REAL){
+				//~ cout << "Valor de "<< nom_propiedad << " " << valor->val.rval << endl;
+				v = DoubleAString( valor->val.rval );
+				}
+			if(valor->val.type == CADENA){
+				//~ cout << "Valor de "<< nom_propiedad << " " << valor->val.cval << endl;
+				v = string( valor->val.cval );
+			
+			}
+		}
+
+		return v;
 	}
 
 	
-	bool OA::activar_eventos(string n_c, string n_e){
+	bool OA::activar_eventos(string nom_clase, string nom_evento){
 	
 		bool band = true;
 		Clase *cl;
@@ -588,44 +597,53 @@ class OA{
 		Evento *e;
 		valor_r *va;
 		int k;
-	
-		/*if( !cl->existe_instancia(n_i) ){
-			band = false;
-		}*/
 				
-		cl = get_clase(n_c); //Obtengo el apuntador a la clase donde se activarán los eventos
-		e = get_evento(n_e); //Obtengo el apuntador al evento que se activará
+		cl = get_clase(nom_clase); //Obtengo el apuntador a la clase donde se activarán los eventos
+		e = get_evento(nom_evento); //Obtengo el apuntador al evento que se activará
 		
-		/**********Se tiene que activar para todas las instancias debo hacer ese ciclo ******/
-		i = get_instancia(n_c, "Instancia1"); //Obtengo el apuntador a la instancia en donde se investigara si existe el evento
+		map<string, int>::const_iterator it; //Iterador
+		map<string, int> *portMap; //apuntador a hash
+		portMap = cl->get_instancias(); //consulto tabla hash de las propiedades del padre
+		for(it = portMap->begin(); it != portMap->end(); ++it){//Iterando
 		
-		if( e != NULL && i != NULL){
+			/**********Se tiene que activar para todas las instancias debo hacer ese ciclo ******/
+			i = get_instancia(nom_clase, (string)it->first); //Obtengo el apuntador a la instancia en donde se investigara si existe el evento
 			
-			if( i->validar_expresion( e->get_expresion()) ) {
-				
-				for(k = 0; k < e->get_num_prop_act() ; k++){
-					va = e->get_valor_nuevo(k);
-						
-					if(va->tipo == ENTERO){
-						i->agregar_valor_propiedad( e->get_nombre_propiedad(k), get_propiedad(e->get_nombre_propiedad(k))->get_tipo(), va->ival );
+			
+		cout << "Instancia: " << it->first << ", Posicion: " << instancias[(int)it->second - 1]->get_nombre() << endl;//Clave y Valor
+    		
+			
+			if( e != NULL && i != NULL){
+				//Aqui ira un for con todas las expresiones del evento que se podrian cumplir
+				if( i->validar_expresion( e->get_expresion()) ) {
+					
+					for(k = 0; k < e->get_num_prop_act() ; k++){
+						va = e->get_valor_nuevo(k);
+							
+						if(va->tipo == ENTERO){
+							i->agregar_valor_propiedad( e->get_nombre_propiedad(k), get_propiedad(e->get_nombre_propiedad(k))->get_tipo(), va->ival );
+						}
+						else if(va->tipo == REAL){
+							i->agregar_valor_propiedad( e->get_nombre_propiedad(k), get_propiedad(e->get_nombre_propiedad(k))->get_tipo(), va->rval );
+						}
+						else if(va->tipo == CADENA){
+						i->agregar_valor_propiedad( e->get_nombre_propiedad(k), get_propiedad(e->get_nombre_propiedad(k))->get_tipo(), va->cval );
+						}
 					}
-					else if(va->tipo == REAL){
-						i->agregar_valor_propiedad( e->get_nombre_propiedad(k), get_propiedad(e->get_nombre_propiedad(k))->get_tipo(), va->rval );
-					}
-					else if(va->tipo == CADENA){
-					i->agregar_valor_propiedad( e->get_nombre_propiedad(k), get_propiedad(e->get_nombre_propiedad(k))->get_tipo(), va->cval );
-					}
+					cout << "Cumple con la condicion" << endl << endl;
 				}
-				cout << "Cumple con la condicion" << endl;
+				else{
+					cout << "NO Cumple con la condicion" << endl << endl;
+				}
+				
+				
 			}
 			else{
-				cout << "NO Cumple con la condicion" << endl;
+				cout << "El evento es NULL o La instancia es NULL" << endl;		
 			}
-			
-			
-		}
-		else{
-			cout << "El evento es NULL o La instancia es NULL" << endl;		
+
+		
+		
 		}
 
 		/*
@@ -634,6 +652,8 @@ class OA{
 		map<string, int> *portMap; //apuntador a hash
 		portMap = cl->get_instancias(); //consulto tabla hash de las propiedades del padre
 		for(it = portMap->begin(); it != portMap->end(); ++it){//Iterando
+		* 
+		* 
 			//Recorriendo las instancias de la clase cl
     		cout << "Instancia: " << it->first << ", Posicion: " << instancias[(int)it->second - 1]->get_nombre() << endl;//Clave y Valor
     		
@@ -646,31 +666,7 @@ class OA{
 			n_e = p->get_num_eventos();//Consulto el numero de eventos que tienen a dicha propiedad en su condicion booleana
 			if( band && n_e > 0){ //Si se agrego correctamente el valor a la propiedad de la instancia, y esta propiedad esta en alguna condicion booleana
 				
-				for(j = 0; j < n_e; j++){
-					e = p->get_evento( j );
-					//Aqui ira un for con todas las expresiones del evento que se podrian cumplir
-					if( i->validar_expresion( e->get_expresion()) ) {
-						
-						for(k = 0; k < e->get_num_prop_act() ; k++){
-							va = e->get_valor_nuevo(k);
-						
-							if(va->tipo == ENTERO){
-								i->agregar_valor_propiedad( e->get_nombre_propiedad(k), va->ival );
-							}
-							else if(va->tipo == REAL){
-								///////////////////////
-							}
-							else if(va->tipo == CHAR){
-								//////////////////////
-							}
-						}
-						cout << "Cumple con la condicion" << endl;
 				
-					}
-					else{
-						cout << "NO Cumple con la condicion" << endl;
-					}
-				}
 			}
 			else{
 				cout << "NO esta en ninguna condicion booleana" << endl;

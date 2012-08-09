@@ -47,10 +47,10 @@ int main(){
 	}
 
 	//Crear 2 instancias para cada una de las primeras 7500 clases, 50
-	for(j = 1; j <= 2 ; j++){ //7500
+	for(j = 1; j <= 50 ; j++){ //7500
 		stringstream ff;
 		ff << j;	
-		for(i = 1; i <= 2 ; i++){//50
+		for(i = 1; i <= 50 ; i++){//50
 			stringstream ss;
 			ss << i;
 		
@@ -93,52 +93,85 @@ int main(){
 	}
 
 
+/*
+terminate called after throwing an instance of 'std::logic_error'
+  what():  basic_string::_S_construct null not valid
+Abortado (`core' generado)*/
+
+	oa_bd->agregar_subclase("Clase3", "Clase2");
+
 	//CREAR VARIABLES
-	cout << "/***************************************************************/" <<endl << endl << endl;
+	cout << "/************************* CREAR VARIABLES *************************************/" <<endl;
+	//Se crean las propiedades y se inicializan
 	cout << oa_bd->crear_propiedad("Clase2", "NumMuertes", ENTERO) << endl;
 	cout << oa_bd->crear_propiedad("Clase2", "Velocidad", REAL) << endl;
 	cout << oa_bd->crear_propiedad("Clase2", "Nombre", CADENA) << endl;
 	cout << oa_bd->crear_propiedad("Clase2", "AlertarA", CADENA)<< endl;
 	cout << oa_bd->crear_propiedad("Clase2", "Apellido", CADENA)<< endl;
-	cout << oa_bd->crear_propiedad("Clase2", "Velocidad2", REAL) << endl;
 	
 	
 	//CREAR EVENTO
-	cout << "/***************************************************************/" <<endl << endl << endl;
+	cout << "/**************************** CREAR EVENTO **********************************/" <<endl;
 	cout << oa_bd->crear_evento("Clase2", "OcurreDesastreNatural", "AlertarA", "CruzRoja","NumMuertes > 0 || Nombre == \"HOLA\" ") << endl << endl;
 	
 	
 	//CONSULTAR VALORES
-	cout << "/***************************************************************/" <<endl << endl << endl;
+	cout << "/****************************  CONSULTAR VALORES ***********************************/" <<endl;
 	
 	cout << "Consultando NumMuertes = " << oa_bd->consultar_propiedad_instancia("Clase2", "Instancia1", "NumMuertes") << endl;
 	cout << "Consultando Velocidad = " << oa_bd->consultar_propiedad_instancia("Clase2", "Instancia1", "Velocidad") << endl; //Hay que Comprobar que existe la propiedad y la propiedad existe en esa instancias
-	cout << "Consultando Velocidad2 = " << oa_bd->consultar_propiedad_instancia("Clase2", "Instancia1", "Velocidad2") << endl;
 	cout << "Consultando AlertarA = " << oa_bd->consultar_propiedad_instancia("Clase2", "Instancia1", "AlertarA") << endl;
 	cout << "Consultando Apellido = " << oa_bd->consultar_propiedad_instancia("Clase2", "Instancia1", "Apellido") << endl;
 	cout << "Consultando Nombre = " << oa_bd->consultar_propiedad_instancia("Clase2", "Instancia1", "Nombre") << endl;
-	
+
 	//ASIGNAR VALORES
-	cout << "/***************************************************************/" <<endl << endl << endl;
+	cout << "/*************************** ASIGNAR VALORES ************************************/" <<endl;
 	cout << oa_bd->agregar_valorApropiedad("Clase2", "Instancia1", "Nombre", (string)"Yanina Gabriela")<< endl;
 	cout << oa_bd->agregar_valorApropiedad("Clase2", "Instancia1", "AlertarA", (string)"Nadie")<< endl;
 	cout << oa_bd->agregar_valorApropiedad("Clase2", "Instancia1", "Apellido", (string)"Aular Osorio")<< endl;
 	cout << oa_bd->agregar_valorApropiedad("Clase2", "Instancia1", "NumMuertes", 89)<< endl;
 	cout << oa_bd->agregar_valorApropiedad("Clase2", "Instancia1", "Velocidad", 800.5)<< endl;
-	cout << oa_bd->agregar_valorApropiedad("Clase2", "Instancia1", "Velocidad2", 300.5)<< endl;
+
+	//ASIGNAR VALORES 2
+	cout << "/*************************** ASIGNAR VALORES 2 ************************************/" <<endl;
+	cout << oa_bd->agregar_valorApropiedad("Clase2", "Instancia2", "Nombre", (string)"Nombre_2")<< endl;
+	cout << oa_bd->agregar_valorApropiedad("Clase2", "Instancia2", "AlertarA", (string)"Nadie")<< endl;
+	cout << oa_bd->agregar_valorApropiedad("Clase2", "Instancia2", "Apellido", (string)"Apellido_2")<< endl;
+	cout << oa_bd->agregar_valorApropiedad("Clase2", "Instancia2", "NumMuertes", 0)<< endl;
+	cout << oa_bd->agregar_valorApropiedad("Clase2", "Instancia2", "Velocidad", 3)<< endl;
+
+	
+	cout << oa_bd->agregar_valorApropiedad("Clase3", "Instancia7", "NumMuertes", 13)<< endl;
 	
 	//ACTIVAR EVENTO
-	//cout << "/***************************************************************/" <<endl << endl << endl;
-	oa_bd->activar_eventos("Clase2", "OcurreDesastreNatural");
+	cout << "/***************************** ACTIVAR EVENTO **********************************/" <<endl;
+	oa_bd->activar_eventos("Clase3", "OcurreDesastreNatural");
 	
 	//MAS CONSULTA DE VALORES
-	cout << "/***************************************************************/" <<endl << endl << endl;
-	cout << "Consultando NumMuertes = " << oa_bd->consultar_propiedad_instancia("Clase2", "Instancia1", "NumMuertes") << endl;
-	cout << "Consultando Velocidad = " << oa_bd->consultar_propiedad_instancia("Clase2", "Instancia1", "Velocidad") << endl; //Hay que Comprobar que existe la propiedad y la propiedad existe en esa instancias
-	cout << "Consultando Velocidad2 = " << oa_bd->consultar_propiedad_instancia("Clase2", "Instancia1", "Velocidad2") << endl;
-	cout << "Consultando AlertarA = " << oa_bd->consultar_propiedad_instancia("Clase2", "Instancia1", "AlertarA") << endl;
-	cout << "Consultando Nombre = " << oa_bd->consultar_propiedad_instancia("Clase2", "Instancia1", "Nombre") << endl;
+	
+	
+	for(j = 2; j <= 3 ; j++){ //7500
+		stringstream ff;
+		ff << j;	
+		cout << "/******************** MAS CONSULTA DE VALORES "<< ff.str() <<" ********************/" <<endl;
+		
+		for(i = 1; i <= 7 ; i++){//50
+			stringstream ss;
+			ss << i;
+		
+			c = "Instancia" + ss.str() ;	
+			c2 = "Clase" + ff.str();
+	cout << c << " " << c2 << endl; 	
+	cout << "Consultando NumMuertes = " << oa_bd->consultar_propiedad_instancia(c2, c, "NumMuertes") << endl;
+	cout << "Consultando Velocidad = " << oa_bd->consultar_propiedad_instancia(c2, c, "Velocidad") << endl; //Hay que Comprobar que existe la propiedad y la propiedad existe en esa instancias
+	cout << "Consultando AlertarA = " << oa_bd->consultar_propiedad_instancia(c2, c, "AlertarA") << endl;
+	cout << "Consultando Nombre = " << oa_bd->consultar_propiedad_instancia(c2, c, "Nombre") << endl;
+	cout << "Consultando Apellido = " << oa_bd->consultar_propiedad_instancia(c2, c, "Apellido") << endl << endl;
 
-	cout << "Consultando Apellido = " << oa_bd->consultar_propiedad_instancia("Clase2", "Instancia1", "Apellido") << endl;
+				
+		}
+	}
+	
+
 	return EXIT_SUCCESS;
 }
