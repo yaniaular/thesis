@@ -142,23 +142,15 @@ class OA{
 				else{
 					instancias[num_instancias] = new Instancia(nom_instancia, cl );
 					
-								//Agregar las propiedades de la superclase a la clase
+					//Agregar las propiedades de la superclase a la clase
 					map<string, int>::const_iterator it; //Iterador
 					map<string, int> *portMap; //apuntador a hash
 					portMap = cl->get_propiedades(); //consulto tabla hash de las propiedades del padre
 					for(it = portMap->begin(); it != portMap->end(); ++it){//Iterando
 					//Voy agregando las propiedades del padre al hijo
     				tipo_propiedad = get_propiedad( (string)it->first )->get_tipo();
-    				
-    				//inicializar_instancia(tipo_propiedad, nom_clase, nom_instancia, (string)it->first);
-    				
-    				if(tipo_propiedad == ENTERO)
-						instancias[num_instancias]->agregar_valor_propiedad((string)it->first, tipo_propiedad ,-1);
-					else if(tipo_propiedad == REAL)
-						instancias[num_instancias]->agregar_valor_propiedad((string)it->first, tipo_propiedad , -1.0);
-					else if(tipo_propiedad == CADENA)
-						instancias[num_instancias]->agregar_valor_propiedad((string)it->first, tipo_propiedad , (string)"");
-					
+    				inicializar_instancia(tipo_propiedad, nom_clase, nom_instancia, (string)it->first);
+
 					}
 					cl->agregar_instancia(nom_instancia, num_instancias);
 					num_instancias+=1;
@@ -234,7 +226,9 @@ class OA{
 					
 					eventos[num_eventos] = new Evento(nom_evento, nom_propActiva, valor_futuro, expresion);
 					//Descomponer expresion y ver que variables tiene para agregar el evento a esas propiedades
-					
+					//Esto se hacia con el fin de que al cambiar el valor de una propiedad, se verificara
+					// los eventos que dependian de esa propiedad en la clase Propiedad.h
+					// y luego activar dichos eventos
 					/*for(int i = 0; i < c_v; i++){
 						//~ cout << "La propiedad " << variables[i]<< " esta en la condicion" << endl;
 						(get_propiedad( variables[i] ))->agregar_evento( eventos[num_eventos] );
@@ -266,10 +260,10 @@ class OA{
 				if( cl->comprobar_expresion(expresion, variables, &c_v)==0 ){
 					eventos[num_eventos] = new Evento(nom_evento, nom_propActiva, valor_futuro, expresion);
 					//Descomponer expresion y ver que variables tiene para agregar el evento a esas propiedades
-					for(int i = 0; i < c_v; i++){
+					/*for(int i = 0; i < c_v; i++){
 						//~ cout << "La propiedad " << variables[i]<< " esta en la condicion" << endl;
 						(get_propiedad( variables[i] ))->agregar_evento( eventos[num_eventos] );
-					}
+					}*/
 					num_eventos = num_eventos + 1;
 					band = true;
 				}
@@ -672,20 +666,6 @@ class OA{
 		
 		}
 
-		/*
-		
-		map<string, int>::const_iterator it; //Iterador
-		map<string, int> *portMap; //apuntador a hash
-		portMap = cl->get_instancias(); //consulto tabla hash de las propiedades del padre
-		for(it = portMap->begin(); it != portMap->end(); ++it){//Iterando
-		* 
-		* 
-			//Recorriendo las instancias de la clase cl
-    		cout << "Instancia: " << it->first << ", Posicion: " << instancias[(int)it->second - 1]->get_nombre() << endl;//Clave y Valor
-    		
-		
-		}*/
-	
 		return band;
 		/*
 			p = get_propiedad(nom_propiedad);//Obtengo el apuntador a la propiedad

@@ -181,6 +181,24 @@ Abortado (`core' generado)*/
 		}
 	}
 
+	c = "Clase2";
+	in =  "INSTANCIA_NUEVA";
+	oa_bd->crear_instancia( in, c );
+
+	if( (oa_bd->get_clase(c))->existe_propiedad( "NumMuertes" ) )
+	cout << "Consultando NumMuertes = " << oa_bd->consultar_propiedad_instancia(c, in, "NumMuertes") << endl;
+	
+	if( (oa_bd->get_clase(c))->existe_propiedad( "Velocidad" ) )
+	cout << "Consultando Velocidad = " << oa_bd->consultar_propiedad_instancia(c, in, "Velocidad") << endl; //Hay que Comprobar que existe la propiedad y la propiedad existe en esa instancias
+	
+	if( (oa_bd->get_clase(c))->existe_propiedad( "AlertarA" ) )
+	cout << "Consultando AlertarA = " << oa_bd->consultar_propiedad_instancia(c, in, "AlertarA") << endl;
+	
+	if( (oa_bd->get_clase(c))->existe_propiedad( "Nombre" ) )
+	cout << "Consultando Nombre = " << oa_bd->consultar_propiedad_instancia(c, in, "Nombre") << endl;
+	
+	if( (oa_bd->get_clase(c))->existe_propiedad( "Apellido" ) )
+	cout << "Consultando Apellido = " << oa_bd->consultar_propiedad_instancia(c, in, "Apellido") << endl << endl;
 		
 /*  Se hace la lectura por archivos de las consultas reactivas:
  *  Se verifica la correctitud de la sintaxis
