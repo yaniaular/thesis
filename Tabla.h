@@ -4,6 +4,10 @@
 #include <kcstashdb.h>
 #include <string.h>
 #include <map>
+#include <fstream>
+#include <limits.h>
+#include <float.h>
+#include <cstdlib>
 
 #define C 15000
 #define I 15000

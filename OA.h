@@ -1,6 +1,5 @@
 #ifndef OA_H_
 #define OA_H_
-#include <cstdlib>
 #include "Instancia.h"
 #include "Propiedad.h"
 
@@ -22,6 +21,7 @@ class OA{
 	public:
 		OA(); //Constructor 
 		bool crear_clase(string nom_clase);
+		bool inicializar_instancia(int tipo_propiedad, string nom_clase, string nom_instancia, string nom_propiedad);
 		bool crear_instancia(string nom_instancia, string nom_clase);
 		bool crear_propiedad(string nom_clase, string nom_propiedad, int tipo_propiedad);
 		
@@ -102,6 +102,28 @@ class OA{
 		return se_creo;
 	}
 	
+	bool OA::inicializar_instancia(int tipo_propiedad, string nom_clase, string nom_instancia, string nom_propiedad){
+		bool band = false;
+		
+			if(tipo_propiedad == ENTERO){	
+				//~ cout << "Entero Propiedad " << nom_propiedad << endl;
+				agregar_valorApropiedad(nom_clase, nom_instancia, nom_propiedad, INT_MIN);//Inicializo
+				band = true;
+			}
+			else if(tipo_propiedad == REAL){
+				//~ cout << "Real Propiedad " << nom_propiedad << endl;
+				agregar_valorApropiedad(nom_clase, nom_instancia, nom_propiedad, DBL_MIN);
+				band = true;
+			}
+			else if(tipo_propiedad == CADENA){
+				//~ cout << "Cadena Propiedad " << nom_propiedad << endl;
+				agregar_valorApropiedad(nom_clase, nom_instancia, nom_propiedad, "");
+				band = true;
+			}
+			return band;
+		
+		}
+	
 	bool OA::crear_instancia(string nom_instancia, string nom_clase){
 		bool se_creo = false;
 		Clase *cl = get_clase(nom_clase);
@@ -127,14 +149,17 @@ class OA{
 					for(it = portMap->begin(); it != portMap->end(); ++it){//Iterando
 					//Voy agregando las propiedades del padre al hijo
     				tipo_propiedad = get_propiedad( (string)it->first )->get_tipo();
+    				
+    				//inicializar_instancia(tipo_propiedad, nom_clase, nom_instancia, (string)it->first);
+    				
     				if(tipo_propiedad == ENTERO)
 						instancias[num_instancias]->agregar_valor_propiedad((string)it->first, tipo_propiedad ,-1);
 					else if(tipo_propiedad == REAL)
 						instancias[num_instancias]->agregar_valor_propiedad((string)it->first, tipo_propiedad , -1.0);
 					else if(tipo_propiedad == CADENA)
 						instancias[num_instancias]->agregar_valor_propiedad((string)it->first, tipo_propiedad , (string)"");
-					}
 					
+					}
 					cl->agregar_instancia(nom_instancia, num_instancias);
 					num_instancias+=1;
 					se_creo = true;
@@ -143,6 +168,8 @@ class OA{
 		}
 		return se_creo;
 	}
+	
+
 	
 	bool OA::crear_propiedad(string nom_clase, string nom_propiedad, int tipo_propiedad){
 		bool band = false;
@@ -163,20 +190,9 @@ class OA{
 				//Inicializar nueva propiedad a las instancias de la clase
 				map<string, int>::const_iterator it; //Iterador
 				map<string, int> *portMap; //apuntador a hash
-				portMap = cl->get_instancias(); //consulto tabla hash de las propiedades del padre
+				portMap = cl->get_instancias(); //consulto tabla hash de las instancias
 				for(it = portMap->begin(); it != portMap->end(); ++it){//Iterando
-					
-					if(tipo_propiedad == ENTERO){	
-						//~ cout << "Entero Propiedad " << nom_propiedad << endl;
-						agregar_valorApropiedad(nom_clase, (string)it->first, nom_propiedad, -1);//Inicializo
-					}
-					else if(tipo_propiedad == REAL){
-						//~ cout << "Real Propiedad " << nom_propiedad << endl;
-						agregar_valorApropiedad(nom_clase, (string)it->first, nom_propiedad, -1.0);
-					}
-					else if(tipo_propiedad == CADENA){
-						//~ cout << "Cadena Propiedad " << nom_propiedad << endl;
-						agregar_valorApropiedad(nom_clase, (string)it->first, nom_propiedad, (string)"");}
+					inicializar_instancia(tipo_propiedad, nom_clase, (string)it->first, nom_propiedad);
 				
 				}
 				
@@ -185,26 +201,16 @@ class OA{
 					for(i = 0; i < num_hijos; i++){
 						Clase *p = cl->get_hijo(i);
 						p->agregar_propiedad(nom_propiedad, num_propiedades);
-					
 						//Inicializar nueva propiedad a las instancias de la clase
 						portMap = p->get_instancias(); //consulto tabla hash de las propiedades del padre
 						for(it = portMap->begin(); it != portMap->end(); ++it){//Iterando
-							if(tipo_propiedad == ENTERO){
-				agregar_valorApropiedad(p->get_nombre(), (string)it->first, nom_propiedad, -1);//Inicializo cada una de las instancias de las clases hijas
-							}
-							else if(tipo_propiedad == REAL){
-				agregar_valorApropiedad(p->get_nombre(), (string)it->first, nom_propiedad, (double)-1.0);}
-							else if(tipo_propiedad == CADENA){
-				agregar_valorApropiedad(p->get_nombre(), (string)it->first, nom_propiedad, (string)"");
-				}
+							inicializar_instancia(tipo_propiedad, p->get_nombre(), (string)it->first, nom_propiedad);
 						}
-					
 					}
 				}
 				num_propiedades = num_propiedades + 1;
 				band = true;
 			}
-
 		}
 		return band;
 	}
@@ -213,12 +219,12 @@ class OA{
 	bool OA::crear_evento(string nom_clase, string nom_evento, string nom_propActiva, int valor_futuro, string expresion){
 		bool band = false;
 		int i, c_v = 0;
-		string variables[P]; 
+		string variables[P]; //Aqui se guardan el nombre de las variables de la expresion.
 
 		Clase *cl = get_clase(nom_clase);
 		
 		//Si el evento ya existe y la prop_Activa es la misma, agregar la expresion al evento existente
-		if( get_evento(nom_evento) == NULL && get_propiedad(nom_propActiva) != NULL && num_eventos < E){
+		if( cl->existe_propiedad(nom_propActiva) && get_evento(nom_evento) == NULL && get_propiedad(nom_propActiva) != NULL && num_eventos < E){
 			if( !event->set(nom_evento, EnteroAString(num_eventos) ) ){
 				cout << "Error creando clase: " << event->error().name() << endl;
 			}
@@ -228,11 +234,12 @@ class OA{
 					
 					eventos[num_eventos] = new Evento(nom_evento, nom_propActiva, valor_futuro, expresion);
 					//Descomponer expresion y ver que variables tiene para agregar el evento a esas propiedades
-					for(int i = 0; i < c_v; i++){
+					
+					/*for(int i = 0; i < c_v; i++){
 						//~ cout << "La propiedad " << variables[i]<< " esta en la condicion" << endl;
 						(get_propiedad( variables[i] ))->agregar_evento( eventos[num_eventos] );
+					}*/
 					
-					}
 					num_eventos = num_eventos + 1;
 					band = true;
 				}
@@ -250,21 +257,18 @@ class OA{
 		Clase *cl = get_clase(nom_clase);
 		
 		//Si el evento ya existe y la prop_Activa es la misma, agregar la expresion al evento existente
-		if( get_evento(nom_evento) == NULL && get_propiedad(nom_propActiva) != NULL && num_eventos < E){
+		if( cl->existe_propiedad(nom_propActiva) && get_evento(nom_evento) == NULL && get_propiedad(nom_propActiva) != NULL && num_eventos < E){
 			if( !event->set(nom_evento, EnteroAString(num_eventos) ) ){
 				cout << "Error creando clase: " << event->error().name() << endl;
 			}
 			else{
 				//validar que la expresion sea correcta							
 				if( cl->comprobar_expresion(expresion, variables, &c_v)==0 ){
-				
-					
 					eventos[num_eventos] = new Evento(nom_evento, nom_propActiva, valor_futuro, expresion);
 					//Descomponer expresion y ver que variables tiene para agregar el evento a esas propiedades
 					for(int i = 0; i < c_v; i++){
 						//~ cout << "La propiedad " << variables[i]<< " esta en la condicion" << endl;
 						(get_propiedad( variables[i] ))->agregar_evento( eventos[num_eventos] );
-					
 					}
 					num_eventos = num_eventos + 1;
 					band = true;
@@ -284,23 +288,26 @@ class OA{
 		Clase *cl = get_clase(nom_clase);
 		
 		//Si el evento ya existe y la prop_Activa es la misma, agregar la expresion al evento existente
-		if( get_evento(nom_evento) == NULL && get_propiedad(nom_propActiva) != NULL && num_eventos < E){
+		if( cl->existe_propiedad(nom_propActiva) && get_evento(nom_evento) == NULL && get_propiedad(nom_propActiva) != NULL && num_eventos < E){
 			if( !event->set(nom_evento, EnteroAString(num_eventos) ) ){
 				cout << "Error creando clase: " << event->error().name() << endl;
 			}
 			else{
-				//validar que la expresion sea correcta							
+				//validar que la expresion sea correcta
+								
 				if( cl->comprobar_expresion(expresion, variables, &c_v)==0 ){
-				
 					eventos[num_eventos] = new Evento(nom_evento, nom_propActiva, valor_futuro, expresion);
 					//Descomponer expresion y ver que variables tiene para agregar el evento a esas propiedades
-					for(int i = 0; i < c_v; i++){
+					/*for(int i = 0; i < c_v; i++){
 						//~ cout << "La propiedad " << variables[i]<< " esta en la condicion" << endl;
 						(get_propiedad( variables[i] ))->agregar_evento( eventos[num_eventos] );
-					}
+					}*/
 					num_eventos = num_eventos + 1;
 					band = true;
 				}
+				else{
+					cout << "La expresion no es correcta, puede que tenga alguna propiedad que no exista en la clase o la expresion este mal formulada" << endl;
+					}
 			}
 		}
 		
@@ -401,6 +408,7 @@ class OA{
 	//Si devuelve verdadero se agrego el padre, sino, no se pudo
 	bool OA::agregar_subclase(string nom_clase, string nom_padre){
 		//Ver si existe n_clase y n_padre y devolver el puntero
+		int tipo_propiedad;
 		bool todo_bien = false;
 		Clase *hijo = get_clase(nom_clase);
 		Clase *padre = get_clase(nom_padre);
@@ -430,12 +438,30 @@ class OA{
 			portMap = padre->get_propiedades(); //consulto tabla hash de las propiedades del padre
 			for(it = portMap->begin(); it != portMap->end(); ++it){//Iterando
 				//Voy agregando las propiedades del padre al hijo
-    			hijo->agregar_propiedad(it->first, it->second);//Clave y Valor
+    			hijo->agregar_propiedad(it->first, it->second);//Agrego propiedad al hijo, y abajo a sus descendientes
+    			tipo_propiedad = get_propiedad( (string)it->first )->get_tipo();
+    			
+    			//Inicializar nueva propiedad a las instancias de la clase
+				map<string, int>::const_iterator ins; //Iterador
+				map<string, int> *portMap_ins; //apuntador a hash
+				portMap_ins = hijo->get_instancias(); //consulto tabla hash de las instancias
+				for(ins = portMap_ins->begin(); ins != portMap_ins->end(); ++ins){//Iterando
+					inicializar_instancia(  tipo_propiedad  , nom_clase, (string)ins->first, (string)it->first);
+				
+				}
+    			
     			
     			//Tambien agrego las propiedades a los descendientes del hijo
 				for(int i = 0; i < num_hijos; i++){//Agregar propiedades del padre a los descendientes del hijo
 					Clase *h = hijo->get_hijo(i);
 					h->agregar_propiedad(it->first, it->second);//Clave y Valor
+				
+					 //Inicializar nueva propiedad a las instancias de la clase
+					portMap_ins = h->get_instancias(); //consulto tabla hash de las instancias
+					for(ins = portMap_ins->begin(); ins != portMap_ins->end(); ++ins){//Iterando
+						inicializar_instancia(  tipo_propiedad  , h->get_nombre(), (string)ins->first, (string)it->first);
+					
+					}
 				}
 			}
 			todo_bien = true;
@@ -546,10 +572,8 @@ class OA{
 		}
 		
 		if( entrar ){ //Si existe la instancia, la propiedad y la clase
-			
 			//~ cout << "nom_propiedad " << nom_propiedad << " get_propiedad(nom_propiedad)->get_tipo() " << get_propiedad(nom_propiedad)->get_tipo() << " valor " << valor << endl;
 			band = i->agregar_valor_propiedad(nom_propiedad, get_propiedad(nom_propiedad)->get_tipo(), valor);
-			
 			//Antes se activaban aqui los eventos			
 		}
 		else{
@@ -584,6 +608,9 @@ class OA{
 			
 			}
 		}
+		else{
+			cout << "No se encontro la propiedad "<< nom_propiedad << " en la clase "<< nom_clase << endl;
+			}
 
 		return v;
 	}
@@ -604,15 +631,14 @@ class OA{
 		map<string, int>::const_iterator it; //Iterador
 		map<string, int> *portMap; //apuntador a hash
 		portMap = cl->get_instancias(); //consulto tabla hash de las propiedades del padre
-		for(it = portMap->begin(); it != portMap->end(); ++it){//Iterando
+		
+		for(it = portMap->begin(); it != portMap->end(); ++it){//Iterando por todas las instancias de la clase
 		
 			/**********Se tiene que activar para todas las instancias debo hacer ese ciclo ******/
 			i = get_instancia(nom_clase, (string)it->first); //Obtengo el apuntador a la instancia en donde se investigara si existe el evento
-			
-			
-		cout << "Instancia: " << it->first << ", Posicion: " << instancias[(int)it->second - 1]->get_nombre() << endl;//Clave y Valor
-    		
-			
+					
+			cout << "Instancia: " << it->first << ", Posicion: " << instancias[(int)it->second - 1]->get_nombre() << endl;//Clave y Valor
+    				
 			if( e != NULL && i != NULL){
 				//Aqui ira un for con todas las expresiones del evento que se podrian cumplir
 				if( i->validar_expresion( e->get_expresion()) ) {
