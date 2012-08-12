@@ -16,7 +16,7 @@ class OA{
 		Instancia *(instancias[I]);//Todas las instancias en la BD
 		Propiedad *(propiedades[P]);//Todas las propiedades de la BD
 		Evento *(eventos[E]);
-		StashDB *bd, *ins, *prop, *event;//Indices de las clases, instancias y propiedades
+		StashDB *cla, *ins, *prop, *event;//Indices de las clases, instancias y propiedades
 				
 	public:
 		OA(); //Constructor 
@@ -64,13 +64,13 @@ class OA{
 		num_propiedades = 0;
 		num_eventos = 0;
 		
-		bd = new StashDB();
+		cla = new StashDB();
 		ins = new StashDB();
 		prop = new StashDB();
 		event = new StashDB();
 					
-		if( !bd->open("cofre.kch", StashDB::OWRITER | StashDB::OCREATE) ){
-			cout << "Error al crear el cofre: " << bd->error().name() << endl;
+		if( !cla->open("cofre.kch", StashDB::OWRITER | StashDB::OCREATE) ){
+			cout << "Error al crear el cofre: " << cla->error().name() << endl;
 		}
 		if(!ins->open("instancias.kch", StashDB::OWRITER | StashDB::OCREATE)){
 			cout << "Error al crear el cofre: " << ins->error().name() << endl;
@@ -90,8 +90,8 @@ class OA{
 			
 		if( get_clase(nombre) == NULL && num_clases < C ){		
 			
-			if( !(bd->set(nombre, EnteroAString( num_clases ) )) ){
-				cout << "Error creando clase: " << bd->error().name() << endl;
+			if( !(cla->set(nombre, EnteroAString( num_clases ) )) ){
+				cout << "Error creando clase: " << cla->error().name() << endl;
 			}
 			else{
 				clases[num_clases] = new Clase(nombre);
@@ -210,7 +210,7 @@ class OA{
 
 	bool OA::crear_evento(string nom_clase, string nom_evento, string nom_propActiva, int valor_futuro, string expresion){
 		bool band = false;
-		int i, c_v = 0;
+		int c_v = 0;
 		string variables[P]; //Aqui se guardan el nombre de las variables de la expresion.
 
 		Clase *cl = get_clase(nom_clase);
@@ -245,7 +245,7 @@ class OA{
 
 	bool OA::crear_evento(string nom_clase, string nom_evento, string nom_propActiva, double valor_futuro, string expresion){
 		bool band = false;
-		int i, c_v = 0;
+		int c_v = 0;
 		string variables[P]; 
 
 		Clase *cl = get_clase(nom_clase);
@@ -276,7 +276,7 @@ class OA{
 	
 		bool OA::crear_evento(string nom_clase, string nom_evento, string nom_propActiva, string valor_futuro, string expresion){
 		bool band = false;
-		int i, c_v = 0;
+		int c_v = 0;
 		string variables[P]; 
 
 		Clase *cl = get_clase(nom_clase);
@@ -318,7 +318,7 @@ class OA{
 	Clase* OA::get_clase(string nombre){
 		Clase *r = NULL;
 		string valor;
-		if( bd->get(nombre, &valor) ){
+		if( cla->get(nombre, &valor) ){
 			int n ;
 			istringstream ( valor ) >> n;//Transformo el string en int
 			r = clases[n];
@@ -483,10 +483,7 @@ class OA{
 
 	bool OA::agregar_valorApropiedad(string nom_clase, string nom_instancia, string nom_propiedad, int valor){
 		Instancia *i;
-		Propiedad *p;
-		Evento *e;
 		Clase *c;
-		int j, k, n_e;
 		bool band = false, existe_propiedad_en_la_clase, entrar = false;
 		
 		
@@ -515,10 +512,7 @@ class OA{
 
 	bool OA::agregar_valorApropiedad(string nom_clase, string nom_instancia, string nom_propiedad, double valor){
 		Instancia *i;
-		Propiedad *p;
-		Evento *e;
 		Clase *c;
-		int j, k, n_e;
 		bool band = false, existe_propiedad_en_la_clase, entrar = false;
 		
 		
@@ -547,10 +541,7 @@ class OA{
 
 	bool OA::agregar_valorApropiedad(string nom_clase, string nom_instancia, string nom_propiedad, string valor){
 		Instancia *i;
-		Propiedad *p;
-		Evento *e;
 		Clase *c;
-		int j, k, n_e;
 		bool band = false, existe_propiedad_en_la_clase, entrar = false;
 		
 		
@@ -683,7 +674,6 @@ class OA{
 	}
 	
 	bool OA::existencia_consulta_reactiva(map<string, string> *eventosHash, int n, string cl){
-		int i = 0;
 		bool band = true;
 		map<string, string>::const_iterator it; //Iterador
 		

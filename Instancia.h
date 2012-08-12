@@ -10,8 +10,8 @@ class Instancia{
 	private:
 		string nombre;//Nombre de la clase
 		Clase *clase; //Clase a la que pertenece la instancia
-		struct vartable *vt;
-		struct val *(valores[P]);
+		struct vartable *vt; //Tabla de variables de la instancia, aqui se comprueba la expresion 
+		struct val *(valores[P]);//Tabla de los valores de cada propiedad de la instancia
 		int num_var;
 				
 	public:
@@ -21,8 +21,6 @@ class Instancia{
 		bool existe_propiedad(string nom_propiedad);
 		struct var * get_valor_propiedad(string nom_propiedad);
 		bool validar_expresion(string exp);
-		
-		
 		bool agregar_valor_propiedad(string propiedad, int tipo, int valor);
 		bool agregar_valor_propiedad(string propiedad, int tipo, double valor);
 		bool agregar_valor_propiedad(string propiedad, int tipo, string valor);
@@ -131,11 +129,6 @@ class Instancia{
 		if( get_var(vt, StringAChar(propiedad) )  ){//Si la propiedad ya existe (ya ha obtenido su primer valor) actualizo su valor
 
 			v = get_var(vt, StringAChar(propiedad));
-			/*char *i,*p = &valor[0];
-			i = new char[strlen(p)+1];
-			strcpy(i, p);
-			(v->val).cval = i;
- 			*/
  			(v->val).cval = StringAChar(valor);
  			
  			band = true;
@@ -144,9 +137,7 @@ class Instancia{
 			if( clase->existe_propiedad(propiedad) ){ //Si la propiedad pertenece a la clase, se agrega valor por primera vez
 				valores[num_var] = new val(); //Se crea el registro del valor
 				valores[num_var]->type = tipo; //Se asigna el tipo de dato
-		
-				(valores[num_var])->cval = ""; //Se guarda el valor
-				
+				(valores[num_var])->cval = StringAChar(valor); //Se guarda el valor
 				put_var(vt, StringAChar(propiedad), valores[num_var]);//Se introduce el registro en la tabla de valores
 				num_var = num_var + 1; //Se incrementa el contador de valores
 				band = true;

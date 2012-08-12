@@ -13,10 +13,10 @@ class Clase{
 		int num_instancias;
 		Clase *( padres[C]);//Padres de la clase
 		Clase *( hijos[C] );//Hijos de la clase
-		map<string, int> *propi;
+		map<string, int> *propi; //Debido a que la clase propiedad hereda a Clase, se tendran las propiedades de las clases con una tabla de Hash, no se puede hacer herencia cruzada
 		map<string, int> *instancias;
 		struct vartable *vt;
-		struct val x;
+		struct val x; //Al añadir una variable a la tabla de variables se necesita obligatoriamente un valor, como solo nos interesa comprobar la expresion, siempre mandamos el valor x...
 		
 	public:
 		Clase(string n);	//Constructor 
@@ -49,7 +49,7 @@ class Clase{
 		propi = new map<string, int>();
 		instancias = new map<string, int>();
 		vt = create_vartable();
-		x.type = T_INT; x.ival = 6;
+		x.type = T_INT; x.ival = 0;
 	}
 
 	string Clase::get_nombre(){

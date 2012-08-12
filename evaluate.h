@@ -413,8 +413,7 @@ int scan_number(char **stringptr, struct val *valptr) {
 int scan_string(char **stringptr, struct val *valptr) {
   struct val v = { T_INT, 0, NULL,0.0 };
   char *s = *stringptr;
-	char c;
- 	
+
  	v.type = T_CHAR;
  	
  	v.cval = new char;
@@ -470,7 +469,7 @@ int eval(struct memh *mh, struct tok *list, struct vartable *vt,
   struct val newval = { T_INT, 0, NULL , 0.0 }, env, *valstk, *x, *y; /************************/
   struct tok open, close, *l, *r, *t, **opstk;
   char *envtxt, lt, rt, token;
-  int vstk, ostk, vcnt = 0, ocnt = 0, error;
+  int vstk, ostk, vcnt = 0, ocnt = 0;
   double xr, yr, rr = 0;
   long xi, yi, ri = 0;
   
@@ -865,7 +864,7 @@ void prt_tok(struct tok *t) {
                  else if(t->val.type == T_REAL)
                    printf("%g ", t->val.rval);
                  break;
-	case TK_COMI: //***************************************
+	case TK_COMI: // ***************************************
 		 printf("\"%s\" ", t->val.cval);break;	
 
   case TK_VAR:   printf("%s ", t->name); break;
@@ -893,7 +892,7 @@ void dump_vars(struct vartable *vt) {
     else if(v->val.type == T_REAL)
       printf("'%s'=%g ", v->name, v->val.rval);
     else
-    	printf("'%s'=%s ", v->name, v->val.cval); //************************************
+    	printf("'%s'=%s ", v->name, v->val.cval); // ************************************
   }
   printf("\n");*/
 }
