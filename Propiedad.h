@@ -15,15 +15,22 @@ class Propiedad{
 		Clase *(clases_a_la_que_pertenece[C]);
 		Propiedad *(prop_padres[P]);//Propiedades padre
 		Propiedad *(prop_hijas[P]);//Propiedades hijas
+		
 		//Evento *(eventos[E]);
 		
 	public:
 		Propiedad(string n, Clase *c, int t);
+		int get_num_padres();
+		int get_num_hijos();
 		//bool agregar_evento(Evento *e);
 		string get_nombre();
+		Propiedad* get_padre(int n);
+		Propiedad* get_hijo(int n);
 		//Evento* get_evento(int pos);
 		//int get_num_eventos();
 		int get_tipo();
+		void agregar_padre(Propiedad *nuevo_padre);
+		void agregar_hijo(Propiedad *nuevo_hijo);
 
 };
  
@@ -45,6 +52,16 @@ class Propiedad{
 		}
 		
 	}
+	
+	
+	int Propiedad::get_num_padres(){
+		return num_padres;
+	}
+
+	int Propiedad::get_num_hijos(){
+		return num_hijos;
+	}
+
 /*
 	bool Propiedad::agregar_evento(Evento *e){
 		eventos[num_eventos] = e;
@@ -53,6 +70,14 @@ class Propiedad{
 
 	string Propiedad::get_nombre(){
 		return nombre;
+	}
+	
+	Propiedad* Propiedad::get_padre(int n){
+		return prop_padres[n];
+	}
+
+	Propiedad* Propiedad::get_hijo(int n){
+		return prop_hijas[n];
 	}
 	
 	/*Evento* Propiedad::get_evento(int pos){
@@ -66,6 +91,18 @@ class Propiedad{
 
 	int Propiedad::get_tipo(){
 		return tipo;
+	}
+	
+	void Propiedad::agregar_padre(Propiedad *nuevo_padre){
+	//Ver primero si el padre a conectar existe 
+		prop_padres[num_padres] = nuevo_padre;
+		num_padres+=1;
+	}
+
+	void Propiedad::agregar_hijo(Propiedad *nuevo_hijo){
+	//Ver primero si el padre a conectar existe 
+		prop_hijas[num_hijos] = nuevo_hijo;
+		num_hijos+=1;
 	}
 
 # endif

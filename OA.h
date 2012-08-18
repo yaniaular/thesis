@@ -46,10 +46,14 @@ class OA{
 		int get_num_propiedades();//Numero de propiedades existentes en la base de datos
 		
 		bool agregar_subclase(string nom_clase, string nom_padre); //n_clase sera subclase de n_padre
+		bool agregar_subpropiedad(string nom_propiedad, string nom_padre);
+		bool agregar_subevento(string nom_evento, string nom_padre);
 		bool es_subclase_de(string nom_clase, string nom_clase_padre); //Ver si n_clase es subclase de n_clase_padre
+		bool es_subpropiedad_de(string nom_propiedad, string nom_propiedad_padre);
+		bool es_subevento_de(string nom_evento, string nom_evento_padre);
 		bool agregar_valorApropiedad(string nom_clase, string nom_instancia, string nom_propiedad, int valor);
 		bool agregar_valorApropiedad(string nom_clase, string nom_instancia, string nom_propiedad, double valor);
-	bool agregar_valorApropiedad(string nom_clase, string nom_instancia, string nom_propiedad, string valor);
+		bool agregar_valorApropiedad(string nom_clase, string nom_instancia, string nom_propiedad, string valor);
 		
 		string consultar_propiedad_instancia(string nom_clase, string nom_instancia, string nom_propiedad);
 		
@@ -406,7 +410,7 @@ class OA{
 		bool todo_bien = false;
 		Clase *hijo = get_clase(nom_clase);
 		Clase *padre = get_clase(nom_padre);
-		if( hijo!=NULL && padre!=NULL ){	
+		if( hijo!=NULL && padre!=NULL && !es_subclase_de(nom_clase, nom_padre) &&  !es_subclase_de(nom_padre, nom_clase) ){	
 			hijo->agregar_padre(padre); //Agregar padre al hijo
 			int num_padres = padre->get_num_padres(); //Consultar ancestros del padre
 			if(num_padres > 0){
@@ -463,6 +467,67 @@ class OA{
 		return todo_bien;
 	}
 
+	bool OA::agregar_subpropiedad(string nom_propiedad, string nom_padre){
+		//Ver si existe n_clase y n_padre y devolver el puntero
+		bool todo_bien = false;
+		Propiedad *hijo = get_propiedad(nom_propiedad);
+		Propiedad *padre = get_propiedad(nom_padre);
+		
+		if( hijo!=NULL && padre!=NULL && !es_subpropiedad_de(nom_propiedad, nom_padre) &&  !es_subpropiedad_de(nom_padre, nom_propiedad) ){	
+			hijo->agregar_padre(padre);
+			int num_padres = padre->get_num_padres();
+			if(num_padres > 0){
+				for(int i = 0; i < num_padres; i++){//Agregar los ancestros del padre al hijo
+					Propiedad *p = padre->get_padre(i);
+					hijo->agregar_padre( p );
+					p->agregar_hijo( hijo );
+				}
+			}
+			padre->agregar_hijo(hijo);
+			int num_hijos = hijo->get_num_hijos();//Consultar descendientes del hijo
+			if(num_hijos > 0){
+				for(int i = 0; i < num_hijos; i++){//Agregar los descendientes del hijo al padre
+					Propiedad *h = hijo->get_hijo(i);
+					padre->agregar_hijo( h );
+					h->agregar_padre( padre );
+				}
+			}
+			todo_bien = true;			
+		}
+		return todo_bien;
+	}
+
+	bool OA::agregar_subevento(string nom_evento, string nom_padre){
+		//Ver si existe n_clase y n_padre y devolver el puntero
+		
+		bool todo_bien = false;
+		Evento *hijo = get_evento(nom_evento);
+		Evento *padre = get_evento(nom_padre);
+		
+		if( hijo!=NULL && padre!=NULL && !es_subevento_de(nom_evento, nom_padre) &&  !es_subevento_de(nom_padre, nom_evento) ){	
+			hijo->agregar_padre(padre);
+			int num_padres = padre->get_num_padres();
+			if(num_padres > 0){
+				for(int i = 0; i < num_padres; i++){//Agregar los ancestros del padre al hijo
+					Evento *p = padre->get_padre(i);
+					hijo->agregar_padre( p );
+					p->agregar_hijo( hijo );
+				}
+			}
+			padre->agregar_hijo(hijo);
+			int num_hijos = hijo->get_num_hijos();//Consultar descendientes del hijo
+			if(num_hijos > 0){
+				for(int i = 0; i < num_hijos; i++){//Agregar los descendientes del hijo al padre
+					Evento *h = hijo->get_hijo(i);
+					padre->agregar_hijo( h );
+					h->agregar_padre( padre );
+				}
+			}
+			todo_bien = true;			
+		}
+		return todo_bien;
+	}
+
 	bool OA::es_subclase_de(string nom_clase, string nom_clase_padre){
 		bool es_subclase = false;
 		Clase *clase = get_clase( nom_clase );
@@ -479,6 +544,46 @@ class OA{
 			}
 		}
 		return es_subclase;
+	}
+
+	bool OA::es_subpropiedad_de(string nom_propiedad, string nom_propiedad_padre){
+		bool es_subpropiedad = false;
+		
+		Propiedad *propiedad = get_propiedad( nom_propiedad );
+		Propiedad *padre = get_propiedad( nom_propiedad_padre );
+		
+		if( propiedad!=NULL && padre!=NULL ){
+			
+			int num_padres = propiedad->get_num_padres();
+			int i = 0;
+			while(i < num_padres && !es_subpropiedad){
+				if( (propiedad->get_padre(i))->get_nombre() == nom_propiedad_padre ){
+					es_subpropiedad = true;
+				}
+				i+=1;
+			}
+		}
+		return es_subpropiedad;
+	}
+
+	bool OA::es_subevento_de(string nom_evento, string nom_evento_padre){
+		bool es_subevento = false;
+		
+		Evento *evento = get_evento( nom_evento );
+		Evento *padre = get_evento( nom_evento_padre );
+		
+		if( evento!=NULL && padre!=NULL ){
+			
+			int num_padres = evento->get_num_padres();
+			int i = 0;
+			while(i < num_padres && !es_subevento){
+				if( (evento->get_padre(i))->get_nombre() == nom_evento_padre ){
+					es_subevento = true;
+				}
+				i+=1;
+			}
+		}
+		return es_subevento;
 	}
 
 	bool OA::agregar_valorApropiedad(string nom_clase, string nom_instancia, string nom_propiedad, int valor){
