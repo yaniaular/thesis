@@ -109,15 +109,18 @@ int main(){
 		
 	cout << oa_bd->activar_eventos("huracan", "HuboMuerte") << endl;
 	cout << oa_bd->activar_eventos("huracan", "aumentoViento") << endl;
+	//cout << oa_bd->agregar_valorApropiedad("huracan", "vince", "intensidad", 3)<< endl;
 
 	cout << "intensidad: " << oa_bd->consultar_propiedad_instancia("huracan", "vince", "intensidad") << endl;
 	cout << "HuboPerdidaHumana: " << oa_bd->consultar_propiedad_instancia("huracan", "vince", "HuboPerdidaHumana") << endl;
 	cout << "AlertarA: " << oa_bd->consultar_propiedad_instancia("huracan", "vince", "AlertarA") << endl;
-
+	cout << "categoria: " << oa_bd->consultar_propiedad_instancia("huracan", "vince", "categoria") << endl;
+	
 	cout << "intensidad: " << oa_bd->consultar_propiedad_instancia("huracan", "ike", "intensidad") << endl;
 	cout << "HuboPerdidaHumana: " << oa_bd->consultar_propiedad_instancia("huracan", "ike", "HuboPerdidaHumana") << endl;
 	cout << "AlertarA: " << oa_bd->consultar_propiedad_instancia("huracan", "ike", "AlertarA") << endl;
-
+	cout << "categoria: " << oa_bd->consultar_propiedad_instancia("huracan", "ike", "categoria") << endl;
+	
 	
 	cout << oa_bd->es_subpropiedad_de("intensidad", "categoria") << endl;
 	cout << oa_bd->es_subevento_de("HuboMuerte", "OcurreDesastreNatural") << endl;

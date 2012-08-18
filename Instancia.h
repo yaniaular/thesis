@@ -9,6 +9,7 @@ class Instancia{
 
 	private:
 		string nombre;//Nombre de la clase
+		string nombre_bruto;
 		Clase *clase; //Clase a la que pertenece la instancia
 		struct vartable *vt; //Tabla de variables de la instancia, aqui se comprueba la expresion 
 		struct val *(valores[P]);//Tabla de los valores de cada propiedad de la instancia
@@ -17,6 +18,7 @@ class Instancia{
 	public:
 		Instancia(string n, Clase *c);
 		string get_nombre();
+		string get_nombre_bruto();
 		Clase* get_clase();
 		bool existe_propiedad(string nom_propiedad);
 		struct var * get_valor_propiedad(string nom_propiedad);
@@ -28,6 +30,7 @@ class Instancia{
  
  	Instancia::Instancia(string n, Clase *c){
  		nombre = n + "_" + c->get_nombre();
+ 		nombre_bruto = n;
 		clase = c;
 		vt = create_vartable();
 		num_var = 0;
@@ -35,6 +38,10 @@ class Instancia{
 
 	string Instancia::get_nombre(){
 		return nombre;
+	}
+
+	string Instancia::get_nombre_bruto(){
+		return nombre_bruto;
 	}
 
 	Clase* Instancia::get_clase(){

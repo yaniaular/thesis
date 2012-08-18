@@ -492,6 +492,7 @@ class OA{
 					h->agregar_padre( padre );
 				}
 			}
+			
 			todo_bien = true;			
 		}
 		return todo_bien;
@@ -590,7 +591,8 @@ class OA{
 		Instancia *i;
 		Clase *c;
 		bool band = false, existe_propiedad_en_la_clase, entrar = false;
-		
+		int j;
+		Propiedad *p,*p_p;
 		
 		c = get_clase(nom_clase); //Obtengo apuntador a la clase	
 		
@@ -605,7 +607,16 @@ class OA{
 		
 		if( entrar ){ //Si existe la instancia, la propiedad y la clase
 			//~ cout << "nom_propiedad " << nom_propiedad << " get_propiedad(nom_propiedad)->get_tipo() " << get_propiedad(nom_propiedad)->get_tipo() << " valor " << valor << endl;
-			band = i->agregar_valor_propiedad(nom_propiedad,get_propiedad(nom_propiedad)->get_tipo() , valor);//Si se agrega el valor correctamente
+			p = get_propiedad(nom_propiedad);
+			
+			band = i->agregar_valor_propiedad(nom_propiedad, p->get_tipo() , valor);//Si se agrega el valor correctamente
+			
+			int prop_padres = p->get_num_padres();
+			for(j = 0; j < prop_padres; j++){
+				p_p = p->get_padre(j);
+				i->agregar_valor_propiedad(p_p->get_nombre(), p_p->get_tipo() , valor);
+			}
+
 			//Antes se activaban aqui los eventos			
 		}
 		else{
@@ -619,7 +630,8 @@ class OA{
 		Instancia *i;
 		Clase *c;
 		bool band = false, existe_propiedad_en_la_clase, entrar = false;
-		
+		int j;
+		Propiedad *p,*p_p;
 		
 		c = get_clase(nom_clase); //Obtengo apuntador a la clase	
 		
@@ -634,7 +646,16 @@ class OA{
 		
 		if( entrar ){ //Si existe la instancia, la propiedad y la clase
 			//~ cout << "nom_propiedad " << nom_propiedad << " get_propiedad(nom_propiedad)->get_tipo() " << get_propiedad(nom_propiedad)->get_tipo() << " valor " << valor << endl;
-			band = i->agregar_valor_propiedad(nom_propiedad, get_propiedad(nom_propiedad)->get_tipo(),valor );//Si se agrega el valor correctamente
+			p = get_propiedad(nom_propiedad);
+			
+			band = i->agregar_valor_propiedad(nom_propiedad, p->get_tipo() , valor);//Si se agrega el valor correctamente
+
+			int prop_padres = p->get_num_padres();
+			for(j = 0; j < prop_padres; j++){
+				p_p = p->get_padre(j);
+				i->agregar_valor_propiedad(p_p->get_nombre(), p_p->get_tipo() , valor);
+			}
+			
 			//Antes se activaban aqui los eventos			
 		}
 		else{
@@ -648,7 +669,8 @@ class OA{
 		Instancia *i;
 		Clase *c;
 		bool band = false, existe_propiedad_en_la_clase, entrar = false;
-		
+		int j;
+		Propiedad *p,*p_p;
 		
 		c = get_clase(nom_clase); //Obtengo apuntador a la clase	
 		
@@ -663,7 +685,15 @@ class OA{
 		
 		if( entrar ){ //Si existe la instancia, la propiedad y la clase
 			//~ cout << "nom_propiedad " << nom_propiedad << " get_propiedad(nom_propiedad)->get_tipo() " << get_propiedad(nom_propiedad)->get_tipo() << " valor " << valor << endl;
-			band = i->agregar_valor_propiedad(nom_propiedad, get_propiedad(nom_propiedad)->get_tipo(), valor);
+			p = get_propiedad(nom_propiedad);
+			
+			band = i->agregar_valor_propiedad(nom_propiedad, p->get_tipo() , valor);//Si se agrega el valor correctamente
+			
+			int prop_padres = p->get_num_padres();
+			for(j = 0; j < prop_padres; j++){
+				p_p = p->get_padre(j);
+				i->agregar_valor_propiedad(p_p->get_nombre(), p_p->get_tipo() , valor);
+			}
 			//Antes se activaban aqui los eventos			
 		}
 		else{
@@ -752,13 +782,15 @@ class OA{
 								va = e->get_valor_nuevo(k);
 								
 								if(va->tipo == ENTERO){
-									i->agregar_valor_propiedad( e->get_nombre_propiedad(), get_propiedad(e->get_nombre_propiedad())->get_tipo(), va->ival );
+									agregar_valorApropiedad(nom_clase, i->get_nombre_bruto(),  e->get_nombre_propiedad(), va->ival);
+									
+									//i->agregar_valor_propiedad( e->get_nombre_propiedad(), get_propiedad(e->get_nombre_propiedad())->get_tipo(), va->ival );
 								}
 								else if(va->tipo == REAL){
-									i->agregar_valor_propiedad( e->get_nombre_propiedad(), get_propiedad(e->get_nombre_propiedad())->get_tipo(), va->rval );
+									agregar_valorApropiedad(nom_clase, i->get_nombre_bruto(),  e->get_nombre_propiedad(), va->rval);
 								}
 								else if(va->tipo == CADENA){
-								i->agregar_valor_propiedad( e->get_nombre_propiedad(), get_propiedad(e->get_nombre_propiedad())->get_tipo(), va->cval );
+									agregar_valorApropiedad(nom_clase, i->get_nombre_bruto(),  e->get_nombre_propiedad(), va->cval);
 								}
 							cumple_una_expresion = true; //Ya no se deben revisar las demas expresiones del evento actual
 							cumple = true; //SI SE CUMPLE EL EVENTO PRINCIPAL, SE ACTIVARAN TODOS LOS PADRES, PENDIENTE CON ESTO, HAY QUE SABER SI SE CUMPLEN POR TRANSITIVIDAD O NO
