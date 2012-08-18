@@ -711,55 +711,63 @@ class OA{
 		bool band = true;
 		Clase *cl;
 		Instancia *i;
-		Evento *e;
+		Evento *e, *evento;
 		valor_r *va;
 		int k;
 				
 		cl = get_clase(nom_clase); //Obtengo el apuntador a la clase donde se activarán los eventos
-		e = get_evento(nom_evento); //Obtengo el apuntador al evento que se activará
+		evento = get_evento(nom_evento); //Obtengo el apuntador al evento que se activará
+		
 		
 		map<string, int>::const_iterator it; //Iterador
 		map<string, int> *portMap; //apuntador a hash
-		portMap = cl->get_instancias(); //consulto tabla hash de las propiedades del padre
+		portMap = cl->get_instancias(); //consulto las instancias de esa clase
 		
 		for(it = portMap->begin(); it != portMap->end(); ++it){//Iterando por todas las instancias de la clase
-		
-			/**********Se tiene que activar para todas las instancias debo hacer ese ciclo ******/
+		/***Validar que el evento padre pertenezca a la misma clase ***/
+			
 			i = get_instancia(nom_clase, (string)it->first); //Obtengo el apuntador a la instancia en donde se investigara si existe el evento
 					
 			cout << "Instancia: " << it->first << ", Posicion: " << instancias[(int)it->second - 1]->get_nombre() << endl;//Clave y Valor
-    				
-			if( e != NULL && i != NULL){
-				//Aqui ira un for con todas las expresiones del evento que se podrian cumplir
-				if( i->validar_expresion( e->get_expresion()) ) {
-					
-					for(k = 0; k < e->get_num_prop_act() ; k++){
-						va = e->get_valor_nuevo(k);
+    		
+    		int eventos_padres = evento->get_num_padres(); //Numero de padres del evento principal
+    		int e_padres = 0;
+    		
+    		e = get_evento(nom_evento); //El evento principal se activa primero
+    		do{
+    			if( e != NULL && i != NULL){
+					/***Aqui ira un for con todas las expresiones del evento que se podrian cumplir***/
+										
+					if( i->validar_expresion( e->get_expresion()) ) {
+
+						for(k = 0; k < e->get_num_prop_act() ; k++){
+							va = e->get_valor_nuevo(k);
 							
-						if(va->tipo == ENTERO){
-							i->agregar_valor_propiedad( e->get_nombre_propiedad(k), get_propiedad(e->get_nombre_propiedad(k))->get_tipo(), va->ival );
+							if(va->tipo == ENTERO){
+								i->agregar_valor_propiedad( e->get_nombre_propiedad(k), get_propiedad(e->get_nombre_propiedad(k))->get_tipo(), va->ival );
+							}
+							else if(va->tipo == REAL){
+								i->agregar_valor_propiedad( e->get_nombre_propiedad(k), get_propiedad(e->get_nombre_propiedad(k))->get_tipo(), va->rval );
+							}
+							else if(va->tipo == CADENA){
+							i->agregar_valor_propiedad( e->get_nombre_propiedad(k), get_propiedad(e->get_nombre_propiedad(k))->get_tipo(), va->cval );
+							}
 						}
-						else if(va->tipo == REAL){
-							i->agregar_valor_propiedad( e->get_nombre_propiedad(k), get_propiedad(e->get_nombre_propiedad(k))->get_tipo(), va->rval );
-						}
-						else if(va->tipo == CADENA){
-						i->agregar_valor_propiedad( e->get_nombre_propiedad(k), get_propiedad(e->get_nombre_propiedad(k))->get_tipo(), va->cval );
-						}
+						cout << "Cumple con la condicion" << endl << endl;
 					}
-					cout << "Cumple con la condicion" << endl << endl;
+					else{
+						cout << "NO Cumple con la condicion" << endl << endl;
+					}
+				
 				}
 				else{
-					cout << "NO Cumple con la condicion" << endl << endl;
+					cout << "El evento es NULL o La instancia es NULL" << endl;		
 				}
-				
-				
-			}
-			else{
-				cout << "El evento es NULL o La instancia es NULL" << endl;		
-			}
-
-		
-		
+			
+				e = evento->get_padre(e_padres);//Continuo con los eventos padres del evento principal
+				e_padres+=1;
+			
+			}while( e_padres <= eventos_padres );
 		}
 
 		return band;

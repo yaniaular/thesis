@@ -20,6 +20,7 @@ class Evento{
 		map<int, string> *prop_activas;//Nombre de la propiedad, y su posicion en el arreglo general de OA menos 1
 		struct valor_r *(valores[P]);
 		string expresion;
+		//string *(exp[50]);
 		Evento *(padres[E]);//Eventos padre
 		Evento *(hijos[E]);//Eventos hijas
 		int num_padres;
