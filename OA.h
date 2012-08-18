@@ -713,7 +713,9 @@ class OA{
 		Instancia *i;
 		Evento *e, *evento;
 		valor_r *va;
-		int k;
+		int k, m;
+		int num_exp;
+		bool cumple, cumple_una_expresion;
 				
 		cl = get_clase(nom_clase); //Obtengo el apuntador a la clase donde se activarán los eventos
 		evento = get_evento(nom_evento); //Obtengo el apuntador al evento que se activará
@@ -734,31 +736,40 @@ class OA{
     		int e_padres = 0;
     		
     		e = get_evento(nom_evento); //El evento principal se activa primero
-    		do{
+    		cumple = false;
+    		do{ //Recorre los eventos padres
+				
     			if( e != NULL && i != NULL){
 					/***Aqui ira un for con todas las expresiones del evento que se podrian cumplir***/
-										
-					if( i->validar_expresion( e->get_expresion()) ) {
-
-						for(k = 0; k < e->get_num_prop_act() ; k++){
-							va = e->get_valor_nuevo(k);
-							
-							if(va->tipo == ENTERO){
-								i->agregar_valor_propiedad( e->get_nombre_propiedad(k), get_propiedad(e->get_nombre_propiedad(k))->get_tipo(), va->ival );
-							}
-							else if(va->tipo == REAL){
-								i->agregar_valor_propiedad( e->get_nombre_propiedad(k), get_propiedad(e->get_nombre_propiedad(k))->get_tipo(), va->rval );
-							}
-							else if(va->tipo == CADENA){
-							i->agregar_valor_propiedad( e->get_nombre_propiedad(k), get_propiedad(e->get_nombre_propiedad(k))->get_tipo(), va->cval );
-							}
+					cumple_una_expresion = false;
+					k = 0;
+					while( k < e->get_num_prop_act() && !cumple_una_expresion){//Mientras haya expresiones del mismo evento y ninguna ha cumplido
+		
+		//cout << "Evento " << nom_evento << "Expresion " << e->get_expresion(k) << endl;				
+						
+						if( i->validar_expresion( e->get_expresion(k) ) ) {
+		
+								va = e->get_valor_nuevo(k);
+								
+								if(va->tipo == ENTERO){
+									i->agregar_valor_propiedad( e->get_nombre_propiedad(), get_propiedad(e->get_nombre_propiedad())->get_tipo(), va->ival );
+								}
+								else if(va->tipo == REAL){
+									i->agregar_valor_propiedad( e->get_nombre_propiedad(), get_propiedad(e->get_nombre_propiedad())->get_tipo(), va->rval );
+								}
+								else if(va->tipo == CADENA){
+								i->agregar_valor_propiedad( e->get_nombre_propiedad(), get_propiedad(e->get_nombre_propiedad())->get_tipo(), va->cval );
+								}
+							cumple_una_expresion = true; //Ya no se deben revisar las demas expresiones del evento actual
+							cumple = true; //SI SE CUMPLE EL EVENTO PRINCIPAL, SE ACTIVARAN TODOS LOS PADRES, PENDIENTE CON ESTO, HAY QUE SABER SI SE CUMPLEN POR TRANSITIVIDAD O NO
+							cout << "Cumple con la condicion" << endl << endl;
+						
 						}
-						cout << "Cumple con la condicion" << endl << endl;
+						else{
+							cout << "NO Cumple con la condicion" << endl << endl;
+						}
+						k+=1;
 					}
-					else{
-						cout << "NO Cumple con la condicion" << endl << endl;
-					}
-				
 				}
 				else{
 					cout << "El evento es NULL o La instancia es NULL" << endl;		
@@ -767,7 +778,7 @@ class OA{
 				e = evento->get_padre(e_padres);//Continuo con los eventos padres del evento principal
 				e_padres+=1;
 			
-			}while( e_padres <= eventos_padres );
+			}while( e_padres <= eventos_padres && cumple );
 		}
 
 		return band;

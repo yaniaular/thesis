@@ -69,7 +69,15 @@ int main(){
 	cout << oa_bd->crear_instancia( "desastreVargas", "Lluvia" ) << endl;
 	
 	cout << oa_bd->crear_evento("fenomeno", "HuboMuerte", "HuboPerdidaHumana", "Si","NumMuertos > 0") << endl;
-	cout << oa_bd->crear_evento("huracan", "aumentoViento", "intensidad", "5","velocidadViento >= 250  ") << endl;
+	
+	cout << oa_bd->crear_evento("huracan", "aumentoViento", "intensidad", 5,"velocidadViento >= 250") << endl;
+	oa_bd->get_evento("aumentoViento")->agregar_expresion(4, "velocidadViento >= 210 && velocidadViento <= 249");
+	oa_bd->get_evento("aumentoViento")->agregar_expresion(3, "velocidadViento >= 178 && velocidadViento <= 209");
+	oa_bd->get_evento("aumentoViento")->agregar_expresion(2, "velocidadViento >= 154 && velocidadViento <= 177");
+	oa_bd->get_evento("aumentoViento")->agregar_expresion(1, "velocidadViento >= 119 && velocidadViento <= 153");
+	
+	//cout << oa_bd->crear_evento("huracan", "aumentoViento", "intensidad", "4","velocidadViento <= 250  ") << endl;
+	
 	cout << oa_bd->crear_evento("fenomeno", "OcurreDesastreNatural", "AlertarA", "CruzRoja", "1") << endl; //Evento que se activa con activarse aumentoviento y hubomuerte, la condicion es siempre True, ya que la unica forma de activarse es por sus subeventos, y al activarse algunos de sus subevento, ya el evento OcurreDesastreNatural es verdadero.
 	
 	cout << oa_bd->agregar_subevento("HuboMuerte", "OcurreDesastreNatural") << endl;
@@ -92,12 +100,24 @@ int main(){
 	cout << oa_bd->consultar_propiedad_instancia("huracan", "vince", "intensidad") << endl;
 
 	cout << oa_bd->agregar_valorApropiedad("huracan", "vince", "NumMuertos", 280)<< endl;
-	cout << oa_bd->consultar_propiedad_instancia("huracan", "vince", "NumMuertos") << endl;
+	cout << oa_bd->agregar_valorApropiedad("huracan", "vince", "velocidadViento", 260)<< endl;
+	cout << oa_bd->consultar_propiedad_instancia("huracan", "vince", "velocidadViento") << endl;
+
+	cout << oa_bd->agregar_valorApropiedad("huracan", "ike", "velocidadViento", 125)<< endl;
+	cout << oa_bd->consultar_propiedad_instancia("huracan", "ike", "velocidadViento") << endl;
+		
 		
 	cout << oa_bd->activar_eventos("huracan", "HuboMuerte") << endl;
-	
+	cout << oa_bd->activar_eventos("huracan", "aumentoViento") << endl;
+
+	cout << "intensidad: " << oa_bd->consultar_propiedad_instancia("huracan", "vince", "intensidad") << endl;
 	cout << "HuboPerdidaHumana: " << oa_bd->consultar_propiedad_instancia("huracan", "vince", "HuboPerdidaHumana") << endl;
 	cout << "AlertarA: " << oa_bd->consultar_propiedad_instancia("huracan", "vince", "AlertarA") << endl;
+
+	cout << "intensidad: " << oa_bd->consultar_propiedad_instancia("huracan", "ike", "intensidad") << endl;
+	cout << "HuboPerdidaHumana: " << oa_bd->consultar_propiedad_instancia("huracan", "ike", "HuboPerdidaHumana") << endl;
+	cout << "AlertarA: " << oa_bd->consultar_propiedad_instancia("huracan", "ike", "AlertarA") << endl;
+
 	
 	cout << oa_bd->es_subpropiedad_de("intensidad", "categoria") << endl;
 	cout << oa_bd->es_subevento_de("HuboMuerte", "OcurreDesastreNatural") << endl;
