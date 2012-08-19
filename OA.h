@@ -59,6 +59,7 @@ class OA{
 		
 		bool activar_eventos(string nom_clase, string nom_evento);
 		bool existencia_consulta_reactiva(map<string, string> *eventosHash, int n, string clase);
+		bool pertenece_a(string nom_instancia, string nom_clase);
 };
   
 	
@@ -848,6 +849,43 @@ class OA{
 		}
 		cout << endl;
 		return band;
+	}
+
+	bool OA::pertenece_a(string nom_instancia, string nom_clase){
+		bool pertenece = true;
+		Clase *cl, *c_i;
+		
+		if( get_instancia(nom_clase, nom_instancia) == NULL ){
+			pertenece = false;
+			cl = get_clase(nom_clase);
+			int i, num_clases_hijas;
+			
+			i = 0;
+			num_clases_hijas = cl->get_num_hijos();
+			
+			while(i < num_clases_hijas && !pertenece){
+				
+				c_i = cl->get_hijo(i);
+				
+				map<string, int>::const_iterator it; //Iterador
+				map<string, int> *portMap; //apuntador a hash
+					
+				portMap = c_i->get_instancias(); //consulto las instancias de esa clase
+				it = portMap->begin();
+				
+				while( it != portMap->end() && !pertenece ){//Iterando por todas las instancias de la clase
+						
+					if( (string)it->first == nom_instancia ){
+						pertenece = true;
+						}
+					++it;
+				}
+				
+			i+=1;
+			}
+		}
+				
+		return pertenece;
 	}
 
 # endif

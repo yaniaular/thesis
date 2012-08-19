@@ -125,6 +125,12 @@ int main(){
 	cout << oa_bd->es_subpropiedad_de("intensidad", "categoria") << endl;
 	cout << oa_bd->es_subevento_de("HuboMuerte", "OcurreDesastreNatural") << endl;
 
+
+	cout << oa_bd->pertenece_a("ike", "fenomeno") << endl;
+	cout << oa_bd->pertenece_a("ike", "huracan") << endl;
+	cout << oa_bd->pertenece_a("ike", "Lluvia") << endl;
+	cout << oa_bd->pertenece_a("ike", "fenNatural") << endl;
+
 //	oa_bd->consultar_propiedad_instancia("Clase2", "Instancia1", "NumMuertes")
 //	cout << oa_bd->agregar_valorApropiedad("Clase3", "Instancia7", "NumMuertes", 13)<< endl;
 //	oa_bd->activar_eventos("Clase3", "OcurreDesastreNatural");
