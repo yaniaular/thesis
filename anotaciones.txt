@@ -1,0 +1,14 @@
+VALIDAR Hay que saber si el evento es de la clase.
+
+DUDA Eliminar hijos de eventos y de propiedades?? Tal vez no es necesario. 
+
+DUDA si un evento cumple, activar sus supereventos, pero un superevento
+no cumple hay que activar sus ancestros?
+
+DUDA Si cambia una propiedad, cambian sus superpropiedades, tener cuidado
+si cambian transitivamente o no
+
+VALIDAR AL agregar expresiones nuevas hay que validar que el valornuevo sea del mismo
+tipo que fue al crearse el evento.
+
+VALIDAR activar eventos en paralelo, hacer estudio para saber que evento debe activarse primero que otro, sabiendo si depende de otro o no.

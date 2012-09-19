@@ -1,0 +1,73 @@
+=== modified file 'OA.h'
+--- OA.h	2012-08-18 23:16:45 +0000
++++ OA.h	2012-08-19 00:08:44 +0000
+@@ -59,6 +59,7 @@
+ 		
+ 		bool activar_eventos(string nom_clase, string nom_evento);
+ 		bool existencia_consulta_reactiva(map<string, string> *eventosHash, int n, string clase);
++		bool pertenece_a(string nom_instancia, string nom_clase);
+ };
+   
+ 	
+@@ -850,4 +851,41 @@
+ 		return band;
+ 	}
+ 
++	bool OA::pertenece_a(string nom_instancia, string nom_clase){
++		bool pertenece = true;
++		Clase *cl, *c_i;
++		
++		if( get_instancia(nom_clase, nom_instancia) == NULL ){
++			pertenece = false;
++			cl = get_clase(nom_clase);
++			int i, num_clases_hijas;
++			
++			i = 0;
++			num_clases_hijas = cl->get_num_hijos();
++			
++			while(i < num_clases_hijas && !pertenece){
++				
++				c_i = cl->get_hijo(i);
++				
++				map<string, int>::const_iterator it; //Iterador
++				map<string, int> *portMap; //apuntador a hash
++					
++				portMap = c_i->get_instancias(); //consulto las instancias de esa clase
++				it = portMap->begin();
++				
++				while( it != portMap->end() && !pertenece ){//Iterando por todas las instancias de la clase
++						
++					if( (string)it->first == nom_instancia ){
++						pertenece = true;
++						}
++					++it;
++				}
++				
++			i+=1;
++			}
++		}
++				
++		return pertenece;
++	}
++
+ # endif
+
+=== modified file 'main'
+Binary files main	2012-08-18 23:16:45 +0000 and main	2012-08-19 00:09:11 +0000 differ
+=== modified file 'main.cpp'
+--- main.cpp	2012-08-18 23:16:45 +0000
++++ main.cpp	2012-08-19 00:07:21 +0000
+@@ -125,6 +125,12 @@
+ 	cout << oa_bd->es_subpropiedad_de("intensidad", "categoria") << endl;
+ 	cout << oa_bd->es_subevento_de("HuboMuerte", "OcurreDesastreNatural") << endl;
+ 
++
++	cout << oa_bd->pertenece_a("ike", "fenomeno") << endl;
++	cout << oa_bd->pertenece_a("ike", "huracan") << endl;
++	cout << oa_bd->pertenece_a("ike", "Lluvia") << endl;
++	cout << oa_bd->pertenece_a("ike", "fenNatural") << endl;
++
+ //	oa_bd->consultar_propiedad_instancia("Clase2", "Instancia1", "NumMuertes")
+ //	cout << oa_bd->agregar_valorApropiedad("Clase3", "Instancia7", "NumMuertes", 13)<< endl;
+ //	oa_bd->activar_eventos("Clase3", "OcurreDesastreNatural");
+

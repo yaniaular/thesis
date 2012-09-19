@@ -295,26 +295,32 @@ int main(){
 	cout << "Consultando Nombre = " << oa_bd->consultar_propiedad_instancia(c, in, "Nombre") << endl;
 	
 	if( (oa_bd->get_clase(c))->existe_propiedad( "Apellido" ) )
-	cout << "Consultando Apellido = " << oa_bd->consultar_propiedad_instancia(c, in, "Apellido") << endl << endl;*/
+	cout << "Consultando Apellido = " << oa_bd->consultar_propiedad_instancia(c, in, "Apellido") << endl << endl;
+	 
+	*/
 	
+
+
+
+
+
+
 		
-/*  Se hace la lectura por archivos de las consultas reactivas:
+/**  Se hace la lectura por archivos de las consultas reactivas:
  *  Se verifica la correctitud de la sintaxis
  *  No deben haber eventos repetidos
  *  Se comprueba la existencia de la clase donde se activara el o los eventos
  *  
 */
 
-
 /*
-
 ifstream entrada("consultas_reactivas.in");
 int reti;
 regex_t regex; //Variable para la expresion regular
 string exp;
 char * pattern ="^\\((S|s|p|P),\\[([A-Za-z0-9])+(([,])([A-Za-z0-9])+)*\\],([A-Za-z0-9])+\\)$"; //Patron de la expresion regular
 */
-/*
+/**
 ^ Indica el inicio de la frase
 \\(   Agrega el parentesis
 (S|s|p|P) debe haber cualquiera de las letras que esta entre parentesis
