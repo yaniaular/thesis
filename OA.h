@@ -3,6 +3,7 @@
 #include "Instancia.h"
 #include "Propiedad.h"
 
+
 using namespace kyotocabinet;
 
 class OA{
@@ -20,6 +21,7 @@ class OA{
 				
 	public:
 		OA(); //Constructor 
+		~OA();
 		bool crear_clase(string nom_clase);
 		bool inicializar_instancia(int tipo_propiedad, string nom_clase, string nom_instancia, string nom_propiedad);
 		bool crear_instancia(string nom_instancia, string nom_clase);
@@ -44,7 +46,8 @@ class OA{
 		int get_num_clases();//Numero de clases existentes en la base de datos
 		int get_num_instancias();//Numero de instancias existentes en la base de datos
 		int get_num_propiedades();//Numero de propiedades existentes en la base de datos
-		
+		int get_num_eventos();
+
 		bool agregar_subclase(string nom_clase, string nom_padre); //n_clase sera subclase de n_padre
 		bool agregar_subpropiedad(string nom_propiedad, string nom_padre);
 		bool agregar_subevento(string nom_evento, string nom_padre);
@@ -58,7 +61,7 @@ class OA{
 		string consultar_propiedad_instancia(string nom_clase, string nom_instancia, string nom_propiedad);
 		
 		bool activar_eventos(string nom_clase, string nom_evento);
-		bool existencia_consulta_reactiva(map<string, string> *eventosHash, int n, string clase);
+		bool existencia_consulta_reactiva(Cuadro *eventosHash, int n, string clase);
 		bool pertenece_a(string nom_instancia, string nom_clase);
 };
   
@@ -86,6 +89,10 @@ class OA{
 		if(!event->open("eventos.kch", StashDB::OWRITER | StashDB::OCREATE)){
 			cout << "Error al crear el cofre: " << event->error().name() << endl;
 		}
+	}
+
+	OA::~OA(){
+		//Destructor
 	}
 
 	//Ver si "nombre" no lo esta ocupado otra clase
@@ -148,8 +155,8 @@ class OA{
 					instancias[num_instancias] = new Instancia(nom_instancia, cl );
 					
 					//Agregar las propiedades de la clase a la instancia
-					map<string, int>::const_iterator it; //Iterador
-					map<string, int> *portMap; //apuntador a hash
+					Cuadro::const_iterator it; //Iterador
+					Cuadro *portMap; //apuntador a hash
 					portMap = cl->get_propiedades(); //consulto tabla hash de las propiedade de la clase
 					for(it = portMap->begin(); it != portMap->end(); ++it){//Iterando
 					//Voy agregando las propiedades del padre al hijo
@@ -190,8 +197,8 @@ class OA{
 				cl->agregar_propiedad(nom_propiedad, num_propiedades);
 				
 				//Inicializar nueva propiedad a las instancias de la clase
-				map<string, int>::const_iterator it; //Iterador
-				map<string, int> *portMap; //apuntador a hash
+				Cuadro::const_iterator it; //Iterador
+				Cuadro *portMap; //apuntador a hash
 				portMap = cl->get_instancias(); //consulto tabla hash de las instancias
 				for(it = portMap->begin(); it != portMap->end(); ++it){//Iterando
 					inicializar_instancia(tipo_propiedad, nom_clase, (string)it->first, nom_propiedad);
@@ -409,6 +416,10 @@ class OA{
 		return num_propiedades;
 	}
 
+	int OA::get_num_eventos(){
+		return num_eventos;
+	}
+
 	//Si devuelve verdadero se agrego el padre, sino, no se pudo
 	bool OA::agregar_subclase(string nom_clase, string nom_padre){
 		//Ver si existe n_clase y n_padre y devolver el puntero
@@ -437,8 +448,8 @@ class OA{
 			}
 			
 			//Agregar las propiedades de la superclase a la clase
-			map<string, int>::const_iterator it; //Iterador
-			map<string, int> *portMap; //apuntador a hash
+			Cuadro::const_iterator it; //Iterador
+			Cuadro *portMap; //apuntador a hash
 			portMap = padre->get_propiedades(); //consulto tabla hash de las propiedades del padre
 			for(it = portMap->begin(); it != portMap->end(); ++it){//Iterando
 				//Voy agregando las propiedades del padre al hijo
@@ -446,8 +457,8 @@ class OA{
     			tipo_propiedad = get_propiedad( (string)it->first )->get_tipo();
     			
     			//Inicializar nueva propiedad a las instancias de la clase
-				map<string, int>::const_iterator ins; //Iterador
-				map<string, int> *portMap_ins; //apuntador a hash
+				Cuadro::const_iterator ins; //Iterador
+				Cuadro *portMap_ins; //apuntador a hash
 				portMap_ins = hijo->get_instancias(); //consulto tabla hash de las instancias
 				for(ins = portMap_ins->begin(); ins != portMap_ins->end(); ++ins){//Iterando
 					inicializar_instancia(  tipo_propiedad  , nom_clase, (string)ins->first, (string)it->first);
@@ -759,8 +770,8 @@ class OA{
 		evento = get_evento(nom_evento); //Obtengo el apuntador al evento que se activará
 		
 		if( cl !=NULL && evento !=NULL ){
-			map<string, int>::const_iterator it; //Iterador
-			map<string, int> *portMap; //apuntador a hash
+			Cuadro::const_iterator it; //Iterador
+			Cuadro *portMap; //apuntador a hash
 			portMap = cl->get_instancias(); //consulto las instancias de esa clase
 		
 			for(it = portMap->begin(); it != portMap->end(); ++it){//Iterando por todas las instancias de la clase
@@ -837,9 +848,9 @@ class OA{
 	
 	}
 	
-	bool OA::existencia_consulta_reactiva(map<string, string> *eventosHash, int n, string cl){
+	bool OA::existencia_consulta_reactiva(Cuadro *eventosHash, int n, string cl){
 		bool band = true;
-		map<string, string>::const_iterator it; //Iterador
+		Cuadro::const_iterator it; //Iterador
 		
 		if(get_clase(cl)== NULL){
 			band = false;
@@ -874,8 +885,8 @@ class OA{
 				
 				c_i = cl->get_hijo(i);
 				
-				map<string, int>::const_iterator it; //Iterador
-				map<string, int> *portMap; //apuntador a hash
+				Cuadro::const_iterator it; //Iterador
+				Cuadro *portMap; //apuntador a hash
 					
 				portMap = c_i->get_instancias(); //consulto las instancias de esa clase
 				it = portMap->begin();

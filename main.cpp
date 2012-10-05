@@ -9,6 +9,17 @@
 #include <cctype>
 #include "OA.h"
 
+#include <new>
+using std::set_new_handler;
+#include <cstdlib>
+using std::abort;
+
+
+
+void mensaje_error(){
+	cerr << "Error de memoria, bad_alloc";
+	abort();
+}
 
 //Funcion que recibe un string, y elimina los espacios en blanco del mismo
 string Trim(string cadena)
@@ -37,6 +48,10 @@ string StringToUpper(string myString)
 }
 
 int main(){
+
+
+	set_new_handler( mensaje_error ); //Llama al metodo cuando hay una sobrecarga de memoria, mensaje personalizado
+
 	typedef int T;
 	int i, j, n;
 	string c, in, h1, h2;
@@ -240,9 +255,10 @@ int main(){
 //	oa_bd->activar_eventos("Clase3", "OcurreDesastreNatural");
 		
 	
-	int cant_clases = 120;
-	int cant_instancias = 1900;
-		
+	int cant_clases = 300; //500
+	int cant_prop = 500; //300
+	int cant_even = 150;
+	int cant_instancias = 800; //200	
 	//Crear 15000 clases
 	for(i = 1; i <= cant_clases ; i++){ //15000
 		stringstream ss;
@@ -380,10 +396,38 @@ int main(){
 	cout << oa_bd->crear_propiedad("Clase3", "Nombre", CADENA) << endl;
 	cout << oa_bd->crear_propiedad("Clase3", "Apellido", CADENA)<< endl;
 	
-	
+
+	for(i = 1; i <= cant_prop - 5 ; i++){ //15000
+		stringstream ss;
+		ss << i;
+		c = "Propiedad" + ss.str();		
+		oa_bd->crear_propiedad("Clase1", c, ENTERO);
+	}
+
+
+	cout <<"Numero de propiedades: " << oa_bd->get_num_propiedades() << endl;
+		
+
+
+
 	//CREAR EVENTO
 	cout << "**************************** CREAR EVENTO **********************************" <<endl;
 	cout << oa_bd->crear_evento("Clase2", "OcurreDesastreNatural", "AlertarA", "CruzRoja","NumMuertes > 0 || Velocidad > 500") << endl << endl;
+	
+
+
+	cout << oa_bd->crear_evento("Clase1", "Evento1", "intensidad", 0,"velocidadViento == 0") << endl;
+	
+	
+	for(i = 1; i <= cant_even ; i++){ //15000
+		stringstream ss;
+		ss << i;
+		c = "Evento" + ss.str();		
+		oa_bd->crear_evento("Clase1", c, "Propiedad" +  ss.str(), 45,"velocidadViento == " + ss.str());
+	}
+
+	cout <<"Numero de propiedades: " << oa_bd->get_num_eventos() << endl;
+
 	//  || Nombre == \"HOLA\" 
 	
 	//CONSULTAR VALORES
@@ -395,7 +439,7 @@ int main(){
 	cout << "Consultando AlertarA = " << oa_bd->consultar_propiedad_instancia("Clase2", "Instancia1", "AlertarA") << endl;
 	cout << "Consultando Apellido = " << oa_bd->consultar_propiedad_instancia("Clase2", "Instancia1", "Apellido") << endl;
 	cout << "Consultando Nombre = " << oa_bd->consultar_propiedad_instancia("Clase2", "Instancia1", "Nombre") << endl;
-/*
+
 	//ASIGNAR VALORES
 	cout << "*************************** ASIGNAR VALORES ************************************" <<endl;
 	cout << oa_bd->agregar_valorApropiedad("Clase2", "Instancia1", "Nombre", (string)"Yanina Gabriela")<< endl;
@@ -412,7 +456,7 @@ int main(){
 	cout << oa_bd->agregar_valorApropiedad("Clase2", "Instancia2", "NumMuertes", 0)<< endl;
 	cout << oa_bd->agregar_valorApropiedad("Clase2", "Instancia2", "Velocidad", 3)<< endl;
 
-	
+/*	
 	cout << oa_bd->agregar_valorApropiedad("Clase3", "Instancia7", "NumMuertes", 13)<< endl;
 	
 	//ACTIVAR EVENTO
@@ -582,11 +626,11 @@ $ indica el final de la frase
 			char *patter = "\\[([A-Za-z0-9])+(([,])([A-Za-z0-9])+)*\\]";
 			string eventos, tipo, tabla;
 			int num_eventos;
-			map<string, string> *eventosHash;//Tabla Hash con los eventos de la consulta-reactiva
+			Cuadro *eventosHash;//Tabla Hash con los eventos de la consulta-reactiva
 			string eve;
 			bool band;
 			
-			eventosHash = new map<string, string>();
+			eventosHash = new Cuadro();
 						
 			//Se compila la expresión regular y se verifica si tiene algún error
 			if (regcomp(&re, patter, REG_EXTENDED) != 0) {

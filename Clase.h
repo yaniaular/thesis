@@ -6,26 +6,32 @@
 class Clase{
 
 	private:
+		
 		string nombre;
 		int num_padres;
 		int num_hijos;
 		int num_propiedades;
 		int num_instancias;
-		Clase *( padres[C]);//Padres de la clase
+		list<Clase> padres;
+		//Clase *( padres[C]);//Padres de la clase
 		Clase *( hijos[C] );//Hijos de la clase
-		map<string, int> *propi; //Debido a que la clase propiedad hereda a Clase, se tendran las propiedades de las clases con una tabla de Hash, no se puede hacer herencia cruzada
-		map<string, int> *instancias;
+		Cuadro *propi;
+		//map<string, int> *propi; //Debido a que la clase propiedad hereda a Clase, se tendran las propiedades de las clases con una tabla de Hash, no se puede hacer herencia cruzada
+		Cuadro *instancias;
+		//map<string, int> *instancias;
 		struct vartable *vt;
 		struct val x; //Al añadir una variable a la tabla de variables se necesita obligatoriamente un valor, como solo nos interesa comprobar la expresion, siempre mandamos el valor x...
 		
 	public:
+		Clase();
+		~Clase();
 		Clase(string n);	//Constructor 
 		string get_nombre();
-		Clase* get_padres();
+		//Clase* get_padres();
 		Clase* get_padre(int n);
 		Clase* get_hijo(int n);
-		map<string, int>* get_propiedades();//Tiene el nombre de la propiedad y la posicion en la tabla general en la clase OA menos 1
-		map<string, int>* get_instancias();//Tiene el nombre de la instancia (sin el "_" + nom_clase) y la posicion en la tabla general en la clase OA menos 1
+		Cuadro* get_propiedades();//Tiene el nombre de la propiedad y la posicion en la tabla general en la clase OA menos 1
+		Cuadro* get_instancias();//Tiene el nombre de la instancia (sin el "_" + nom_clase) y la posicion en la tabla general en la clase OA menos 1
 		int get_num_padres();
 		int get_num_hijos();
 		int get_num_propiedades();
@@ -40,16 +46,27 @@ class Clase{
 		int comprobar_expresion(string expresion, string variables[P], int *cant_var);
 };
 
+
+ 	Clase::Clase()
+	{
+
+
+	}
+
  	Clase::Clase(string n){
 		nombre = n;
 		num_padres = 0;
 		num_hijos = 0;
 		num_propiedades = 0;
 		num_instancias = 0;
-		propi = new map<string, int>();
-		instancias = new map<string, int>();
+		propi = new Cuadro();
+		instancias = new Cuadro();
 		vt = create_vartable();
 		x.type = T_INT; x.ival = 0;
+	}
+
+	Clase::~Clase(){
+		//Destructor
 	}
 
 	string Clase::get_nombre(){
@@ -57,13 +74,23 @@ class Clase{
 	}
 
 	//No se esta usando
-	Clase* Clase::get_padres(){
+	/*Clase* Clase::get_padres(){
 		return padres[C];
 
-	}
+	}*/
 
 	Clase* Clase::get_padre(int n){
-		return padres[n];
+				
+		int i = 0;
+		list<Clase>::iterator pos;
+		pos = padres.begin();
+		while( i < n && pos != padres.end())
+		{
+			pos++;
+			i++;
+		}
+		return &(*pos);
+		//return padres[n];
 	}
 
 	Clase* Clase::get_hijo(int n){
@@ -116,7 +143,10 @@ class Clase{
 
 	void Clase::agregar_padre(Clase *nuevo_padre){
 	//Ver primero si el padre a conectar existe 
-		padres[num_padres] = nuevo_padre;
+		padres.push_back( *nuevo_padre ); 
+
+		//padres[num_padres] = nuevo_padre;
+		//padres.insertarAlFinal( *nuevo_padre );		
 		num_padres+=1;
 	}
 
@@ -128,12 +158,14 @@ class Clase{
 	
 	void Clase::agregar_propiedad(string n_p, int posicion){
 		put_var(vt, StringAChar(n_p), &x);
-		(*propi)[n_p] = posicion + 1; //le sumo 1, porque cuando la pos es 0, y la propiedad no exista, lanzara 0 igual, y se presta para confusiones
+		propi->insert(Cuadro::value_type(n_p, posicion + 1) );
+		//(*propi)[n_p] = posicion + 1; //le sumo 1, porque cuando la pos es 0, y la propiedad no exista, lanzara 0 igual, y se presta para confusiones
 		num_propiedades = num_propiedades + 1;
 	}
 	
 	void Clase::agregar_instancia(string n_i, int posicion){
-		(*instancias)[n_i] = posicion + 1; //le sumo 1, porque cuando la pos es 0, y la propiedad no exista, lanzara 0 igual, y se presta para confusiones
+		instancias->insert( Cuadro::value_type(n_i, posicion + 1) );
+		//(*instancias)[n_i] = posicion + 1; //le sumo 1, porque cuando la pos es 0, y la propiedad no exista, lanzara 0 igual, y se presta para confusiones
 		num_instancias = num_instancias + 1;
 	}
 	

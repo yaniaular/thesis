@@ -8,11 +8,12 @@
 #include <limits.h>
 #include <float.h>
 #include <cstdlib>
+#include <list>
 
-#define C 700
-#define I 700000
-#define P 3001
-#define E 501
+#define C 500 //500
+#define I 240000 //240000
+#define P 3001 //3001
+#define E 501 // 501
 
 #define ENTERO 0
 #define REAL 1
@@ -21,18 +22,25 @@
 using namespace kyotocabinet;
 using namespace std;
 
+typedef std::map< string, int, std::less<string> > Cuadro; //Crear tabla de hash
+
 class Tabla{
 
 	private:
 			
 	public:
 		Tabla();
+		~Tabla();
 		string EnteroAString(int a);
 		string DoubleAString(double a);
 		char* StringAChar(string a);
 };
  
  	Tabla::Tabla(){
+			
+	}
+
+ 	Tabla::~Tabla(){
 			
 	}
 

@@ -17,6 +17,7 @@ class Instancia{
 				
 	public:
 		Instancia(string n, Clase *c);
+		~Instancia();
 		string get_nombre();
 		string get_nombre_bruto();
 		Clase* get_clase();
@@ -34,6 +35,10 @@ class Instancia{
 		clase = c;
 		vt = create_vartable();
 		num_var = 0;
+	}
+
+	Instancia::~Instancia(){
+		//Destructor
 	}
 
 	string Instancia::get_nombre(){

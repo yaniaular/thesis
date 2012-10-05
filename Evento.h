@@ -24,8 +24,10 @@ class Evento{
 		struct valor_r *(valores[P]);
 		string expresion;
 		string *(exp[50]);
-		Evento *(padres[E]);//Eventos padre
-		Evento *(hijos[E]);//Eventos hijas
+		list<Evento> padres;
+		list<Evento> hijos;
+		//Evento *(padres[E]);//Eventos padre
+		//Evento *(hijos[E]);//Eventos hijas
 		int num_padres;
 		int num_hijos;
 		//int num_expresiones;
@@ -34,6 +36,7 @@ class Evento{
 		Evento(string nom, string pA, int NuevoValor, string e);
 		Evento(string nom, string pA, double NuevoValor, string e);
 		Evento(string nom, string pA, string NuevoValor, string e);
+		~Evento();
 		
 		void agregar_expresion(int NuevoValor, string e);
 		void agregar_expresion(double NuevoValor, string e);
@@ -109,6 +112,10 @@ class Evento{
 		
 	}
 
+	Evento::~Evento(){
+		//Destructor
+	}
+
 	void Evento::agregar_expresion(int NuevoValor, string e){
 		
 		valores[num_prop_activas] = new valor_r();
@@ -164,11 +171,29 @@ class Evento{
 	}
 
 	Evento* Evento::get_padre(int n){
-		return padres[n];
+		int i = 0;
+		list<Evento>::iterator pos;
+		pos = padres.begin();
+		while( i < n && pos != padres.end())
+		{
+			pos++;
+			i++;
+		}
+		return &(*pos);
+		//return padres[n];
 	}
 
 	Evento* Evento::get_hijo(int n){
-		return hijos[n];
+		int i = 0;
+		list<Evento>::iterator pos;
+		pos = hijos.begin();
+		while( i < n && pos != hijos.end())
+		{
+			pos++;
+			i++;
+		}
+		return &(*pos);
+		//return hijos[n];
 	}
 
 	string Evento::get_nombre_propiedad(){
@@ -186,13 +211,15 @@ class Evento{
 	
 	void Evento::agregar_padre(Evento *nuevo_padre){
 	//Ver primero si el padre a conectar existe 
-		padres[num_padres] = nuevo_padre;
+		padres.push_back( *nuevo_padre ); 		
+		//padres[num_padres] = nuevo_padre;
 		num_padres+=1;
 	}
 
 	void Evento::agregar_hijo(Evento *nuevo_hijo){
 	//Ver primero si el padre a conectar existe 
-		hijos[num_hijos] = nuevo_hijo;
+		hijos.push_back( *nuevo_hijo ); 	
+		//hijos[num_hijos] = nuevo_hijo;
 		num_hijos+=1;
 	}
 
