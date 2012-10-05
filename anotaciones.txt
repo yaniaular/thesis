@@ -14,8 +14,8 @@ tipo que fue al crearse el evento.
 VALIDAR activar eventos en paralelo, hacer estudio para saber que evento debe activarse primero que otro, sabiendo si depende de otro o no.
 
 
-Al crear subpropiedad una de otra, deben ser de la misma clase???
-Al hacer una propiedad subpropiedad de otra, si alguna de ellas no existe, se deberia crear automaticamente como propiedada la clase de la otra????
-Al hacer una propiedad subpropiedad de otra, hay que agregarle el valor que tiene actualmente la subpropiedad???
+Al crear subpropiedad una de otra, deben ser de la misma clase??? No, por ahora
+Al hacer una propiedad subpropiedad de otra, si alguna de ellas no existe, se deberia crear automaticamente como propiedada la clase de la otra???? Roberto
+Al hacer una propiedad subpropiedad de otra, hay que agregarle el valor que tiene actualmente la subpropiedad??? no
 
 Terminar lo de la estructura de datos para villa y roberto, y la validacion de las consultas reactivas por archivo

@@ -6,6 +6,7 @@
 //#include <sys/types.h>
 #include <regex.h>
 #include <vector>
+#include <cctype>
 #include "OA.h"
 
 
@@ -25,7 +26,15 @@ string Trim(string cadena)
      return buff;    
 }
 
-
+string StringToUpper(string myString)
+{
+  const int length = myString.length();
+  for(int i=0; i!=length ; ++i)
+  {
+    myString[i] = toupper(myString[i]);
+  }
+  return myString;
+}
 
 int main(){
 	typedef int T;
@@ -37,6 +46,8 @@ int main(){
 	 
 	OA *oa_bd = new OA();
 
+
+/*
 	cout << "******** oa_bd->crear_clase( huracan )" << endl;
 		cout << oa_bd->crear_clase( "huracan" ) << endl;
 	cout << "******** oa_bd->crear_clase( fenMeteorologico )" << endl;
@@ -222,16 +233,18 @@ int main(){
 	cout << "******** categoria: " << oa_bd->consultar_propiedad_instancia("huracan", "vince", "categoria") << endl;
 	cout << "******** valor1: " << oa_bd->consultar_propiedad_instancia("huracan", "vince", "valor1") << endl;
 	cout << "******** valor2: " << oa_bd->consultar_propiedad_instancia("huracan", "vince", "valor2") << endl;
-
+*/
 
 //	oa_bd->consultar_propiedad_instancia("Clase2", "Instancia1", "NumMuertes")
 //	cout << oa_bd->agregar_valorApropiedad("Clase3", "Instancia7", "NumMuertes", 13)<< endl;
 //	oa_bd->activar_eventos("Clase3", "OcurreDesastreNatural");
 		
+	
+	int cant_clases = 120;
+	int cant_instancias = 1900;
 		
-	/*	
 	//Crear 15000 clases
-	for(i = 1; i <=50 ; i++){ //15000
+	for(i = 1; i <= cant_clases ; i++){ //15000
 		stringstream ss;
 		ss << i;
 		c = "Clase" + ss.str();		
@@ -242,10 +255,10 @@ int main(){
 
 	
 	//Crear 2 instancias para cada una de las primeras 7500 clases, 50
-	for(j = 1; j <= 50 ; j++){ //7500
+	for(j = 1; j <=  cant_clases ; j++){ //7500
 		stringstream ff;
 		ff << j;	
-		for(i = 1; i <= 50 ; i++){//50
+		for(i = 1; i <= cant_instancias ; i++){//50
 			stringstream ss;
 			ss << i;
 		
@@ -256,6 +269,65 @@ int main(){
 		}
 	}
 
+	i = 1;
+	int b = true;
+	while(i <=  cant_clases && b){ //15000
+		stringstream ss;
+		ss << i;
+		c = "Clase" + ss.str();		
+		if( oa_bd->get_clase(c) == NULL){
+			b = false;
+			cout << "Hay una clase que no existe: "<< c << endl;
+		}
+		i++;
+	}
+
+	j = 1;
+	b = true;
+	while(j <=  cant_clases){ //7500
+		stringstream ff;
+		ff << j;
+		i = 1;	
+		while( i <= cant_instancias){//50
+			stringstream ss;
+			ss << i;
+		
+			in = "Instancia" + ss.str() ;	
+			c = "Clase" + ff.str();
+			
+			if( oa_bd->get_instancia(c, in) == NULL ){
+				b = false;
+				cout << "Hay una instancia que no existe: "<< in << " "<< c << endl;
+			}
+
+	
+			i++;				
+		}
+		j++;
+	}
+
+	i = 1;
+	// hallar un 2^x ~ cant_clases
+	//7499
+	while(i <= 59){
+		stringstream ss,s2,s3;
+		ss << i;
+		c = "Clase" + ss.str();
+			
+		s2 << (i*2);
+		h1 = "Clase" + s2.str();
+
+		s3 << ((i*2)+1);
+		h2 = "Clase" + s3.str();
+		
+		oa_bd->agregar_subclase(h1, c);
+		oa_bd->agregar_subclase(h2, c);
+		
+		i+=1;
+	}
+
+	//cout << INT_MAX << endl; //2147483647
+
 	n = oa_bd->get_num_clases();
 
 	cout <<"Numero de clases: "<< n << endl;
@@ -263,12 +335,22 @@ int main(){
 
 
 	//Cuando se consulta una instancia o una clase y no existe, devuelve NULL, y al imprimir NULL crea violacion del segmento
+	//Al tener 15000 clases con 15000 instancias cada una, dice que la instancia 1 de la clase 3 no existen	
+
 	is = oa_bd->get_instancia("Clase3", "Instancia1");
 	if( is != NULL ){
 		cout << "Instancia: " << is->get_nombre() << endl;
 	}
 	else{
 		cout << "No existe la instancia" << endl;
+	}
+
+	x = oa_bd->get_clase(2);
+	if( x != NULL ){
+		cout << "Clase: " << x->get_nombre() << endl;
+	}
+	else{
+		cout << "No existe la clase" << endl;
 	}
 	
 	x = oa_bd->get_clase(14999);
@@ -292,11 +374,11 @@ int main(){
 	//CREAR VARIABLES
 	cout << "************************* CREAR VARIABLES *************************************" <<endl;
 	//Se crean las propiedades y se inicializan
-	cout << oa_bd->crear_propiedad("Clase2", "NumMuertes", ENTERO) << endl;
-	cout << oa_bd->crear_propiedad("Clase2", "Velocidad", REAL) << endl;
-	cout << oa_bd->crear_propiedad("Clase2", "AlertarA", CADENA)<< endl;
-	cout << oa_bd->crear_propiedad("Clase4", "Nombre", CADENA) << endl;
-	cout << oa_bd->crear_propiedad("Clase4", "Apellido", CADENA)<< endl;
+	cout << oa_bd->crear_propiedad("Clase1", "NumMuertes", ENTERO) << endl;
+	cout << oa_bd->crear_propiedad("Clase1", "Velocidad", REAL) << endl;
+	cout << oa_bd->crear_propiedad("Clase1", "AlertarA", CADENA)<< endl;
+	cout << oa_bd->crear_propiedad("Clase3", "Nombre", CADENA) << endl;
+	cout << oa_bd->crear_propiedad("Clase3", "Apellido", CADENA)<< endl;
 	
 	
 	//CREAR EVENTO
@@ -306,13 +388,14 @@ int main(){
 	
 	//CONSULTAR VALORES
 	cout << "****************************  CONSULTAR VALORES ***********************************" <<endl;
+///Al tener 15000 clases con 15000 instancias cada una, sa violacion de segmento por aca
 	
 	cout << "Consultando NumMuertes = " << oa_bd->consultar_propiedad_instancia("Clase2", "Instancia1", "NumMuertes") << endl;
 	cout << "Consultando Velocidad = " << oa_bd->consultar_propiedad_instancia("Clase2", "Instancia1", "Velocidad") << endl; //Hay que Comprobar que existe la propiedad y la propiedad existe en esa instancias
 	cout << "Consultando AlertarA = " << oa_bd->consultar_propiedad_instancia("Clase2", "Instancia1", "AlertarA") << endl;
 	cout << "Consultando Apellido = " << oa_bd->consultar_propiedad_instancia("Clase2", "Instancia1", "Apellido") << endl;
 	cout << "Consultando Nombre = " << oa_bd->consultar_propiedad_instancia("Clase2", "Instancia1", "Nombre") << endl;
-
+/*
 	//ASIGNAR VALORES
 	cout << "*************************** ASIGNAR VALORES ************************************" <<endl;
 	cout << oa_bd->agregar_valorApropiedad("Clase2", "Instancia1", "Nombre", (string)"Yanina Gabriela")<< endl;
@@ -352,47 +435,101 @@ int main(){
 			c = "Clase" + ff.str();
 	cout << in << " " << c << endl;
 	
-	if( (oa_bd->get_clase(c))->existe_propiedad( "NumMuertes" ) )
-	cout << "Consultando NumMuertes = " << oa_bd->consultar_propiedad_instancia(c, in, "NumMuertes") << endl;
+	if(oa_bd->get_clase(c) != NULL){
+		if( (oa_bd->get_clase(c))->existe_propiedad( "NumMuertes" ) )
+			cout << "Consultando NumMuertes = " << oa_bd->consultar_propiedad_instancia(c, in, "NumMuertes") << endl;
+	}
+	else{
+		cout << "La clase " << c << " es NULL" << endl;
+
+	}
+
+	if(oa_bd->get_clase(c) != NULL)
+		if( (oa_bd->get_clase(c))->existe_propiedad( "Velocidad" ) )
+			cout << "Consultando Velocidad = " << oa_bd->consultar_propiedad_instancia(c, in, "Velocidad") << endl; //Hay que Comprobar que existe la propiedad y la propiedad existe en esa instancias
+	else{
+		cout << "La clase " << c << " es NULL" << endl;
+
+	}
 	
-	if( (oa_bd->get_clase(c))->existe_propiedad( "Velocidad" ) )
-	cout << "Consultando Velocidad = " << oa_bd->consultar_propiedad_instancia(c, in, "Velocidad") << endl; //Hay que Comprobar que existe la propiedad y la propiedad existe en esa instancias
+	if(oa_bd->get_clase(c) != NULL)
+		if( (oa_bd->get_clase(c))->existe_propiedad( "AlertarA" ) )
+			cout << "Consultando AlertarA = " << oa_bd->consultar_propiedad_instancia(c, in, "AlertarA") << endl;
+	else{
+		cout << "La clase " << c << " es NULL" << endl;
+
+	}
+
+	if(oa_bd->get_clase(c) != NULL)	
+		cout << endl;
+		if( (oa_bd->get_clase(c))->existe_propiedad( "Nombre" ) )
+			cout << "Consultando Nombre = " << oa_bd->consultar_propiedad_instancia(c, in, "Nombre") << endl;
+	else{
+		cout << "La clase " << c << " es NULL" << endl;
+
+	}
 	
-	if( (oa_bd->get_clase(c))->existe_propiedad( "AlertarA" ) )
-	cout << "Consultando AlertarA = " << oa_bd->consultar_propiedad_instancia(c, in, "AlertarA") << endl;
-	
-	if( (oa_bd->get_clase(c))->existe_propiedad( "Nombre" ) )
-	cout << "Consultando Nombre = " << oa_bd->consultar_propiedad_instancia(c, in, "Nombre") << endl;
-	
-	if( (oa_bd->get_clase(c))->existe_propiedad( "Apellido" ) )
-	cout << "Consultando Apellido = " << oa_bd->consultar_propiedad_instancia(c, in, "Apellido") << endl << endl;
-	
+	if(oa_bd->get_clase(c) != NULL)
+		if( (oa_bd->get_clase(c))->existe_propiedad( "Apellido" ) )
+			cout << "Consultando Apellido = " << oa_bd->consultar_propiedad_instancia(c, in, "Apellido") << endl << endl;
+	else{
+		cout << "La clase " << c << " es NULL" << endl;
+
+	}	
 				
 		}
 	}
+
+///Hay una violacion de segmento aqui cuando se crean 15000 clases y 50 instancias para las primeras 1000 clases
 
 	c = "Clase2";
 	in =  "INSTANCIA_NUEVA";
 	oa_bd->crear_instancia( in, c );
 
-	if( (oa_bd->get_clase(c))->existe_propiedad( "NumMuertes" ) )
-	cout << "Consultando NumMuertes = " << oa_bd->consultar_propiedad_instancia(c, in, "NumMuertes") << endl;
-	
-	if( (oa_bd->get_clase(c))->existe_propiedad( "Velocidad" ) )
-	cout << "Consultando Velocidad = " << oa_bd->consultar_propiedad_instancia(c, in, "Velocidad") << endl; //Hay que Comprobar que existe la propiedad y la propiedad existe en esa instancias
-	
+	cout << "Comenzo " << endl;
+
+	if(oa_bd->get_clase(c) != NULL)
+		if( (oa_bd->get_clase(c))->existe_propiedad( "NumMuertes" ) )
+			cout << "Consultando NumMuertes = " << oa_bd->consultar_propiedad_instancia(c, in, "NumMuertes") << endl;
+	else{
+		cout << "La clase " << c << " es NULL" << endl;
+
+	}
+
+	if(oa_bd->get_clase(c) != NULL)
+		if( (oa_bd->get_clase(c))->existe_propiedad( "Velocidad" ) )
+			cout << "Consultando Velocidad = " << oa_bd->consultar_propiedad_instancia(c, in, "Velocidad") << endl; //Hay que Comprobar que existe la propiedad y la propiedad existe en esa instancias
+	else{
+		cout << "La clase " << c << " es NULL" << endl;
+
+	}
+
+	if(oa_bd->get_clase(c) != NULL)
 	if( (oa_bd->get_clase(c))->existe_propiedad( "AlertarA" ) )
 	cout << "Consultando AlertarA = " << oa_bd->consultar_propiedad_instancia(c, in, "AlertarA") << endl;
-	
+	else{
+		cout << "La clase " << c << " es NULL" << endl;
+
+	}
+
+	if(oa_bd->get_clase(c) != NULL)
 	if( (oa_bd->get_clase(c))->existe_propiedad( "Nombre" ) )
 	cout << "Consultando Nombre = " << oa_bd->consultar_propiedad_instancia(c, in, "Nombre") << endl;
-	
+	else{
+		cout << "La clase " << c << " es NULL" << endl;
+
+	}
+
+	if(oa_bd->get_clase(c) != NULL)
 	if( (oa_bd->get_clase(c))->existe_propiedad( "Apellido" ) )
 	cout << "Consultando Apellido = " << oa_bd->consultar_propiedad_instancia(c, in, "Apellido") << endl << endl;
-	 
-	*/
-	
+	 else{
+		cout << "La clase " << c << " es NULL" << endl;
 
+	}
+	
+	
+*/
 
 
 
@@ -466,8 +603,8 @@ $ indica el final de la frase
 			else{
 				// Extraigo el rango de los eventos
 				eventos = exp.substr( (int)rm.rm_so, (int)rm.rm_eo - 3);
-				tipo = exp.substr(1, (int)rm.rm_so - 2);
-				tabla = exp.substr((int)rm.rm_eo + 1 , exp.size() );
+				tipo = exp.substr(1, (int)rm.rm_so - 2); //Tipo de ejecucion de ventos
+				tabla = exp.substr((int)rm.rm_eo + 1 , exp.size() ); //Clase donde se ejecutaran los eventos
 				tabla.erase(tabla.size() - 1 , 2);
 				eventos = eventos.substr( 1, eventos.size());
 				eventos[ eventos.size()-1 ] = ',';
@@ -477,27 +614,31 @@ $ indica el final de la frase
 			// Se obtienen los nombres de los eventos y se verifica que no hayan repetidos
 			num_eventos = 0;
 			band = true;
-			do{
-				int f;
-				f = eventos.find(","); //Busco la posicion de la coma mas cercana
-				eve = eventos.substr(0, f); //Extraigo un evento de la lista
-				
-				if( (*eventosHash)[eve] != ""  ){//Reviso si es evento es repetido
-					band = false;
-				}
-				else{
-					(*eventosHash)[eve] = eve; //Guardo el evento en la tabla hash
-					num_eventos+=1; //Contador de eventos
-					eventos = eventos.substr( f+1, eventos.size()-1);//Elimino el evento que se agrego de la cadena original
-				}
-			}while( eventos.size() > 1 && band );
 			
+			if( StringToUpper( tipo ) == "P"){ //Se verifica si es paralelo para no permitir eventos repetidos
+				do{
+					int f;
+					f = eventos.find(","); //Busco la posicion de la coma mas cercana
+					eve = eventos.substr(0, f); //Extraigo un evento de la lista
+				
+					if( (*eventosHash)[eve] != ""  ){//Reviso si es evento es repetido
+						band = false;
+					}
+					else{
+						(*eventosHash)[eve] = eve; //Guardo el evento en la tabla hash
+						num_eventos+=1; //Contador de eventos
+						eventos = eventos.substr( f+1, eventos.size()-1);//Elimino el evento que se agrego de la cadena original
+					}
+				}while( eventos.size() > 1 && band );
+			}
 			if(!band){
 				cout << "Hay uno o más eventos repetidos" << endl;
 			}
 			else{
 				//Verificar que existen los eventos y la clase en donde se activaran		
 				if( oa_bd->existencia_consulta_reactiva(eventosHash, num_eventos, tabla) ){
+					
+
 					//oa_bd->activar_eventos(nom_evento, nom_);
 				}
 			}

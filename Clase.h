@@ -97,7 +97,11 @@ class Clase{
 	}
 
 	bool Clase::existe_propiedad(string p){
-		return ( !( ((*propi)[p]-1) == -1) );
+		int nume = (*propi)[p];
+		
+		nume = nume - 1;
+				
+		return (  nume != -1 );
 	
 	}
 

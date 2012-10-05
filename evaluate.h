@@ -9,7 +9,7 @@
 #include <stddef.h>
 #include <stdlib.h> /******************************Antes era stdlib, daba problemas con la funcion getenv()
 */
-#define P 15000 //Cantidad de propiedades en Tabla.h
+#define P 3001 //Cantidad de propiedades en Tabla.h
 
 using namespace std;
 

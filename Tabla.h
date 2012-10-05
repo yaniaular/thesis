@@ -9,10 +9,10 @@
 #include <float.h>
 #include <cstdlib>
 
-#define C 15000
-#define I 15000
-#define P 15000
-#define E 15000
+#define C 700
+#define I 700000
+#define P 3001
+#define E 501
 
 #define ENTERO 0
 #define REAL 1
