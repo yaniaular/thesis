@@ -10,10 +10,10 @@
 #include <cstdlib>
 #include <list>
 
-#define C 500 //500
-#define I 240000 //240000
-#define P 3001 //3001
-#define E 501 // 501
+#define C 300
+#define I 249000 
+#define P 500 
+#define E 150
 
 #define ENTERO 0
 #define REAL 1

@@ -258,7 +258,7 @@ int main(){
 	int cant_clases = 300; //500
 	int cant_prop = 500; //300
 	int cant_even = 150;
-	int cant_instancias = 800; //200	
+	int cant_instancias = 830; //200	
 	//Crear 15000 clases
 	for(i = 1; i <= cant_clases ; i++){ //15000
 		stringstream ss;
@@ -325,7 +325,7 @@ int main(){
 	i = 1;
 	// hallar un 2^x ~ cant_clases
 	//7499
-	while(i <= 59){
+	while(i <= 149){
 		stringstream ss,s2,s3;
 		ss << i;
 		c = "Clase" + ss.str();
@@ -388,16 +388,17 @@ int main(){
 	//oa_bd->agregar_subclase("Clase3", "Clase2");
 
 	//CREAR VARIABLES
-	cout << "************************* CREAR VARIABLES *************************************" <<endl;
+	cout << "************************* CREAR PROPIEDADES *************************************" <<endl;
 	//Se crean las propiedades y se inicializan
 	cout << oa_bd->crear_propiedad("Clase1", "NumMuertes", ENTERO) << endl;
 	cout << oa_bd->crear_propiedad("Clase1", "Velocidad", REAL) << endl;
 	cout << oa_bd->crear_propiedad("Clase1", "AlertarA", CADENA)<< endl;
+	cout << oa_bd->crear_propiedad("Clase1", "intensidad", ENTERO)<< endl;
 	cout << oa_bd->crear_propiedad("Clase3", "Nombre", CADENA) << endl;
 	cout << oa_bd->crear_propiedad("Clase3", "Apellido", CADENA)<< endl;
 	
 
-	for(i = 1; i <= cant_prop - 5 ; i++){ //15000
+	for(i = 1; i <= cant_prop - 6 ; i++){ //15000
 		stringstream ss;
 		ss << i;
 		c = "Propiedad" + ss.str();		
@@ -416,17 +417,15 @@ int main(){
 	
 
 
-	cout << oa_bd->crear_evento("Clase1", "Evento1", "intensidad", 0,"velocidadViento == 0") << endl;
-	
-	
 	for(i = 1; i <= cant_even ; i++){ //15000
 		stringstream ss;
 		ss << i;
-		c = "Evento" + ss.str();		
-		oa_bd->crear_evento("Clase1", c, "Propiedad" +  ss.str(), 45,"velocidadViento == " + ss.str());
+		c = "Evento" + ss.str();
+		h1 = "Velocidad == " + ss.str() + ".0";		
+		cout << oa_bd->crear_evento("Clase1", c, "intensidad", i, h1) << endl;
 	}
 
-	cout <<"Numero de propiedades: " << oa_bd->get_num_eventos() << endl;
+	cout <<"Numero de eventos: " << oa_bd->get_num_eventos() << endl;
 
 	//  || Nombre == \"HOLA\" 
 	
@@ -443,29 +442,51 @@ int main(){
 	//ASIGNAR VALORES
 	cout << "*************************** ASIGNAR VALORES ************************************" <<endl;
 	cout << oa_bd->agregar_valorApropiedad("Clase2", "Instancia1", "Nombre", (string)"Yanina Gabriela")<< endl;
+	cout << oa_bd->agregar_valorApropiedad("Clase2", "Instancia1", "Apellido", (string)"Aular Osorio")<< endl;	
 	cout << oa_bd->agregar_valorApropiedad("Clase2", "Instancia1", "AlertarA", (string)"Nadie")<< endl;
-	cout << oa_bd->agregar_valorApropiedad("Clase2", "Instancia1", "Apellido", (string)"Aular Osorio")<< endl;
 	cout << oa_bd->agregar_valorApropiedad("Clase2", "Instancia1", "NumMuertes", 0)<< endl;
 	cout << oa_bd->agregar_valorApropiedad("Clase2", "Instancia1", "Velocidad", 800.5)<< endl;
 
 	//ASIGNAR VALORES 2
 	cout << "*************************** ASIGNAR VALORES 2 ************************************" <<endl;
 	cout << oa_bd->agregar_valorApropiedad("Clase2", "Instancia2", "Nombre", (string)"Nombre_2")<< endl;
+	cout << oa_bd->agregar_valorApropiedad("Clase2", "Instancia2", "Apellido", (string)"Apellido_2")<< endl;	
 	cout << oa_bd->agregar_valorApropiedad("Clase2", "Instancia2", "AlertarA", (string)"Nadie")<< endl;
-	cout << oa_bd->agregar_valorApropiedad("Clase2", "Instancia2", "Apellido", (string)"Apellido_2")<< endl;
 	cout << oa_bd->agregar_valorApropiedad("Clase2", "Instancia2", "NumMuertes", 0)<< endl;
 	cout << oa_bd->agregar_valorApropiedad("Clase2", "Instancia2", "Velocidad", 3)<< endl;
 
-/*	
+	
 	cout << oa_bd->agregar_valorApropiedad("Clase3", "Instancia7", "NumMuertes", 13)<< endl;
 	
 	//ACTIVAR EVENTO
 	cout << "***************************** ACTIVAR EVENTO **********************************" <<endl;
-	oa_bd->activar_eventos("Clase3", "OcurreDesastreNatural");
+	//oa_bd->activar_eventos("Clase3", "OcurreDesastreNatural");
+
+
+	for(i = 1; i <= cant_instancias ; i++){ //15000
+		stringstream ss;
+		ss << i;
+		c = "Instancia" + ss.str();		
+		oa_bd->agregar_valorApropiedad("Clase1", c , "Velocidad", 1.0);
+	}
+
+	oa_bd->activar_eventos("Clase1", "Evento1");
+
+cout << "Consultando intensidad = " << oa_bd->consultar_propiedad_instancia("Clase1", "Instancia1", "intensidad") << endl;
 	
+	for(i = 1; i <= cant_instancias ; i++){ //15000
+		stringstream ss;
+		ss << i;
+		c = "Instancia" + ss.str();		
+	cout << "Consultando intensidad de "<< c <<" = " << oa_bd->consultar_propiedad_instancia("Clase1", c, "intensidad") << endl;
+	}
+
+	
+
 	//MAS CONSULTA DE VALORES
-	oa_bd->agregar_subclase("Clase5", "Clase4");
-	oa_bd->agregar_subclase("Clase4", "Clase2");
+	//oa_bd->agregar_subclase("Clase5", "Clase4");
+	//oa_bd->agregar_subclase("Clase4", "Clase2");
+/*	
 	for(j = 2; j <= 3 ; j++){ //7500
 		stringstream ff;
 		ff << j;	
@@ -488,35 +509,35 @@ int main(){
 
 	}
 
-	if(oa_bd->get_clase(c) != NULL)
+	if(oa_bd->get_clase(c) != NULL){
 		if( (oa_bd->get_clase(c))->existe_propiedad( "Velocidad" ) )
 			cout << "Consultando Velocidad = " << oa_bd->consultar_propiedad_instancia(c, in, "Velocidad") << endl; //Hay que Comprobar que existe la propiedad y la propiedad existe en esa instancias
-	else{
+	}else{
 		cout << "La clase " << c << " es NULL" << endl;
 
 	}
 	
-	if(oa_bd->get_clase(c) != NULL)
+	if(oa_bd->get_clase(c) != NULL){
 		if( (oa_bd->get_clase(c))->existe_propiedad( "AlertarA" ) )
 			cout << "Consultando AlertarA = " << oa_bd->consultar_propiedad_instancia(c, in, "AlertarA") << endl;
-	else{
+	}else{
 		cout << "La clase " << c << " es NULL" << endl;
 
 	}
 
-	if(oa_bd->get_clase(c) != NULL)	
+	if(oa_bd->get_clase(c) != NULL){	
 		cout << endl;
 		if( (oa_bd->get_clase(c))->existe_propiedad( "Nombre" ) )
 			cout << "Consultando Nombre = " << oa_bd->consultar_propiedad_instancia(c, in, "Nombre") << endl;
-	else{
+	}else{
 		cout << "La clase " << c << " es NULL" << endl;
 
 	}
 	
-	if(oa_bd->get_clase(c) != NULL)
+	if(oa_bd->get_clase(c) != NULL){
 		if( (oa_bd->get_clase(c))->existe_propiedad( "Apellido" ) )
 			cout << "Consultando Apellido = " << oa_bd->consultar_propiedad_instancia(c, in, "Apellido") << endl << endl;
-	else{
+	}else{
 		cout << "La clase " << c << " es NULL" << endl;
 
 	}	
@@ -532,48 +553,48 @@ int main(){
 
 	cout << "Comenzo " << endl;
 
-	if(oa_bd->get_clase(c) != NULL)
+	if(oa_bd->get_clase(c) != NULL){
 		if( (oa_bd->get_clase(c))->existe_propiedad( "NumMuertes" ) )
 			cout << "Consultando NumMuertes = " << oa_bd->consultar_propiedad_instancia(c, in, "NumMuertes") << endl;
-	else{
+	}else{
 		cout << "La clase " << c << " es NULL" << endl;
 
 	}
 
-	if(oa_bd->get_clase(c) != NULL)
+	if(oa_bd->get_clase(c) != NULL){
 		if( (oa_bd->get_clase(c))->existe_propiedad( "Velocidad" ) )
 			cout << "Consultando Velocidad = " << oa_bd->consultar_propiedad_instancia(c, in, "Velocidad") << endl; //Hay que Comprobar que existe la propiedad y la propiedad existe en esa instancias
-	else{
+	}else{
 		cout << "La clase " << c << " es NULL" << endl;
 
 	}
 
-	if(oa_bd->get_clase(c) != NULL)
+	if(oa_bd->get_clase(c) != NULL){
 	if( (oa_bd->get_clase(c))->existe_propiedad( "AlertarA" ) )
 	cout << "Consultando AlertarA = " << oa_bd->consultar_propiedad_instancia(c, in, "AlertarA") << endl;
-	else{
+	}else{
 		cout << "La clase " << c << " es NULL" << endl;
 
 	}
 
-	if(oa_bd->get_clase(c) != NULL)
+	if(oa_bd->get_clase(c) != NULL){
 	if( (oa_bd->get_clase(c))->existe_propiedad( "Nombre" ) )
 	cout << "Consultando Nombre = " << oa_bd->consultar_propiedad_instancia(c, in, "Nombre") << endl;
-	else{
+	}else{
 		cout << "La clase " << c << " es NULL" << endl;
 
 	}
 
-	if(oa_bd->get_clase(c) != NULL)
+	if(oa_bd->get_clase(c) != NULL){
 	if( (oa_bd->get_clase(c))->existe_propiedad( "Apellido" ) )
 	cout << "Consultando Apellido = " << oa_bd->consultar_propiedad_instancia(c, in, "Apellido") << endl << endl;
-	 else{
+	 }else{
 		cout << "La clase " << c << " es NULL" << endl;
 
 	}
 	
-	
-*/
+	*/
+
 
 
 

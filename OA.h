@@ -228,34 +228,36 @@ class OA{
 	bool OA::crear_evento(string nom_clase, string nom_evento, string nom_propActiva, int valor_futuro, string expresion){
 		bool band = false;
 		int c_v = 0;
-		string variables[P]; //Aqui se guardan el nombre de las variables de la expresion.
+		string variables[100]; //Aqui se guardan el nombre de las variables de la expresion.
 
 		Clase *cl = get_clase(nom_clase);
-		
+
 		//Si el evento ya existe y la prop_Activa es la misma, agregar la expresion al evento existente
-		if( cl->existe_propiedad(nom_propActiva) && get_evento(nom_evento) == NULL && get_propiedad(nom_propActiva) != NULL && num_eventos < E){
-			if( !event->set(nom_evento, EnteroAString(num_eventos) ) ){
-				cout << "Error creando clase: " << event->error().name() << endl;
-			}
-			else{
-				//validar que la expresion sea correcta							
-				if( cl->comprobar_expresion(expresion, variables, &c_v)==0 ){
-					
-					eventos[num_eventos] = new Evento(nom_evento, nom_propActiva, valor_futuro, expresion);
-					//Descomponer expresion y ver que variables tiene para agregar el evento a esas propiedades
-					//Esto se hacia con el fin de que al cambiar el valor de una propiedad, se verificara
-					// los eventos que dependian de esa propiedad en la clase Propiedad.h
-					// y luego activar dichos eventos
-					for(int i = 0; i < c_v; i++){
-						cout << "La propiedad " << variables[i]<< " esta en la condicion" << endl;
-						//(get_propiedad( variables[i] ))->agregar_evento( eventos[num_eventos] );
-					}
-					
-					num_eventos = num_eventos + 1;
-					band = true;
+		if(cl != NULL){			
+			if( cl->existe_propiedad(nom_propActiva) && get_evento(nom_evento) == NULL && get_propiedad(nom_propActiva) != NULL && num_eventos < E){
+				if( !event->set(nom_evento, EnteroAString(num_eventos) ) ){
+					cout << "Error creando clase: " << event->error().name() << endl;
 				}
-			}
+				else{
+					//validar que la expresion sea correcta							
+					if( cl->comprobar_expresion(expresion, variables, &c_v)==0 ){
+					
+						eventos[num_eventos] = new Evento(nom_evento, nom_propActiva, valor_futuro, expresion);
+						//Descomponer expresion y ver que variables tiene para agregar el evento a esas propiedades
+						//Esto se hacia con el fin de que al cambiar el valor de una propiedad, se verificara
+						// los eventos que dependian de esa propiedad en la clase Propiedad.h
+						// y luego activar dichos eventos
+						/*for(int i = 0; i < c_v; i++){
+							cout << "La propiedad " << variables[i]<< " esta en la condicion" << endl;
+							//(get_propiedad( variables[i] ))->agregar_evento( eventos[num_eventos] );
+						}*/
+					
+						num_eventos = num_eventos + 1;
+						band = true;
+					}
+				}
 	
+			}
 		}
 		return band;
 	}
@@ -263,65 +265,67 @@ class OA{
 	bool OA::crear_evento(string nom_clase, string nom_evento, string nom_propActiva, double valor_futuro, string expresion){
 		bool band = false;
 		int c_v = 0;
-		string variables[P]; 
+		string variables[100]; 
 
 		Clase *cl = get_clase(nom_clase);
 		
 		//Si el evento ya existe y la prop_Activa es la misma, agregar la expresion al evento existente
-		if( cl->existe_propiedad(nom_propActiva) && get_evento(nom_evento) == NULL && get_propiedad(nom_propActiva) != NULL && num_eventos < E){
-			if( !event->set(nom_evento, EnteroAString(num_eventos) ) ){
-				cout << "Error creando clase: " << event->error().name() << endl;
-			}
-			else{
-				//validar que la expresion sea correcta							
-				if( cl->comprobar_expresion(expresion, variables, &c_v)==0 ){
-					eventos[num_eventos] = new Evento(nom_evento, nom_propActiva, valor_futuro, expresion);
-					//Descomponer expresion y ver que variables tiene para agregar el evento a esas propiedades
-					/*for(int i = 0; i < c_v; i++){
-						//~ cout << "La propiedad " << variables[i]<< " esta en la condicion" << endl;
-						(get_propiedad( variables[i] ))->agregar_evento( eventos[num_eventos] );
-					}*/
-					num_eventos = num_eventos + 1;
-					band = true;
+		if(cl != NULL){	
+			if( cl->existe_propiedad(nom_propActiva) && get_evento(nom_evento) == NULL && get_propiedad(nom_propActiva) != NULL && num_eventos < E){
+				if( !event->set(nom_evento, EnteroAString(num_eventos) ) ){
+					cout << "Error creando clase: " << event->error().name() << endl;
 				}
-			}
+				else{
+					//validar que la expresion sea correcta							
+					if( cl->comprobar_expresion(expresion, variables, &c_v)==0 ){
+						eventos[num_eventos] = new Evento(nom_evento, nom_propActiva, valor_futuro, expresion);
+						//Descomponer expresion y ver que variables tiene para agregar el evento a esas propiedades
+						/*for(int i = 0; i < c_v; i++){
+							//~ cout << "La propiedad " << variables[i]<< " esta en la condicion" << endl;
+							(get_propiedad( variables[i] ))->agregar_evento( eventos[num_eventos] );
+						}*/
+						num_eventos = num_eventos + 1;
+						band = true;
+					}
+				}
 	
+			}
 		}
-		
 		return band;
 	}
 	
 		bool OA::crear_evento(string nom_clase, string nom_evento, string nom_propActiva, string valor_futuro, string expresion){
 		bool band = false;
 		int c_v = 0;
-		string variables[P]; 
+		string variables[100]; 
 
 		Clase *cl = get_clase(nom_clase);
 		
 		//Si el evento ya existe y la prop_Activa es la misma, agregar la expresion al evento existente
-		if( cl->existe_propiedad(nom_propActiva) && get_evento(nom_evento) == NULL && get_propiedad(nom_propActiva) != NULL && num_eventos < E){
-			if( !event->set(nom_evento, EnteroAString(num_eventos) ) ){
-				cout << "Error creando clase: " << event->error().name() << endl;
-			}
-			else{
-				//validar que la expresion sea correcta
-								
-				if( cl->comprobar_expresion(expresion, variables, &c_v)==0 ){
-					eventos[num_eventos] = new Evento(nom_evento, nom_propActiva, valor_futuro, expresion);
-					//Descomponer expresion y ver que variables tiene para agregar el evento a esas propiedades
-					/*for(int i = 0; i < c_v; i++){
-						//~ cout << "La propiedad " << variables[i]<< " esta en la condicion" << endl;
-						(get_propiedad( variables[i] ))->agregar_evento( eventos[num_eventos] );
-					}*/
-					num_eventos = num_eventos + 1;
-					band = true;
+		if(cl != NULL){			
+			if( cl->existe_propiedad(nom_propActiva) && get_evento(nom_evento) == NULL && get_propiedad(nom_propActiva) != NULL && num_eventos < E){
+				if( !event->set(nom_evento, EnteroAString(num_eventos) ) ){
+					cout << "Error creando clase: " << event->error().name() << endl;
 				}
 				else{
-					cout << "La expresion no es correcta, puede que tenga alguna propiedad que no exista en la clase o la expresion este mal formulada" << endl;
+					//validar que la expresion sea correcta
+								
+					if( cl->comprobar_expresion(expresion, variables, &c_v)==0 ){
+						eventos[num_eventos] = new Evento(nom_evento, nom_propActiva, valor_futuro, expresion);
+						//Descomponer expresion y ver que variables tiene para agregar el evento a esas propiedades
+						/*for(int i = 0; i < c_v; i++){
+							//~ cout << "La propiedad " << variables[i]<< " esta en la condicion" << endl;
+							(get_propiedad( variables[i] ))->agregar_evento( eventos[num_eventos] );
+						}*/
+						num_eventos = num_eventos + 1;
+						band = true;
 					}
+					else{
+						cout << "La expresion no es correcta, puede que tenga alguna propiedad que no exista en la clase o la expresion este mal formulada" << endl;
+						}
+				}
 			}
 		}
-		
 		return band;
 	}
 	
