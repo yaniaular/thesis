@@ -1,4 +1,4 @@
-(s,  [OcurreDesastreNatural,AlertarA],tablasafadf)
+(P,  [EcharAgua, OcurreDesastreNatural, BomberosActivados, huboMuerte], Clase2)
 (s,  [eve1,eve2,eve3],tabla123)
 (p, [eve1,eve2],tabla3423245)
 (s,[eve1  ,e],tabla3245)

@@ -14,8 +14,6 @@ using std::set_new_handler;
 #include <cstdlib>
 using std::abort;
 
-
-
 void mensaje_error(){
 	cerr << "Error de memoria, bad_alloc";
 	abort();
@@ -260,6 +258,7 @@ int main(){
 	int cant_even = 150;
 	int cant_instancias = 830; //200	
 	//Crear 15000 clases
+	cout << "Creando las " << cant_clases << " Clases..." << endl;	
 	for(i = 1; i <= cant_clases ; i++){ //15000
 		stringstream ss;
 		ss << i;
@@ -271,6 +270,7 @@ int main(){
 
 	
 	//Crear 2 instancias para cada una de las primeras 7500 clases, 50
+	cout << "Creando las " << cant_clases*cant_instancias << " instancias..." << endl;	
 	for(j = 1; j <=  cant_clases ; j++){ //7500
 		stringstream ff;
 		ff << j;	
@@ -297,6 +297,7 @@ int main(){
 		}
 		i++;
 	}
+
 
 	j = 1;
 	b = true;
@@ -325,6 +326,7 @@ int main(){
 	i = 1;
 	// hallar un 2^x ~ cant_clases
 	//7499
+	cout << "Creando conexion entre las " << cant_clases << " Clases..." << endl;
 	while(i <= 149){
 		stringstream ss,s2,s3;
 		ss << i;
@@ -346,13 +348,13 @@ int main(){
 
 	n = oa_bd->get_num_clases();
 
-	cout <<"Numero de clases: "<< n << endl;
-	cout <<"Numero de instancias: " << oa_bd->get_num_instancias() << endl;
+	//cout <<"Numero de clases: "<< n << endl;
+	//cout <<"Numero de instancias: " << oa_bd->get_num_instancias() << endl;
 
 
 	//Cuando se consulta una instancia o una clase y no existe, devuelve NULL, y al imprimir NULL crea violacion del segmento
 	//Al tener 15000 clases con 15000 instancias cada una, dice que la instancia 1 de la clase 3 no existen	
-
+/*
 	is = oa_bd->get_instancia("Clase3", "Instancia1");
 	if( is != NULL ){
 		cout << "Instancia: " << is->get_nombre() << endl;
@@ -384,12 +386,15 @@ int main(){
 	else{
 		cout << "No existe la clase" << endl;
 	}
-
-	//oa_bd->agregar_subclase("Clase3", "Clase2");
-
+*/
+	
 	//CREAR VARIABLES
-	cout << "************************* CREAR PROPIEDADES *************************************" <<endl;
+	//cout << "************************* CREAR PROPIEDADES *************************************" <<endl;
 	//Se crean las propiedades y se inicializan
+	cout << "Creando las " << cant_prop << " Propiedades..." << endl;
+	cout << oa_bd->crear_propiedad("Clase1", "AumentarPresion", ENTERO) << endl;
+	cout << oa_bd->crear_propiedad("Clase1", "LlamarBombero", ENTERO) << endl;
+	cout << oa_bd->crear_propiedad("Clase1", "huboPerdidaHumana", ENTERO) << endl;
 	cout << oa_bd->crear_propiedad("Clase1", "NumMuertes", ENTERO) << endl;
 	cout << oa_bd->crear_propiedad("Clase1", "Velocidad", REAL) << endl;
 	cout << oa_bd->crear_propiedad("Clase1", "AlertarA", CADENA)<< endl;
@@ -397,8 +402,8 @@ int main(){
 	cout << oa_bd->crear_propiedad("Clase3", "Nombre", CADENA) << endl;
 	cout << oa_bd->crear_propiedad("Clase3", "Apellido", CADENA)<< endl;
 	
-
-	for(i = 1; i <= cant_prop - 6 ; i++){ //15000
+/*
+	for(i = 1; i <= cant_prop - 8 ; i++){ //15000
 		stringstream ss;
 		ss << i;
 		c = "Propiedad" + ss.str();		
@@ -409,22 +414,24 @@ int main(){
 	cout <<"Numero de propiedades: " << oa_bd->get_num_propiedades() << endl;
 		
 
-
+*/
 
 	//CREAR EVENTO
 	cout << "**************************** CREAR EVENTO **********************************" <<endl;
-	cout << oa_bd->crear_evento("Clase2", "OcurreDesastreNatural", "AlertarA", "CruzRoja","NumMuertes > 0 || Velocidad > 500") << endl << endl;
-	
-
-
-	for(i = 1; i <= cant_even ; i++){ //15000
+	cout << oa_bd->crear_evento("Clase2", "EcharAgua", "AumentarPresion", "1","LlamarBombero == 1") << endl << endl;
+	cout << oa_bd->crear_evento("Clase2", "BomberosActivados", "LlamarBombero", "1","AlertarA == \"CruzRoja\" ") << endl << endl;
+	cout << oa_bd->crear_evento("Clase2", "OcurreDesastreNatural", "AlertarA", "CruzRoja","Velocidad > 500 || huboPerdidaHumana == 1") << endl << endl;
+	cout << oa_bd->crear_evento("Clase2", "huboMuerte", "huboPerdidaHumana", "1","NumMuertes > 0") << endl << endl;
+/*
+	cout << "Creando los " << cant_even << " Eventos" << endl;
+	for(i = 1; i <= cant_even - 2; i++){ //15000
 		stringstream ss;
 		ss << i;
 		c = "Evento" + ss.str();
 		h1 = "Velocidad == " + ss.str() + ".0";		
 		cout << oa_bd->crear_evento("Clase1", c, "intensidad", i, h1) << endl;
 	}
-
+*/
 	cout <<"Numero de eventos: " << oa_bd->get_num_eventos() << endl;
 
 	//  || Nombre == \"HOLA\" 
@@ -462,17 +469,17 @@ int main(){
 	cout << "***************************** ACTIVAR EVENTO **********************************" <<endl;
 	//oa_bd->activar_eventos("Clase3", "OcurreDesastreNatural");
 
-
+/*
 	for(i = 1; i <= cant_instancias ; i++){ //15000
 		stringstream ss;
 		ss << i;
 		c = "Instancia" + ss.str();		
 		oa_bd->agregar_valorApropiedad("Clase1", c , "Velocidad", 1.0);
 	}
+*/
+	//oa_bd->activar_eventos("Clase1", "Evento1");
 
-	oa_bd->activar_eventos("Clase1", "Evento1");
-
-cout << "Consultando intensidad = " << oa_bd->consultar_propiedad_instancia("Clase1", "Instancia1", "intensidad") << endl;
+/*cout << "Consultando intensidad = " << oa_bd->consultar_propiedad_instancia("Clase1", "Instancia1", "intensidad") << endl;
 	
 	for(i = 1; i <= cant_instancias ; i++){ //15000
 		stringstream ss;
@@ -481,7 +488,7 @@ cout << "Consultando intensidad = " << oa_bd->consultar_propiedad_instancia("Cla
 	cout << "Consultando intensidad de "<< c <<" = " << oa_bd->consultar_propiedad_instancia("Clase1", c, "intensidad") << endl;
 	}
 
-	
+	*/
 
 	//MAS CONSULTA DE VALORES
 	//oa_bd->agregar_subclase("Clase5", "Clase4");
@@ -608,13 +615,13 @@ cout << "Consultando intensidad = " << oa_bd->consultar_propiedad_instancia("Cla
  *  
 */
 
-/*
+
 ifstream entrada("consultas_reactivas.in");
 int reti;
 regex_t regex; //Variable para la expresion regular
 string exp;
 char * pattern ="^\\((S|s|p|P),\\[([A-Za-z0-9])+(([,])([A-Za-z0-9])+)*\\],([A-Za-z0-9])+\\)$"; //Patron de la expresion regular
-*/
+
 /**
 ^ Indica el inicio de la frase
 \\(   Agrega el parentesis
@@ -629,7 +636,7 @@ char * pattern ="^\\((S|s|p|P),\\[([A-Za-z0-9])+(([,])([A-Za-z0-9])+)*\\],([A-Za
 \\) Agrega el parentesis
 $ indica el final de la frase
 */
-/*
+
 	reti = regcomp (&regex, pattern, REG_EXTENDED);//Compilo el patrón
 	while( getline (entrada,exp) ){//Leo una linea del archivo
 		exp = Trim(exp);//Quitar espacios de la expresion
@@ -647,11 +654,11 @@ $ indica el final de la frase
 			char *patter = "\\[([A-Za-z0-9])+(([,])([A-Za-z0-9])+)*\\]";
 			string eventos, tipo, tabla;
 			int num_eventos;
-			Cuadro *eventosHash;//Tabla Hash con los eventos de la consulta-reactiva
+			map<string,string> *eventosHash;//Tabla Hash con los eventos de la consulta-reactiva
 			string eve;
 			bool band;
 			
-			eventosHash = new Cuadro();
+			eventosHash = new map<string, string>();
 						
 			//Se compila la expresión regular y se verifica si tiene algún error
 			if (regcomp(&re, patter, REG_EXTENDED) != 0) {
@@ -702,7 +709,7 @@ $ indica el final de la frase
 			else{
 				//Verificar que existen los eventos y la clase en donde se activaran		
 				if( oa_bd->existencia_consulta_reactiva(eventosHash, num_eventos, tabla) ){
-					
+					oa_bd->organizar_eventos(eventosHash, num_eventos, tabla);
 
 					//oa_bd->activar_eventos(nom_evento, nom_);
 				}
@@ -713,6 +720,6 @@ $ indica el final de la frase
 	}
 	regfree (&regex);
 	entrada.close();
-	*/
+
 	return EXIT_SUCCESS;
 }

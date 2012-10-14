@@ -61,8 +61,9 @@ class OA{
 		string consultar_propiedad_instancia(string nom_clase, string nom_instancia, string nom_propiedad);
 		
 		bool activar_eventos(string nom_clase, string nom_evento);
-		bool existencia_consulta_reactiva(Cuadro *eventosHash, int n, string clase);
+		bool existencia_consulta_reactiva(map<string,string> *eventosHash, int n, string clase);
 		bool pertenece_a(string nom_instancia, string nom_clase);
+		bool organizar_eventos(map<string,string> *eventosHash, int n, string clase);
 };
   
 	
@@ -852,9 +853,9 @@ class OA{
 	
 	}
 	
-	bool OA::existencia_consulta_reactiva(Cuadro *eventosHash, int n, string cl){
+	bool OA::existencia_consulta_reactiva(map<string,string> *eventosHash, int n, string cl){
 		bool band = true;
-		Cuadro::const_iterator it; //Iterador
+		map<string, string>::const_iterator it; //Iterador
 		
 		if(get_clase(cl)== NULL){
 			band = false;
@@ -908,6 +909,68 @@ class OA{
 		}
 				
 		return pertenece;
+	}
+
+	bool OA::organizar_eventos(map<string,string> *eventosHash, int n, string clase){
+		
+
+		bool band = true;
+		map<string, string>::const_iterator it,ut; //Iterador
+		Clase *cl;
+		Evento *ev,*ev2;
+		string variables[100], events[100], aux;
+		
+		int c_v,j = 0,k,i,band2;
+		cl = get_clase( clase );
+
+		it = eventosHash->begin();
+
+		while(it != eventosHash->end() ){
+
+			events[j] = (string)it->first;
+			++it; j++;
+		}
+		cout << "num " << n << endl;
+
+		j = 0;
+		while(j < n ){ 
+			ev = get_evento( events[j] );
+			cl->comprobar_expresion(ev->get_expresion(0), variables, &c_v);//Revisar todas las expresiones :(
+			
+			k = 0;band2 = 1;
+			while(k < n){		
+				ev2 = get_evento( events[k] );
+				if( k != j && k > j ){
+					i = 0;
+					band2 = 1;
+					while(i < c_v && band2){
+						if( ev2->get_nombre_propiedad() == variables[i]){
+							aux = events[k];
+							events[k] = events[j];
+							events[j] = aux;
+							band2 = 0;
+							//cout << "intercambio " << events[k] << " y " << events[j] << endl;
+							ev = get_evento( events[j] );
+							cl->comprobar_expresion(ev->get_expresion(0), variables, &c_v);
+							
+						}
+						i++;
+					}				
+					//cout << "La propiedad " << variables[i] << " esta en la condicion" << endl;
+				}
+				k++;
+			}
+
+			j++;
+		}
+		
+		for(i = 0; i < n; i++){
+			cout << events[i] << endl;
+		}
+
+
+		return band;
+
 	}
 
 # endif
