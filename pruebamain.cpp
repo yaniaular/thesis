@@ -50,7 +50,7 @@ int main(){
 		while(j <= 300){
 			s2 << j;
 			c2 = "Clase" + s2.str();
-			cout << "Camino " << oa_bd->es_subclase_de(c, c2)<< endl;
+			//cout << "Camino " << oa_bd->es_subclase_de(c, c2)<< endl;
 			j+=1;		
 		}
 		i+=1;

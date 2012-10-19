@@ -2,58 +2,82 @@
 #define Instancia_H_
 #include "Clase.h"
 
+/**
+En esta clase se define la estructura de una instancia de una clase
 
-//using namespace std;
+**/
 
 class Instancia{
 
 	private:
-		string nombre;//Nombre de la clase
-		string nombre_bruto;
-		Clase *clase; //Clase a la que pertenece la instancia
-		struct vartable *vt; //Tabla de variables de la instancia, aqui se comprueba la expresion 
+		string nombre;//Nombre de la clase junto con el de la instancia, ejemplo: NombreInstancia_NombreClase
+		string nombre_bruto; //Nombre de la instancia, ejemplo: NombreInstancia
+		Clase *clase; //Apuntador a la clase a la que pertenece la instancia
+		struct vartable *vt; //Tabla de propiedades de la instancia, aqui se comprueba la expresion 
 		struct val *(valores[P]);//Tabla de los valores de cada propiedad de la instancia
-		int num_var;
+		int num_var;//Numero de propiedades con valor asignado por el usuario 
 				
 	public:
-		Instancia(string n, Clase *c);
+		//Constructor
+		Instancia(string nombre_instancia, Clase *c);
+
+		//Destructor		
 		~Instancia();
+		
+		//Consultores
 		string get_nombre();
 		string get_nombre_bruto();
 		Clase* get_clase();
-		bool existe_propiedad(string nom_propiedad);
 		struct var * get_valor_propiedad(string nom_propiedad);
+
+		//Existencia
+		bool existe_propiedad(string nom_propiedad);
+		
+		//Validacion		
 		bool validar_expresion(string exp);
+		
+		//Agregar
 		bool agregar_valor_propiedad(string propiedad, int tipo, int valor);
 		bool agregar_valor_propiedad(string propiedad, int tipo, double valor);
 		bool agregar_valor_propiedad(string propiedad, int tipo, string valor);
 };
  
- 	Instancia::Instancia(string n, Clase *c){
- 		nombre = n + "_" + c->get_nombre();
- 		nombre_bruto = n;
+	//Constructor
+ 	Instancia::Instancia(string nombre_instancia, Clase *c){
+ 		num_var = 0;
+		nombre = nombre_instancia + "_" + c->get_nombre();
+ 		nombre_bruto = nombre_instancia;
 		clase = c;
 		vt = create_vartable();
-		num_var = 0;
 	}
 
+	//Destructor
 	Instancia::~Instancia(){
-		//Destructor
 	}
 
+	//Consultar nombre de la instancia junto con el de la clase
 	string Instancia::get_nombre(){
 		return nombre;
 	}
 
+	//Consultar nombre de la instancia
 	string Instancia::get_nombre_bruto(){
 		return nombre_bruto;
 	}
 
+	//Consultar clase a la cual pertenece la instancia
 	Clase* Instancia::get_clase(){
 		return clase;
-		
 	}
 
+	//Consultar valor de una propiedad de la instancia
+	struct var * Instancia::get_valor_propiedad(string nom_propiedad){
+		struct var *v;
+		v = get_var(vt, StringAChar(nom_propiedad) );
+	   	return v;
+   	}
+
+	//Averiguar si la instancia posee alguna propiedad dada
 	bool Instancia::existe_propiedad(string nom_propiedad){
 		struct var *v;
 		if ((v = get_var(vt, StringAChar(nom_propiedad) ))) {
@@ -62,12 +86,7 @@ class Instancia{
 		return false;
 	}
 
-	struct var * Instancia::get_valor_propiedad(string nom_propiedad){
-		struct var *v;
-		v = get_var(vt, StringAChar(nom_propiedad) );
-	   	return v;
-   }
-	
+	//Saber si la expresion de una evento se cumple con los valores de las propiedades de la instancia
 	bool Instancia::validar_expresion(string exp){
 		bool band = false;
 		struct val result;
@@ -80,15 +99,7 @@ class Instancia{
 		return band;
 	}
 
-
-	//Validar que la propiedad pertenezca a la clase de la instancia
-	//Hacer que se pueda consultar la posicion de una propiedad en la
-	//clase, para tener un orden en los valores del vector
-	//ES decir, si la clase tiene 2 propiedades (dia, mes) en ese orden
-	//entonces en la instancia solo se asigno el mes.. tener el arrelgo
-	//ordenado de la siguiente forma [dia = null, mes = 04] y no como
-	//esta ahorita, lo que se vaya asignando se va a agregando
-	// [mes = 04]
+	//Agrega valor a una propiedad de tipo ENTERO
 	bool Instancia::agregar_valor_propiedad(string propiedad, int tipo, int valor){
 		struct var *v;
 		bool band = false;
@@ -107,17 +118,21 @@ class Instancia{
 				num_var = num_var + 1; //Se incrementa el contador de valores
 				band = true;
 			}
+			else{
+				cout << "La propiedad " << propiedad << " no pertenece a la clase de la instancia" << endl;
+			}
 		}
 		return band;
 	}
 
+	//Agrega valor a una propiedad de tipo DOUBLE
 	bool Instancia::agregar_valor_propiedad(string propiedad, int tipo, double valor){
 		struct var *v;
 		bool band = false;
 				
 		if( get_var(vt, StringAChar(propiedad) )  ){//Si la propiedad ya existe (ya ha obtenido su primer valor) actualizo su valor
-			v = get_var(vt, StringAChar(propiedad));
- 			v->val.rval = valor;		   		
+			v = get_var(vt, StringAChar(propiedad)); //Se consulta la propiedad
+ 			v->val.rval = valor;//Se cambia su valor
 			band = true;
 		}
 		else{
@@ -129,20 +144,21 @@ class Instancia{
 				num_var = num_var + 1; //Se incrementa el contador de valores
 				band = true;
 			}
+			else{
+				cout << "La propiedad " << propiedad << " no pertenece a la clase de la instancia" << endl;
+			}
 		}
 		return band;
 	}
 	
+	//Agrega valor a una propiedad de tipo STRING
 	bool Instancia::agregar_valor_propiedad(string propiedad, int tipo, string valor){
 		struct var *v;
-				
 		bool band = false;
 
 		if( get_var(vt, StringAChar(propiedad) )  ){//Si la propiedad ya existe (ya ha obtenido su primer valor) actualizo su valor
-
-			v = get_var(vt, StringAChar(propiedad));
- 			(v->val).cval = StringAChar(valor);
- 			
+			v = get_var(vt, StringAChar(propiedad));//Se consulta la propiedad
+ 			(v->val).cval = StringAChar(valor);//Se cambia su valor
  			band = true;
 		}
 		else{
@@ -153,6 +169,9 @@ class Instancia{
 				put_var(vt, StringAChar(propiedad), valores[num_var]);//Se introduce el registro en la tabla de valores
 				num_var = num_var + 1; //Se incrementa el contador de valores
 				band = true;
+			}
+			else{
+				cout << "La propiedad " << propiedad << " no pertenece a la clase de la instancia" << endl;
 			}
 		}
 		return band;

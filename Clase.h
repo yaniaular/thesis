@@ -3,31 +3,34 @@
 #include "evaluate.h"
 #include "Tabla.h"
 
-class Clase{
+/*
+Clase.h especifica la estructura y funciones que puede tener una Clase
+*/
 
+class Clase{
 	private:
-		
-		string nombre;
-		int num_padres;
-		int num_hijos;
-		int num_propiedades;
-		int num_instancias;
-		list<Clase> padres;
-		//Clase *( padres[C]);//Padres de la clase
-		Clase *( hijos[C] );//Hijos de la clase
-		Cuadro *propi;
-		//map<string, int> *propi; //Debido a que la clase propiedad hereda a Clase, se tendran las propiedades de las clases con una tabla de Hash, no se puede hacer herencia cruzada
-		Cuadro *instancias;
-		//map<string, int> *instancias;
-		struct vartable *vt;
+		string nombre; //Nombre de la clase
+		int num_padres; //Numero de ancestros de la clase
+		int num_hijos; //Numero de descendientes de la clase
+		int num_propiedades; //Numero de propiedades de la clase
+		int num_instancias; //Numero de instancias de la clase
+		list<Clase> padres; //Lista de ancestros de la clase
+		Clase *( hijos[C] );//Lista de descendientes de la clase
+		Cuadro *propi; //Tabla de Hash con las propiedades de la clase, Nombre y Posicion en el arreglo principal de OA.h
+		Cuadro *instancias; //Tabla de Hash con las instancias que perteneces a la clase, con Nombre y Posicion en el arrelgo principal de OA.h
+		struct vartable *vt;//Tabla de propiedades que pertenecen a la clase, se tiene para poder comprobar expresiones, las propiedades en esta tabla no tienen valor alguno, solo se usa para comprobar errores de sintaxis en las expresiones 
 		struct val x; //Al añadir una variable a la tabla de variables se necesita obligatoriamente un valor, como solo nos interesa comprobar la expresion, siempre mandamos el valor x...
 		
 	public:
+		//Constructor
 		Clase();
+		Clase(string nom); 
+		
+		//Destructor
 		~Clase();
-		Clase(string n);	//Constructor 
+		
+		//Consultores
 		string get_nombre();
-		//Clase* get_padres();
 		Clase* get_padre(int n);
 		Clase* get_hijo(int n);
 		Cuadro* get_propiedades();//Tiene el nombre de la propiedad y la posicion en la tabla general en la clase OA menos 1
@@ -36,25 +39,27 @@ class Clase{
 		int get_num_hijos();
 		int get_num_propiedades();
 		string get_pos_propiedad(string p);
+
+		//Comprobar existencia
 		bool existe_propiedad(string p);
 		bool existe_instancia(string i);
-		void set_nombre(string n);
+		int comprobar_expresion(string expresion, string variables[V], int *cant_var);
+
+		//Adiciones
 		void agregar_padre(Clase *nuevo_padre);
 		void agregar_hijo(Clase *nuevo_hijo);
 		void agregar_propiedad(string n_p, int posicion);
 		void agregar_instancia(string n_i, int posicion);
-		int comprobar_expresion(string expresion, string variables[P], int *cant_var);
 };
 
-
+	//Constructor basico
  	Clase::Clase()
 	{
-
-
 	}
 
- 	Clase::Clase(string n){
-		nombre = n;
+	//Constructor
+ 	Clase::Clase(string nom){
+		nombre = nom;
 		num_padres = 0;
 		num_hijos = 0;
 		num_propiedades = 0;
@@ -62,25 +67,20 @@ class Clase{
 		propi = new Cuadro();
 		instancias = new Cuadro();
 		vt = create_vartable();
-		x.type = T_INT; x.ival = 0;
+		x.type = T_INT; x.ival = 0; //Al agregar una propiedad se debe proporcionar una direccion obligatoria con un valor, para eso se usa la variable x, debido a que no necesitamos valores reales siempre usaremos x, ya que solo necesitamos saber si la sintaxis de la expresion es correcta.
 	}
 
 	Clase::~Clase(){
 		//Destructor
 	}
 
+	//Consultar nombre de la clase
 	string Clase::get_nombre(){
 		return nombre;
 	}
 
-	//No se esta usando
-	/*Clase* Clase::get_padres(){
-		return padres[C];
-
-	}*/
-
+	//Consultar un ancestro de la clase
 	Clase* Clase::get_padre(int n){
-				
 		int i = 0;
 		list<Clase>::iterator pos;
 		pos = padres.begin();
@@ -90,29 +90,34 @@ class Clase{
 			i++;
 		}
 		return &(*pos);
-		//return padres[n];
 	}
 
+	//Consulto un descendiente de la clase
 	Clase* Clase::get_hijo(int n){
 		return hijos[n];
 	}
 
+	//Consultar la tabla de Hash con las propiedades de la clase
 	map<string, int>* Clase::get_propiedades(){
 		return propi;
 	}
 
+	//Consultar la tabla de Hash con las instancias de la clase
 	map<string, int>* Clase::get_instancias(){
 		return instancias;
 	}
 
+	//Consultar numero de ancestros de la clase
 	int Clase::get_num_padres(){
 		return num_padres;
 	}
 
+	//Consultar numero de descendientes de la clase
 	int Clase::get_num_hijos(){
 		return num_hijos;
 	}
 
+	//Consultar numero de propiedades de la clase
 	int Clase::get_num_propiedades(){
 		return num_propiedades;
 	}
@@ -123,33 +128,32 @@ class Clase{
 		return EnteroAString((*propi)[p]-1);
 	}
 
+	//Saber existencia de una propiedad dentro de la clase
 	bool Clase::existe_propiedad(string p){
-		int nume = (*propi)[p];
-		
-		nume = nume - 1;
-				
-		return (  nume != -1 );
-	
+		int nume = (*propi).find(p)->second ;
+		return (  (nume-1) != -1 );
 	}
 
+	//Saber existencia de una instancia dentro de la clase
 	bool Clase::existe_instancia(string i){
-		return ( !( ((*instancias)[i]-1) == -1) );
-	
+		int nume = (*instancias).find(i)->second ;
+		return (  (nume-1) != -1 );
 	}
 
-	void Clase::set_nombre(string n){
-		nombre = n;
-	}  
+	//Comprobar la sintaxis de una expresion de un evento
+	int Clase::comprobar_expresion(string expresion, string variables[V], int *cant_var){
+		struct val result;
+		return evaluate(StringAChar(expresion), &result, vt, variables, cant_var);
+	}
 
+	//Agregar un ancestro a la clase
 	void Clase::agregar_padre(Clase *nuevo_padre){
 	//Ver primero si el padre a conectar existe 
 		padres.push_back( *nuevo_padre ); 
-
-		//padres[num_padres] = nuevo_padre;
-		//padres.insertarAlFinal( *nuevo_padre );		
 		num_padres+=1;
 	}
 
+	//Agregar un descendiente a la clase
 	void Clase::agregar_hijo(Clase *nuevo_hijo){
 	//Ver primero si el padre a conectar existe 
 		hijos[num_hijos] = nuevo_hijo;
@@ -158,20 +162,13 @@ class Clase{
 	
 	void Clase::agregar_propiedad(string n_p, int posicion){
 		put_var(vt, StringAChar(n_p), &x);
-		propi->insert(Cuadro::value_type(n_p, posicion + 1) );
-		//(*propi)[n_p] = posicion + 1; //le sumo 1, porque cuando la pos es 0, y la propiedad no exista, lanzara 0 igual, y se presta para confusiones
-		num_propiedades = num_propiedades + 1;
+		propi->insert(Cuadro::value_type(n_p, posicion + 1) );//le sumo 1, porque cuando la posicion es 0, y la propiedad no exista, devolvera 0 igual, y se presta para confusiones
+		num_propiedades+=1;
 	}
 	
 	void Clase::agregar_instancia(string n_i, int posicion){
-		instancias->insert( Cuadro::value_type(n_i, posicion + 1) );
-		//(*instancias)[n_i] = posicion + 1; //le sumo 1, porque cuando la pos es 0, y la propiedad no exista, lanzara 0 igual, y se presta para confusiones
-		num_instancias = num_instancias + 1;
-	}
-	
-	int Clase::comprobar_expresion(string expresion, string variables[P], int *cant_var){
-		struct val result;
-		return evaluate(StringAChar(expresion), &result, vt, variables, cant_var);
+		instancias->insert( Cuadro::value_type(n_i, posicion + 1) );//le sumo 1, porque cuando la posicion es 0, y la propiedad no exista, devolvera 0 igual, y se presta para confusiones
+		num_instancias+=1;
 	}
 	
 # endif

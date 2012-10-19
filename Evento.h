@@ -1,6 +1,7 @@
 #ifndef Evento_H_
 #define Evento_H_
 #include "Tabla.h"
+#define MAX_EXP_VAL 50 //Maxima cantidad de expresiones en un mismo evento, tambien corresponde a la cantidad maxima de valores que puede alcanzar la propiedad activa, ya que cada expresion conlleva un valor.
 
 struct valor_r {
 	int ival;
@@ -9,167 +10,179 @@ struct valor_r {
 	int tipo;
 };
 
-
 using namespace std;
+
+/**
+La clase Evento.h contiene la estructura y funciones de un evento
+**/
 
 class Evento{
 
 	private:
-		string nombre;
-		int num_prop_activas;
-		//map<int, string> *prop_activas;//Nombre de la propiedad, y su posicion en el arreglo general de OA menos 1
-		string prop_activa;
-		int pos_prop_activa;
+		string nombre; //Nombre del evento
+		int num_expr_y_prop_activ; //Cantidad de expresiones y de valores que puede alcanzar la propiedad activa
+		string prop_activa; //Nombre de la propiedad activa
+		int pos_prop_activa; //Posicion de la propiedad activa en el arreglo principal de la Clase OA.h -> Propiedad *(propiedades[P])
+		struct valor_r *(valores[MAX_EXP_VAL]);//Tabla de valores que puede tener la propiedad activa
+		string *(exp[MAX_EXP_VAL]); //Arreglo de expresiones posibles del evento
+		list<Evento> padres; //Lista de ancestros del evento
+		list<Evento> hijos; //Lista de descendientes del evento
+		int num_padres; //Cantidad de ancestros del evento
+		int num_hijos; //Cantidad de descendientes del evento
+		int tipo; //Nos dice el tipo de dato de la propiedad activa, para que cuando se agreguen nuevas expresiones y valores futuros, se verifique que sean del mismo tipo
 		
-		struct valor_r *(valores[P]);
-		string expresion;
-		string *(exp[50]);
-		list<Evento> padres;
-		list<Evento> hijos;
-		//Evento *(padres[E]);//Eventos padre
-		//Evento *(hijos[E]);//Eventos hijas
-		int num_padres;
-		int num_hijos;
-		//int num_expresiones;
-			
+		
 	public:
-		Evento(string nom, string pA, int NuevoValor, string e);
-		Evento(string nom, string pA, double NuevoValor, string e);
-		Evento(string nom, string pA, string NuevoValor, string e);
+		//Constructores
+		Evento(string nom, string pA, int NuevoValor, string expresion);
+		Evento(string nom, string pA, double NuevoValor, string expresion);
+		Evento(string nom, string pA, string NuevoValor, string expresion);
+		//Destructor		
 		~Evento();
 		
-		void agregar_expresion(int NuevoValor, string e);
-		void agregar_expresion(double NuevoValor, string e);
-		void agregar_expresion(string NuevoValor, string e);
+		//Agregar expresiones al evento
+		void agregar_expresion(int NuevoValor, string expresion);
+		void agregar_expresion(double NuevoValor, string expresion);
+		void agregar_expresion(string NuevoValor, string expresion);
 		
+		//Consultas
 		int get_num_padres();
 		int get_num_hijos();
-		//int get_num_expresiones();
-		
-		int get_num_prop_act();
+		int get_num_expr_y_prop_activ();
 		string get_expresion(int n);
 		string get_nombre();
-		
 		Evento* get_padre(int n);
 		Evento* get_hijo(int n);
-		
 		string get_nombre_propiedad();
 		valor_r* get_valor_nuevo(int pos);
 		map<int, string>* get_propiedades();
 		
+		//Agregar ancestros o descendientes nuevos
 		void agregar_padre(Evento *nuevo_padre);
 		void agregar_hijo(Evento *nuevo_hijo);
-		
-		
 };
  
- 	Evento::Evento(string nom, string pA, int NuevoValor, string e){
-		num_prop_activas = 0;
+	//Se crea el evento con valor futuro tipo ENTERO
+ 	Evento::Evento(string nom, string pA, int NuevoValor, string expresion){
 		num_padres = 0;
 		num_hijos = 0;
+		num_expr_y_prop_activ = 0;
 		nombre = nom;
-		exp[0] = new string(e);
-		//prop_activas = new map<int, string>();
-		//(*prop_activas)[num_prop_activas + 1] = pA;//Le sumo 1 para no generar confusiones, porque cuando la propiedad no existe devuelve un valor de 0, y la posicion 0 tambien existe. Entonces cuando una propiedad no exista, devolvera -1
+		exp[0] = new string(expresion);
 		prop_activa = pA;
-		
-		
-		valores[num_prop_activas] = new valor_r();
-		valores[num_prop_activas]->tipo = ENTERO;
-		valores[num_prop_activas]->ival = NuevoValor;
-		num_prop_activas= num_prop_activas + 1;
+		valores[num_expr_y_prop_activ] = new valor_r();
+		valores[num_expr_y_prop_activ]->tipo = ENTERO;
+		valores[num_expr_y_prop_activ]->ival = NuevoValor;
+		num_expr_y_prop_activ+=1;
+		tipo = ENTERO;
 		
 	}
 
- 	Evento::Evento(string nom, string pA, double NuevoValor, string e){
-		num_prop_activas = 0;
+	//Se crea el evento con valor futuro tipo REAL
+ 	Evento::Evento(string nom, string pA, double NuevoValor, string expresion){
+		num_padres = 0;
+		num_hijos = 0;
+		num_expr_y_prop_activ = 0;		
 		nombre = nom;
-		exp[0] = new string(e);
-		//prop_activas = new map<int, string>();
-		//(*prop_activas)[num_prop_activas + 1] = pA;//Le sumo 1 para no generar confusiones, porque cuando la propiedad no existe devuelve un valor de 0, y la posicion 0 tambien existe. Entonces cuando una propiedad no exista, devolvera -1
+		exp[0] = new string(expresion);
 		prop_activa = pA;
-		
-		valores[num_prop_activas] = new valor_r();
-		valores[num_prop_activas]->tipo = REAL;
-		valores[num_prop_activas]->rval = NuevoValor;
-		num_prop_activas= num_prop_activas + 1;
-		
+		valores[num_expr_y_prop_activ] = new valor_r();
+		valores[num_expr_y_prop_activ]->tipo = REAL;
+		valores[num_expr_y_prop_activ]->rval = NuevoValor;
+		num_expr_y_prop_activ+=1;
+		tipo = REAL;
 	}
 	
-	 Evento::Evento(string nom, string pA, string NuevoValor, string e){
-		num_prop_activas = 0;
+	//Se crea el evento con valor futuro tipo CADENA
+	Evento::Evento(string nom, string pA, string NuevoValor, string expresion){
+		num_padres = 0;
+		num_hijos = 0;
+		num_expr_y_prop_activ = 0;
 		nombre = nom;
-		exp[0] = new string(e);
-		//prop_activas = new map<int, string>();
-		//(*prop_activas)[num_prop_activas + 1] = pA;//Le sumo 1 para no generar confusiones, porque cuando la propiedad no existe devuelve un valor de 0, y la posicion 0 tambien existe. Entonces cuando una propiedad no exista, devolvera -1
+		exp[0] = new string(expresion);
 		prop_activa = pA;
-		
-		valores[num_prop_activas] = new valor_r();
-		valores[num_prop_activas]->tipo = CADENA;
-		valores[num_prop_activas]->cval = StringAChar(NuevoValor);
-		
-		num_prop_activas= num_prop_activas + 1;
-		
+		valores[num_expr_y_prop_activ] = new valor_r();
+		valores[num_expr_y_prop_activ]->tipo = CADENA;
+		valores[num_expr_y_prop_activ]->cval = StringAChar(NuevoValor);
+		num_expr_y_prop_activ+=1;
+		tipo = CADENA;
 	}
 
 	Evento::~Evento(){
 		//Destructor
 	}
 
-	void Evento::agregar_expresion(int NuevoValor, string e){
-		
-		valores[num_prop_activas] = new valor_r();
-		valores[num_prop_activas]->tipo = ENTERO;
-		valores[num_prop_activas]->ival = NuevoValor;
-				
-		exp[num_prop_activas] = new string(e);	
-		num_prop_activas= num_prop_activas + 1;
+	//Se agrega una expresion con la propiedad activa tipo ENTERO
+	void Evento::agregar_expresion(int NuevoValor, string expresion){
+		if( num_expr_y_prop_activ < MAX_EXP_VAL && tipo == ENTERO){
+			valores[num_expr_y_prop_activ] = new valor_r();
+			valores[num_expr_y_prop_activ]->tipo = ENTERO;
+			valores[num_expr_y_prop_activ]->ival = NuevoValor;
+			exp[num_expr_y_prop_activ] = new string(expresion);	
+			num_expr_y_prop_activ+=1;
+		}
+		else{
+			cout << "El valor futuro para la propiedad activa no coincide con el tipo de dato inicial o se excedieron el numero de expresiones para el Evento " << nombre << endl;
+		}
 	}
 
-	void Evento::agregar_expresion(double NuevoValor, string e){
-		
-		valores[num_prop_activas] = new valor_r();
-		valores[num_prop_activas]->tipo = REAL;
-		valores[num_prop_activas]->rval = NuevoValor;
-				
-		exp[num_prop_activas] = new string(e);	
-		num_prop_activas= num_prop_activas + 1;
+	//Se agrega una expresion con la propiedad activa tipo REAL
+	void Evento::agregar_expresion(double NuevoValor, string expresion){
+		if( num_expr_y_prop_activ < MAX_EXP_VAL && tipo == REAL){
+			valores[num_expr_y_prop_activ] = new valor_r();
+			valores[num_expr_y_prop_activ]->tipo = REAL;
+			valores[num_expr_y_prop_activ]->rval = NuevoValor;
+			exp[num_expr_y_prop_activ] = new string(expresion);	
+			num_expr_y_prop_activ+=1;
+		}
+		else{
+			cout << "El valor futuro para la propiedad activa no coincide con el tipo de dato inicial o se excedieron el numero de expresiones para el Evento " << nombre << endl;
+		}	
 	}
 
-	void Evento::agregar_expresion(string NuevoValor, string e){
-		
-		valores[num_prop_activas] = new valor_r();
-		valores[num_prop_activas]->tipo = CADENA;
-		valores[num_prop_activas]->cval = StringAChar(NuevoValor);
-				
-		exp[num_prop_activas] = new string(e);	
-		num_prop_activas= num_prop_activas + 1;
+	//Se agrega una expresion con la propiedad activa tipo CADENA
+	void Evento::agregar_expresion(string NuevoValor, string expresion){
+		if( num_expr_y_prop_activ < MAX_EXP_VAL && tipo == CADENA ){
+			valores[num_expr_y_prop_activ] = new valor_r();
+			valores[num_expr_y_prop_activ]->tipo = CADENA;
+			valores[num_expr_y_prop_activ]->cval = StringAChar(NuevoValor);
+			exp[num_expr_y_prop_activ] = new string(expresion);	
+			num_expr_y_prop_activ+=1;
+		}
+		else{
+			cout << "El valor futuro para la propiedad activa no coincide con el tipo de dato inicial o se excedieron el numero de expresiones para el Evento " << nombre << endl;
+		}
 	}
 
+	//Consultar numero de ancestros del evento
 	int Evento::get_num_padres(){
 		return num_padres;
 	}
 
+	//Consultar numero de descendientes del evento
 	int Evento::get_num_hijos(){
 		return num_hijos;
 	}
-/*	
-	int Evento::get_num_expresiones(){
-		return num_expresiones;
-	}*/
 
-	int Evento::get_num_prop_act(){
-		return num_prop_activas;	
-	}
-
-	string Evento::get_expresion(int n){
-		return *(exp[n]);
+	//Consultar numero de expresiones (o posibles valores de la propiedad activa) del evento
+	int Evento::get_num_expr_y_prop_activ(){
+		return num_expr_y_prop_activ;
 	}
 	
+	//Consultar expresion en la posicion n
+	string Evento::get_expresion(int n){
+		if( n <  num_expr_y_prop_activ)
+			return *(exp[n]);
+		else
+			return "";
+	}
+	
+	//Consultar nombre del evento
 	string Evento::get_nombre(){
 		return nombre;
 	}
 
+	//Consultar un evento ancestro del actual
 	Evento* Evento::get_padre(int n){
 		int i = 0;
 		list<Evento>::iterator pos;
@@ -177,12 +190,12 @@ class Evento{
 		while( i < n && pos != padres.end())
 		{
 			pos++;
-			i++;
+			i+=1;
 		}
 		return &(*pos);
-		//return padres[n];
 	}
 
+	//Consultar un evento descendiente del actual
 	Evento* Evento::get_hijo(int n){
 		int i = 0;
 		list<Evento>::iterator pos;
@@ -190,37 +203,32 @@ class Evento{
 		while( i < n && pos != hijos.end())
 		{
 			pos++;
-			i++;
+			i+=1;
 		}
 		return &(*pos);
-		//return hijos[n];
 	}
 
+	//Consultar nombre de la propiedad activa del evento
 	string Evento::get_nombre_propiedad(){
 		return prop_activa;
 	}
 	
+	//Consultar uno de los valores que puede tener la propiedad activa
 	valor_r* Evento::get_valor_nuevo(int pos){
 		return valores[pos];
 	
 	}
 	
-/*	map<int, string>* Evento::get_propiedades(){
-		return prop_activas;
-	}*/
-	
 	void Evento::agregar_padre(Evento *nuevo_padre){
 	//Ver primero si el padre a conectar existe 
 		padres.push_back( *nuevo_padre ); 		
-		//padres[num_padres] = nuevo_padre;
-		num_padres+=1;
+		num_padres = num_padres + 1;
 	}
 
 	void Evento::agregar_hijo(Evento *nuevo_hijo){
 	//Ver primero si el padre a conectar existe 
 		hijos.push_back( *nuevo_hijo ); 	
-		//hijos[num_hijos] = nuevo_hijo;
-		num_hijos+=1;
+		num_hijos = num_hijos + 1;
 	}
 
 

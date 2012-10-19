@@ -10,10 +10,11 @@
 #include <cstdlib>
 #include <list>
 
-#define C 300
-#define I 249000 
-#define P 500 
-#define E 150
+#define C 300 //Maximo de Clases
+#define I 249000  //Maximo de Instancias
+#define P 500 //Maximo de Propiedades
+#define E 150 //Maximo de Eventos
+#define V 100 //Maximo de propiedades dentro de una expresion y maximo de eventos en una consulta reactiva (P,[ev1,eve2,...,eve100),C]
 
 #define ENTERO 0
 #define REAL 1
@@ -22,12 +23,14 @@
 using namespace kyotocabinet;
 using namespace std;
 
-typedef std::map< string, int, std::less<string> > Cuadro; //Crear tabla de hash
+typedef std::map< string, int, std::less<string> > Cuadro; //Tipo de dato Tabla de Hash, con Key de string y Value de entero
+
+/** En esta clase se establecen las funciones, librerias 
+y variables definidas usadas a lo largo de toda la ontología, 
+ademas de establecer las limitaciones **/
 
 class Tabla{
 
-	private:
-			
 	public:
 		Tabla();
 		~Tabla();
@@ -35,34 +38,34 @@ class Tabla{
 		string DoubleAString(double a);
 		char* StringAChar(string a);
 };
- 
+ 	//Constructor
  	Tabla::Tabla(){
-			
 	}
 
+	//Destructor
  	Tabla::~Tabla(){
-			
 	}
 
+	//Pasar un entero a string
 	string EnteroAString(int a){
 		stringstream ss;
 		ss << a;
 		return ss.str();
 	}
 
+	//Pasar un double a string
 	string DoubleAString(double a){
 		stringstream ss;
 		ss << a;
 		return ss.str();
 	}
 	
+	//Pasar string a char
 	char* StringAChar(string a){
-	
 		char *i,*p = &a[0];
 		i = new char[strlen(p)+1];
 		strcpy(i, p);
 		return i;
-
 	}
 
 # endif

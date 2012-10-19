@@ -7,9 +7,8 @@
 #include <math.h>
 #include <string.h>
 #include <stddef.h>
-#include <stdlib.h> /******************************Antes era stdlib, daba problemas con la funcion getenv()
-*/
-#define P 500 //Cantidad de propiedades en Tabla.h
+#include <stdlib.h>
+#define V 100 //Maximo de propiedades dentro de una expresion, debe ser el mismo valor que se encuentra en Tabla.h
 
 using namespace std;
 
@@ -146,7 +145,7 @@ int scan_number(char **stringptr, struct val *valptr);
 int scan_string(char **stringptr, struct val *valptr); /***************************/
 int precedence(struct tok *t);
 int eval(struct memh *mh, struct tok *list, struct vartable *vt,
-  struct val *result, string variables[1000], int *c_v);/********************/
+  struct val *result, string variables[V], int *c_v);/*************************/
 void prt_tok(struct tok *t);
 void prt_lst(struct tok *t);
 
@@ -183,7 +182,7 @@ int evaluate(char *expr, struct val *result, struct vartable *vartable) {
 }
 
 //Otro evaluate, que recibe una tabla de string para guardar las variables que esten presentes en la expresion y utilizarlas para guardar los eventos en cada una de esas propiedades
-int evaluate(char *expr, struct val *result, struct vartable *vartable,string variables[P] ,int *c_v) {
+int evaluate(char *expr, struct val *result, struct vartable *vartable,string variables[V] ,int *c_v) {
   struct memh *mh = NULL;
   int error = RESULT_OK, madevar = 0;
   struct tok *list;
@@ -419,15 +418,15 @@ int scan_string(char **stringptr, struct val *valptr) {
  	v.cval = new char;
  	
 	s+=1;
-    *stringptr = s; //quito las primeras comillas
+    *stringptr = s; //Se quitan las primeras comillas
      
 	int pos =  (int)(strchr(s,'"')-s);
   	if( pos < 0) return 0;
-  	v.cval = s; //copio toda la cadena
-  	v.cval[pos] = '\0'; //lo corto hasta donde lleguen las ultimas comillas
-  	s+=strlen(v.cval); //quito la cadena que este entre las comillas
+  	v.cval = s; //Se copia toda la cadena
+  	v.cval[pos] = '\0'; //Se corta hasta donde lleguen las ultimas comillas
+  	s+=strlen(v.cval); //Se quita la cadena que este entre las comillas
 
-  	s+=1; //avanzo para quitar las ultimas comillas
+  	s+=1; //Se avanza para quitar las ultimas comillas
   	*stringptr = s; 
   
   	*stringptr = s;
@@ -464,9 +463,9 @@ int precedence(struct tok *t) {
 
 
 int eval(struct memh *mh, struct tok *list, struct vartable *vt,
-  struct val *result, string variables[P], int *c_v) {
+  struct val *result, string variables[V], int *c_v) {
 
-  struct val newval = { T_INT, 0, NULL , 0.0 }, env, *valstk, *x, *y; /************************/
+  struct val newval = { T_INT, 0, NULL , 0.0 }, env, *valstk, *x, *y; /*************************/
   struct tok open, close, *l, *r, *t, **opstk;
   char *envtxt, lt, rt, token;
   int vstk, ostk, vcnt = 0, ocnt = 0;
@@ -513,7 +512,7 @@ int eval(struct memh *mh, struct tok *list, struct vartable *vt,
     lt = t->token;
 	
     /* count the number of values and operators */
-    if (lt == TK_VAR || lt == TK_VAL || lt == TK_COMI) vcnt++; else ocnt++; /**********************/
+    if (lt == TK_VAR || lt == TK_VAL || lt == TK_COMI) vcnt++; else ocnt++; /************************/
           
     /* if assigned variables don't exist, create a new blank one */
     if (lt == TK_ASSN) {

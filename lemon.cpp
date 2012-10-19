@@ -18,7 +18,7 @@ int main(){
 	string nombre;
 	
 	cout << "Creando las " << cant_clases << " Clases..." << endl;	
-	for(i = 1; i <= cant_clases ; i++){ //15000
+	for(i = 1; i <= cant_clases ; i++){ 
 		grafo1.agregarVertice( i );
 	}
 	
@@ -38,7 +38,7 @@ int main(){
 	while(i <= 300){
 		j = 0;		
 		while(j <= 300){
-		cout<< "Camino " << grafo1.hayCamino(i, j) << endl;
+		grafo1.hayCamino(i, j);
 			j+=1;		
 		}
 		i+=1;
