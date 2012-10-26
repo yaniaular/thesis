@@ -58,7 +58,7 @@ int main(){
 	string buffer;
 	 
 	OA *oa_bd = new OA();
-/*
+
 
 
 	cout << "******** oa_bd->crear_clase( huracan )" << endl;
@@ -249,9 +249,9 @@ int main(){
 	cout << "******** valor1: " << oa_bd->consultar_propiedad_instancia("huracan", "vince", "valor1") << endl;
 	cout << "******** valor2: " << oa_bd->consultar_propiedad_instancia("huracan", "vince", "valor2") << endl;
 
-*/
+
 		
-	
+/*	
 	int cant_clases = 300; //500
 	int cant_prop = 500; //300
 	int cant_even = 150;
@@ -706,7 +706,7 @@ int main(){
 			break;
 
 
-
+*/
 
 
 
@@ -718,13 +718,13 @@ int main(){
 		 *  
 		*/
 
-			case 19:
+		/*	case 19:
 			ifstream entrada("consultas_reactivas.in");
 			int reti;
 			regex_t regex; //Variable para la expresion regular
 			string exp;
 			char * pattern ="^\\((S|s|p|P),\\[([A-Za-z0-9])+(([,])([A-Za-z0-9])+)*\\],([A-Za-z0-9])+\\)$"; //Patron de la expresion regular
-
+*/
 			/**
 			^ Indica el inicio de la frase
 			\\(   Agrega el parentesis
@@ -740,7 +740,7 @@ int main(){
 			$ indica el final de la frase
 			*/
 
-				reti = regcomp (&regex, pattern, REG_EXTENDED);//Compilo el patrón
+		/*		reti = regcomp (&regex, pattern, REG_EXTENDED);//Compilo el patrón
 				while( getline (entrada,exp) ){//Leo una linea del archivo
 					exp = Trim(exp);//Quitar espacios de la expresion
 					cout << exp << " " << endl;
@@ -816,7 +816,7 @@ int main(){
 							if( oa_bd->existencia_consulta_reactiva(eventoArreglo, num_eventos, tabla) &&
 								oa_bd->organizar_eventos(eventoArreglo, num_eventos, tabla) ){
 								cout << "ACTIVA! " << endl;
-								/***************************************************************/
+								
 								//oa_fbd->activar_eventos(nom_evento, nom_);
 							}
 						}
@@ -830,7 +830,7 @@ int main(){
 	
 
 			}
-	}
+	}*/
 
 	return EXIT_SUCCESS;
 }

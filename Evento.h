@@ -55,7 +55,6 @@ class Evento{
 		Evento* get_hijo(int n);
 		string get_nombre_propiedad();
 		valor_r* get_valor_nuevo(int pos);
-		map<int, string>* get_propiedades();
 		
 		//Agregar ancestros o descendientes nuevos
 		void agregar_padre(Evento *nuevo_padre);
@@ -66,14 +65,13 @@ class Evento{
  	Evento::Evento(string nom, string pA, int NuevoValor, string expresion){
 		num_padres = 0;
 		num_hijos = 0;
-		num_expr_y_prop_activ = 0;
+		num_expr_y_prop_activ = 1;
 		nombre = nom;
 		exp[0] = new string(expresion);
 		prop_activa = pA;
-		valores[num_expr_y_prop_activ] = new valor_r();
-		valores[num_expr_y_prop_activ]->tipo = ENTERO;
-		valores[num_expr_y_prop_activ]->ival = NuevoValor;
-		num_expr_y_prop_activ+=1;
+		valores[0] = new valor_r();
+		valores[0]->tipo = ENTERO;
+		valores[0]->ival = NuevoValor;
 		tipo = ENTERO;
 		
 	}
@@ -82,14 +80,13 @@ class Evento{
  	Evento::Evento(string nom, string pA, double NuevoValor, string expresion){
 		num_padres = 0;
 		num_hijos = 0;
-		num_expr_y_prop_activ = 0;		
+		num_expr_y_prop_activ = 1;		
 		nombre = nom;
 		exp[0] = new string(expresion);
 		prop_activa = pA;
-		valores[num_expr_y_prop_activ] = new valor_r();
-		valores[num_expr_y_prop_activ]->tipo = REAL;
-		valores[num_expr_y_prop_activ]->rval = NuevoValor;
-		num_expr_y_prop_activ+=1;
+		valores[0] = new valor_r();
+		valores[0]->tipo = REAL;
+		valores[0]->rval = NuevoValor;
 		tipo = REAL;
 	}
 	
@@ -97,14 +94,13 @@ class Evento{
 	Evento::Evento(string nom, string pA, string NuevoValor, string expresion){
 		num_padres = 0;
 		num_hijos = 0;
-		num_expr_y_prop_activ = 0;
+		num_expr_y_prop_activ = 1;
 		nombre = nom;
 		exp[0] = new string(expresion);
 		prop_activa = pA;
-		valores[num_expr_y_prop_activ] = new valor_r();
-		valores[num_expr_y_prop_activ]->tipo = CADENA;
-		valores[num_expr_y_prop_activ]->cval = StringAChar(NuevoValor);
-		num_expr_y_prop_activ+=1;
+		valores[0] = new valor_r();
+		valores[0]->tipo = CADENA;
+		valores[0]->cval = StringAChar(NuevoValor);
 		tipo = CADENA;
 	}
 

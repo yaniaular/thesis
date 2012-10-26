@@ -39,13 +39,12 @@ class Propiedad{
  
  	Propiedad::Propiedad(string n, Clase *c, int t){
 		nombre = n;
-		num_clases = 0;
+		num_clases = 1;
 		num_padres = 0;
 		num_hijos = 0;
 		tipo = t;
 		clases_a_la_que_pertenece.push_back( *c );//Agregar la clase original
-		num_clases+=1;
-		
+				
 		//Agregar la propiedad a todas las clases descendientes de la clase original
 		int n_hijos_clase = c->get_num_hijos();
 		for(int i = 0; i < n_hijos_clase ; i++){

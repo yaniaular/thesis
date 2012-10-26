@@ -11,7 +11,7 @@ class Instancia{
 
 	private:
 		string nombre;//Nombre de la clase junto con el de la instancia, ejemplo: NombreInstancia_NombreClase
-		string nombre_bruto; //Nombre de la instancia, ejemplo: NombreInstancia
+		string nombre_puro; //Nombre de la instancia, ejemplo: NombreInstancia
 		Clase *clase; //Apuntador a la clase a la que pertenece la instancia
 		struct vartable *vt; //Tabla de propiedades de la instancia, aqui se comprueba la expresion 
 		struct val *(valores[P]);//Tabla de los valores de cada propiedad de la instancia
@@ -26,7 +26,7 @@ class Instancia{
 		
 		//Consultores
 		string get_nombre();
-		string get_nombre_bruto();
+		string get_nombre_puro();
 		Clase* get_clase();
 		struct var * get_valor_propiedad(string nom_propiedad);
 
@@ -46,7 +46,7 @@ class Instancia{
  	Instancia::Instancia(string nombre_instancia, Clase *c){
  		num_var = 0;
 		nombre = nombre_instancia + "_" + c->get_nombre();
- 		nombre_bruto = nombre_instancia;
+ 		nombre_puro = nombre_instancia;
 		clase = c;
 		vt = create_vartable();
 	}
@@ -61,8 +61,8 @@ class Instancia{
 	}
 
 	//Consultar nombre de la instancia
-	string Instancia::get_nombre_bruto(){
-		return nombre_bruto;
+	string Instancia::get_nombre_puro(){
+		return nombre_puro;
 	}
 
 	//Consultar clase a la cual pertenece la instancia
@@ -91,8 +91,8 @@ class Instancia{
 		bool band = false;
 		struct val result;
 		
-		if( evaluate(StringAChar(exp), &result, vt)==0 ){
-			if(result.ival == 1){
+		if( evaluate(StringAChar(exp), &result, vt)==0 ){//Si, no hubo errores de sintaxis
+			if(result.ival == 1){//Si la expresion devuelve verdadero
 				band = true;
 			}
 		}

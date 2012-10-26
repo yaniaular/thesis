@@ -16,33 +16,32 @@ template <typename C> class Grafo
             public:
                 Arco();
                 Arco(const Arco & otroArco);
-                Arco(int adyacente, const C & costo);
-                int devolverAdyacente() const;
-                const C & devolverCosto() const;
-                int vertice;
-                C costo;
+                Arco(const C & adyacente, int costo);
+                const C & devolverAdyacente() const;
+                int devolverCosto() const;
+                C vertice;
+                int costo;
         };
     public:
         Grafo();
         Grafo(const Grafo & otroGrafo);
         ~Grafo();
-        Grafo & operator = (const Grafo & otroGrafo);
         bool estaVacio() const;   // Devuelve true si la cantidad de vértices es cero
         int devolverLongitud() const;   // Indica la cantidad de vértices del grafo
-        bool existeVertice(int vertice) const;
-        bool existeArco(int origen, int destino) const;
-        const C & costoArco(int origen, int destino) const;  // PRE CONDICION: existeArco(origen, destino)
-        void devolverVertices(list<int> & vertices) const;
-        void devolverAdyacentes(int origen, list<Arco> & adyacentes) const;
-        void agregarVertice(int vertice);
-        void eliminarVertice(int vertice);  // POST CONDICION: Para todo vértice v != vertice: !existeArco(v, vertice) && !existeArco(vertice, v)
-        void agregarArco(int origen, int destino, const C & costo);  // PRE CONDICION: existeVertice(origen) && existeVertice(destino)  // POST CONDICION: existeArco(origen, destino)
-        void eliminarArco(int origen, int destino);  // POST CONDICION: !existeArco(origen, destino)
+        bool existeVertice(const C & vertice) const;
+        bool existeArco(const C & origen, const C & destino) const;
+        int costoArco(const C & origen, const C & destino) const;  // PRE CONDICION: existeArco(origen, destino)
+        void devolverVertices(list<C> & vertices) const;
+        void devolverAdyacentes(const C & origen, list<Arco> & adyacentes) const;
+        void agregarVertice(const C & vertice);
+        void eliminarVertice(const C & vertice);  // POST CONDICION: Para todo vértice v != vertice: !existeArco(v, vertice) && !existeArco(vertice, v)
+        void agregarArco(const C & origen, const C & destino, int costo);  // PRE CONDICION: existeVertice(origen) && existeVertice(destino)  // POST CONDICION: existeArco(origen, destino)
+        void eliminarArco(const C & origen, const C & destino);  // POST CONDICION: !existeArco(origen, destino)
         void vaciar();
-	bool hayCamino( int v1, int v2 ) const;
+	bool hayCamino( const C & v1, const C & v2 ) const;
     private:
         struct NGrafo{
-            int vertice;
+            C vertice;
             list<Arco> adyacentes;
         };
         list<NGrafo> grafo;
@@ -60,18 +59,18 @@ template <typename C> Grafo<C>::Arco::Arco(const Arco & otroArco)
     this->vertice = otroArco.devolverAdyacente();
 }
 //-----------------------------------------------------------------------------------------------//
-template <typename C> Grafo<C>::Arco::Arco(int adyacente, const C & costo)
+template <typename C> Grafo<C>::Arco::Arco(const C & adyacente, int costo)
 {
     vertice = adyacente;
     this->costo = costo;
 }
 //-----------------------------------------------------------------------------------------------//
-template <typename C> int Grafo<C>::Arco::devolverAdyacente() const
+template <typename C> const C & Grafo<C>::Arco::devolverAdyacente() const
 {
     return this->vertice;
 }
 //-----------------------------------------------------------------------------------------------//
-template <typename C> const C & Grafo<C>::Arco::devolverCosto() const
+template <typename C> int Grafo<C>::Arco::devolverCosto() const
 {
     return costo;
 }
@@ -79,31 +78,6 @@ template <typename C> const C & Grafo<C>::Arco::devolverCosto() const
 //------------------------------- Implementacion clase GRAFO ------------------------------------//
 //-----------------------------------------------------------------------------------------------//
 
-template <typename C> ostream & operator << (ostream & salida, const Grafo<C> & grafo)
-{
-	list<int> vertices;   //Recorremos todos los vertices
-	grafo.devolverVertices(vertices);
-	list<int>::iterator v;
-	v = vertices.begin();
-	cout << endl << "//------------------------------- GRAFO ------------------------------------//" << endl << endl;
-	while (v != vertices.end()) 
-	{
-		salida << "Vertice: " << *v << endl;  // Recorremos todos los adyacentes de cada vertice
-		list<typename Grafo<C>::Arco> adyacentes;
-		grafo.devolverAdyacentes(*v, adyacentes);
-		typename list<typename Grafo<C>::Arco>::iterator ady;
-		ady = adyacentes.begin();
-		while (ady != adyacentes.end()) 
-		{
-			salida << "            " << "-> " << ady->devolverAdyacente() << " con costo: (" << ady->costo << ")" << endl;
-			ady++;
-		}
-		v++;
-		cout << endl;
-	}
-	cout << "//-------------------------------------------------------------------------//" << endl << endl;
-	return salida;
-}
 //-----------------------------------------------------------------------------------------------//
 template <typename C> Grafo<C>::Grafo()
 {
@@ -111,10 +85,10 @@ template <typename C> Grafo<C>::Grafo()
 //-----------------------------------------------------------------------------------------------//
 template <typename C> Grafo<C>::Grafo(const Grafo & otroGrafo)
 {
-    list<int> otroGrafo_vertices;
+    list<C> otroGrafo_vertices;
     list<Arco> otroGrafo_adyacentes;
     vaciar();
-    typename list<int>::const_iterator vertices;
+    typename list<C>::const_iterator vertices;
     otroGrafo.devolverVertices(otroGrafo_vertices);
     for(vertices = otroGrafo_vertices.begin(); vertices != otroGrafo_vertices.end(); vertices++)
         this->agregarVertice(*vertices);
@@ -132,24 +106,7 @@ template <typename C> Grafo<C>::~Grafo()
 {
 }
 //-----------------------------------------------------------------------------------------------//
-template <typename C> Grafo<C> & Grafo<C>::operator = (const Grafo & otroGrafo)
-{
-    list<int> otroGrafo_vertices;
-    list<Arco> otroGrafo_adyacentes;
-    vaciar();
-    typename list<int>::const_iterator vertices;
-    otroGrafo.devolverVertices(otroGrafo_vertices);
-    for(vertices = otroGrafo_vertices.begin(); vertices != otroGrafo_vertices.end(); vertices++)
-        this->agregarVertice(*vertices);
-    typename list<int>::const_iterator otroGrafo_iterador;
-    typename list<Arco>::const_iterator otroGrafo_adyacentes_iterador;
-    for(vertices = otroGrafo_vertices.begin(); vertices != otroGrafo_vertices.end(); vertices++, otroGrafo_adyacentes_iterador++)
-    {
-        otroGrafo.devolverAdyacentes(*vertices,otroGrafo_adyacentes);
-        for(otroGrafo_adyacentes_iterador = otroGrafo_adyacentes.begin(); otroGrafo_adyacentes_iterador != otroGrafo_adyacentes.end(); otroGrafo_adyacentes_iterador++)
-            agregarArco(*vertices, otroGrafo_adyacentes_iterador->devolverAdyacente(), otroGrafo_adyacentes_iterador->devolverCosto());
-    }
-}
+
 //-----------------------------------------------------------------------------------------------//
 template <typename C> bool Grafo<C>::estaVacio() const
 {
@@ -161,7 +118,7 @@ template <typename C> int Grafo<C>::devolverLongitud() const
     return grafo.size();
 }
 //-----------------------------------------------------------------------------------------------//
-template <typename C> bool Grafo<C>::existeVertice(int vertice) const
+template <typename C> bool Grafo<C>::existeVertice(const C & vertice) const
 {
     typename list<NGrafo>::const_iterator it;
     it = grafo.begin();
@@ -173,7 +130,7 @@ template <typename C> bool Grafo<C>::existeVertice(int vertice) const
         return false;
 }
 //-----------------------------------------------------------------------------------------------//
-template <typename C> bool Grafo<C>::existeArco(int origen, int destino) const
+template <typename C> bool Grafo<C>::existeArco(const C & origen, const C & destino) const
 {
     list<Arco> adyacentes;
     devolverAdyacentes(origen,adyacentes);
@@ -192,7 +149,7 @@ template <typename C> bool Grafo<C>::existeArco(int origen, int destino) const
         return false;
 }
 //-----------------------------------------------------------------------------------------------//
-template <typename C> const C & Grafo<C>::costoArco(int origen, int destino) const
+template <typename C> int Grafo<C>::costoArco(const C & origen, const C & destino) const
 {
     list<Arco> adyacentes;
     devolverAdyacentes(origen,adyacentes);
@@ -208,7 +165,7 @@ template <typename C> const C & Grafo<C>::costoArco(int origen, int destino) con
     return INFINITO;
 }
 //-----------------------------------------------------------------------------------------------//
-template <typename C> void Grafo<C>::devolverVertices(list<int> & vertices) const
+template <typename C> void Grafo<C>::devolverVertices(list<C> & vertices) const
 {
     typename list<NGrafo>::const_iterator it;
     it = grafo.begin();
@@ -219,7 +176,7 @@ template <typename C> void Grafo<C>::devolverVertices(list<int> & vertices) cons
     }
 }
 //-----------------------------------------------------------------------------------------------//
-template <typename C> void Grafo<C>::devolverAdyacentes(int origen, list<Arco> & adyacentes) const
+template <typename C> void Grafo<C>::devolverAdyacentes(const C & origen, list<Arco> & adyacentes) const
 {
     if(existeVertice(origen))
     {
@@ -231,14 +188,14 @@ template <typename C> void Grafo<C>::devolverAdyacentes(int origen, list<Arco> &
     }
 }
 //-----------------------------------------------------------------------------------------------//
-template <typename C> void Grafo<C>::agregarVertice(int vertice)
+template <typename C> void Grafo<C>::agregarVertice(const C & vertice)
 {
     NGrafo Nuevo;
     Nuevo.vertice = vertice;
     this->grafo.push_back(Nuevo);
 }
 //-----------------------------------------------------------------------------------------------//
-template <typename C> void Grafo<C>::eliminarVertice(int vertice)
+template <typename C> void Grafo<C>::eliminarVertice(const C &vertice)
 {
     typename list<NGrafo>::iterator it;
     it = grafo.begin();
@@ -253,7 +210,7 @@ template <typename C> void Grafo<C>::eliminarVertice(int vertice)
         cout << "El elemento que desea borrar no existe" << endl;
 }
 //-----------------------------------------------------------------------------------------------//
-template <typename C> void Grafo<C>::agregarArco(int origen, int destino, const C & costo)
+template <typename C> void Grafo<C>::agregarArco(const C & origen, const C & destino, int costo)
 {
     // para hacer esta funcion, se verifica de que existan los vertices, si existen se busca la lista de adyacentes y se verifica de que no exista el arco.
     typename list<NGrafo>::iterator begin;
@@ -290,7 +247,7 @@ template <typename C> void Grafo<C>::agregarArco(int origen, int destino, const 
         cout << "No es posible agregar el arco, uno o mas vertices no existen" << endl;
 }
 //-----------------------------------------------------------------------------------------------//
-template <typename C> void Grafo<C>::eliminarArco(int origen, int destino)
+template <typename C> void Grafo<C>::eliminarArco(const C & origen, const C & destino)
 {
     typename list<NGrafo>::iterator begin;
     typename list<NGrafo>::iterator origen_vertice;
@@ -349,7 +306,7 @@ template <typename C> void Grafo<C>::vaciar()
 
 // void devolverAdyacentes(int origen, list<Arco> & adyacentes) const;
 
-template <typename C> bool Grafo<C>::hayCamino( int v1, int v2 ) const
+template <typename C> bool Grafo<C>::hayCamino( const C & v1, const C & v2 ) const
 {
 	list<Arco> suc;
 	typename list<Arco>::iterator pos;

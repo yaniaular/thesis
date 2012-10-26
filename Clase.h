@@ -17,7 +17,7 @@ class Clase{
 		list<Clase> padres; //Lista de ancestros de la clase
 		Clase *( hijos[C] );//Lista de descendientes de la clase
 		Cuadro *propi; //Tabla de Hash con las propiedades de la clase, Nombre y Posicion en el arreglo principal de OA.h
-		Cuadro *instancias; //Tabla de Hash con las instancias que perteneces a la clase, con Nombre y Posicion en el arrelgo principal de OA.h
+		Cuadro *instancias; //Tabla de Hash con las instancias que perteneces a la clase, con Nombre y Posicion en el arreglo principal de OA.h
 		struct vartable *vt;//Tabla de propiedades que pertenecen a la clase, se tiene para poder comprobar expresiones, las propiedades en esta tabla no tienen valor alguno, solo se usa para comprobar errores de sintaxis en las expresiones 
 		struct val x; //Al añadir una variable a la tabla de variables se necesita obligatoriamente un valor, como solo nos interesa comprobar la expresion, siempre mandamos el valor x...
 		
@@ -38,7 +38,6 @@ class Clase{
 		int get_num_padres();
 		int get_num_hijos();
 		int get_num_propiedades();
-		string get_pos_propiedad(string p);
 
 		//Comprobar existencia
 		bool existe_propiedad(string p);
@@ -122,11 +121,6 @@ class Clase{
 		return num_propiedades;
 	}
 
-	//Ver posicion de la propiedad en el arreglo principal en OA.h
-	//Si es -1, no existe la propiedad en esta clase
-	string Clase::get_pos_propiedad(string p){
-		return EnteroAString((*propi)[p]-1);
-	}
 
 	//Saber existencia de una propiedad dentro de la clase
 	bool Clase::existe_propiedad(string p){

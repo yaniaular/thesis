@@ -349,8 +349,8 @@ class OA{
 		Instancia *i = NULL;
 		
 		string valor;
-		nombre = nombre + "_" + clase;
-		if( ins->get(nombre, &valor) ){
+		
+		if( ins->get(nombre + "_" + clase, &valor) ){
 			int n;
 			istringstream ( valor ) >> n;//Transformo el string en int
 			i = instancias[n];
@@ -471,9 +471,9 @@ class OA{
 			int num_hijos = hijo->get_num_hijos();//Consultar descendientes del hijo
 			if(num_hijos > 0){
 				for(int i = 0; i < num_hijos; i++){//Agregar los descendientes del hijo al padre
-					Clase *h = hijo->get_hijo(i);
-					padre->agregar_hijo( h );
-					h->agregar_padre( padre );
+					Clase *p = hijo->get_hijo(i);
+					padre->agregar_hijo( p );
+					p->agregar_padre( padre );
 				}
 			}
 						
@@ -487,22 +487,22 @@ class OA{
 	    			tipo_propiedad = get_propiedad( (string)it->first )->get_tipo();
 	    			
 	    			//Inicializar nueva propiedad a las instancias de la clase
-					Cuadro::const_iterator ins; //Iterador
-					Cuadro *portMap_ins; //apuntador a hash
-					portMap_ins = hijo->get_instancias(); //consulto tabla hash de las instancias
-					for(ins = portMap_ins->begin(); ins != portMap_ins->end(); ++ins){//Iterando
-						inicializar_instancia(  tipo_propiedad  , nom_clase, (string)ins->first, (string)it->first);
-					}
+				Cuadro::const_iterator ins; //Iterador
+				Cuadro *portMap_ins; //apuntador a hash
+				portMap_ins = hijo->get_instancias(); //consulto tabla hash de las instancias
+				for(ins = portMap_ins->begin(); ins != portMap_ins->end(); ++ins){//Iterando
+					inicializar_instancia(  tipo_propiedad  , nom_clase, (string)ins->first, (string)it->first);
+				}
     			
     			//Tambien agrego las propiedades a los descendientes del hijo
 				for(int i = 0; i < num_hijos; i++){//Agregar propiedades del padre a los descendientes del hijo
-					Clase *h = hijo->get_hijo(i);
-					h->agregar_propiedad((string)it->first, (int)it->second);//Clave y Valor
+					Clase *p = hijo->get_hijo(i);
+					p->agregar_propiedad((string)it->first, (int)it->second);//Clave y Valor
 				
 					 //Inicializar nueva propiedad a las instancias de la clase
-					portMap_ins = h->get_instancias(); //consulto tabla hash de las instancias
+					portMap_ins = p->get_instancias(); //consulto tabla hash de las instancias
 					for(ins = portMap_ins->begin(); ins != portMap_ins->end(); ++ins){//Iterando
-						inicializar_instancia(  tipo_propiedad  , h->get_nombre(), (string)ins->first, (string)it->first);
+						inicializar_instancia(  tipo_propiedad  , p->get_nombre(), (string)ins->first, (string)it->first);
 					}
 				}
 			}
@@ -529,9 +529,9 @@ class OA{
 			padre->agregar_hijo(hijo);
 			int num_hijos = hijo->get_num_hijos();//Consultar descendientes del hijo
 			for(int i = 0; i < num_hijos; i++){//Agregar los descendientes del hijo al padre
-				Propiedad *h = get_propiedad( (hijo->get_hijo(i))->get_nombre() );
-				padre->agregar_hijo( h );
-				h->agregar_padre( padre );
+				Propiedad *p = get_propiedad( (hijo->get_hijo(i))->get_nombre() );
+				padre->agregar_hijo( p );
+				p->agregar_padre( padre );
 			}
 						
 			todo_bien = true;			
@@ -768,7 +768,6 @@ class OA{
 		Evento *e, *evento;
 		valor_r *va;
 		int k, m;
-		int num_exp;
 		bool cumple = false, cumple_una_expresion;
 		string arreglo_evento[100];
 				
@@ -812,13 +811,13 @@ class OA{
 								va = e->get_valor_nuevo(k);
 						
 								if(va->tipo == ENTERO){
-									agregar_valorApropiedad(nom_clase, i->get_nombre_bruto(),  e->get_nombre_propiedad(), va->ival);
+									agregar_valorApropiedad(nom_clase, i->get_nombre_puro(),  e->get_nombre_propiedad(), va->ival);
 								}
 								else if(va->tipo == REAL){
-									agregar_valorApropiedad(nom_clase, i->get_nombre_bruto(),  e->get_nombre_propiedad(), va->rval);
+									agregar_valorApropiedad(nom_clase, i->get_nombre_puro(),  e->get_nombre_propiedad(), va->rval);
 								}
 								else if(va->tipo == CADENA){
-									agregar_valorApropiedad(nom_clase, i->get_nombre_bruto(),  e->get_nombre_propiedad(), va->cval);
+									agregar_valorApropiedad(nom_clase, i->get_nombre_puro(),  e->get_nombre_propiedad(), va->cval);
 								}
 								cumple_una_expresion = true; //Ya no se deben revisar las demas expresiones del evento actual
 								cumple = true;//Se cumple el evento principal, por lo tanto se puede seguir con el do-while y activar los eventos padres
@@ -912,7 +911,7 @@ class OA{
 		Evento *ev,*ev2;
 		string variables[V], variables2[V], aux;
 		
-		int c_v, c_v2, j = 0, k, i, num_act = 0, m;
+		int c_v, c_v2, j = 0, k, i, m;
 		cl = get_clase( clase );
 
 		j = 0;
