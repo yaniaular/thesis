@@ -76,6 +76,10 @@ int main(){
 	cout << "******** oa_bd->crear_clase( Lluvia )" << endl;
 		cout << oa_bd->crear_clase( "Lluvia" )<< endl;
 
+
+	cout << "******** oa_bd->crear_clase( huracan_hijo )" << endl;
+		cout << oa_bd->crear_clase( "huracan_hijo" )<< endl;
+
 	cout << "******** oa_bd->crear_propiedad(fenomeno, NumMuertos, ENTERO)" << endl;
 		cout << oa_bd->crear_propiedad("fenomeno", "NumMuertos", ENTERO)<< endl;	
 	cout << "******** oa_bd->crear_propiedad(fenomeno, HuboPerdidaHumana, CADENA)" << endl;	
@@ -106,7 +110,8 @@ int main(){
 		cout << oa_bd->agregar_subclase("fenNatural", "fenomeno") << endl;
 	cout << "******** oa_bd->agregar_subclase(Lluvia, fenClimatico)" << endl;
 		cout << oa_bd->agregar_subclase("Lluvia", "fenClimatico") << endl;
-	
+	cout << "******** oa_bd->agregar_subclase(huracan_hijo, huracan)" << endl;
+		cout << oa_bd->agregar_subclase("huracan_hijo", "huracan") << endl;	
 
 	cout << "******** oa_bd->crear_instancia( ike, huracan )" << endl;
 		cout << oa_bd->crear_instancia( "ike", "huracan" ) << endl;
@@ -114,6 +119,9 @@ int main(){
 		cout << oa_bd->crear_instancia( "vince", "huracan" ) << endl;	
 	cout << "******** oa_bd->crear_instancia( desastreVargas, Lluvia )" << endl;	
 		cout << oa_bd->crear_instancia( "desastreVargas", "Lluvia" ) << endl;
+	cout << "******** oa_bd->crear_instancia( ike_hijo, huracan_hijo )" << endl;
+		cout << oa_bd->crear_instancia( "ike_hijo", "huracan_hijo" ) << endl;	
+
 	cout << "******** oa_bd->crear_evento(fenomeno, HuboMuerte, HuboPerdidaHumana, Si,NumMuertos > 0)" << endl;	
 		cout << oa_bd->crear_evento("fenomeno", "HuboMuerte", "HuboPerdidaHumana", "Si","NumMuertos > 0") << endl;
 	
@@ -178,6 +186,11 @@ int main(){
 		cout << oa_bd->agregar_valorApropiedad("huracan", "ike", "velocidadViento", 125)<< endl;
 	cout << "******** oa_bd->consultar_propiedad_instancia(huracan, ike, velocidadViento)" << endl;
 		cout << oa_bd->consultar_propiedad_instancia("huracan", "ike", "velocidadViento") << endl;
+
+	cout << "******** oa_bd->agregar_valorApropiedad(huracan_hijo, ike_hijo, velocidadViento, 125)" << endl;
+		cout << oa_bd->agregar_valorApropiedad("huracan_hijo", "ike_hijo", "velocidadViento", 125)<< endl;
+	cout << "******** oa_bd->consultar_propiedad_instancia(huracan_hijo, ike_hijo, velocidadViento)" << endl;
+		cout << oa_bd->consultar_propiedad_instancia("huracan_hijo", "ike_hijo", "velocidadViento") << endl;
 		
 	cout << "******** oa_bd->activar_eventos(huracan, HuboMuerte)" << endl;
 		cout << oa_bd->activar_eventos("huracan", "HuboMuerte") << endl;
@@ -201,6 +214,14 @@ int main(){
 	cout << "******** categoria: " << oa_bd->consultar_propiedad_instancia("huracan", "ike", "categoria") << endl;
 	cout << "******** valor1: " << oa_bd->consultar_propiedad_instancia("huracan", "ike", "valor1") << endl;
 	cout << "******** valor2: " << oa_bd->consultar_propiedad_instancia("huracan", "ike", "valor2") << endl;	
+
+	cout << endl;
+	cout << "******** intensidad: " << oa_bd->consultar_propiedad_instancia("huracan_hijo", "ike_hijo", "intensidad") << endl;
+	cout << "******** HuboPerdidaHumana: " << oa_bd->consultar_propiedad_instancia("huracan_hijo", "ike_hijo", "HuboPerdidaHumana") << endl;
+	cout << "******** AlertarA: " << oa_bd->consultar_propiedad_instancia("huracan_hijo", "ike_hijo", "AlertarA") << endl;
+	cout << "******** categoria: " << oa_bd->consultar_propiedad_instancia("huracan_hijo", "ike_hijo", "categoria") << endl;
+	cout << "******** valor1: " << oa_bd->consultar_propiedad_instancia("huracan_hijo", "ike_hijo", "valor1") << endl;
+	cout << "******** valor2: " << oa_bd->consultar_propiedad_instancia("huracan_hijo", "ike_hijo", "valor2") << endl;
 
 	cout << "******** oa_bd->es_subpropiedad_de(intensidad, categoria)" << endl;
 		cout << oa_bd->es_subpropiedad_de("intensidad", "categoria") << endl;

@@ -38,10 +38,12 @@ class Clase{
 		int get_num_padres();
 		int get_num_hijos();
 		int get_num_propiedades();
+		int get_num_instancias();
 
 		//Comprobar existencia
 		bool existe_propiedad(string p);
 		bool existe_instancia(string i);
+		bool existe_hijo(string h);
 		int comprobar_expresion(string expresion, string variables[V], int *cant_var);
 
 		//Adiciones
@@ -121,6 +123,9 @@ class Clase{
 		return num_propiedades;
 	}
 
+	int Clase::get_num_instancias(){
+		return num_instancias;
+	}
 
 	//Saber existencia de una propiedad dentro de la clase
 	bool Clase::existe_propiedad(string p){
@@ -132,6 +137,19 @@ class Clase{
 	bool Clase::existe_instancia(string i){
 		int nume = (*instancias).find(i)->second ;
 		return (  (nume-1) != -1 );
+	}
+
+	bool Clase::existe_hijo(string h){
+		int j;
+		bool band = true;
+		j = 0;
+		while(j < num_hijos && band){
+			if( hijos[j]->get_nombre() == h ){
+				band = false;
+			}
+			j++;
+		}
+		return band;//Si retornar verdad, no existe el hijo
 	}
 
 	//Comprobar la sintaxis de una expresion de un evento
@@ -150,11 +168,20 @@ class Clase{
 	//Agregar un descendiente a la clase
 	void Clase::agregar_hijo(Clase *nuevo_hijo){
 	//Ver primero si el padre a conectar existe 
-		hijos[num_hijos] = nuevo_hijo;
-		num_hijos+=1;
+	
+		if( existe_hijo(nuevo_hijo->get_nombre()) ){
+	
+			if(nombre == "fenomeno"){
+
+				cout << "** " << nuevo_hijo->get_nombre() << " " << nombre <<" "<< num_hijos << endl;
+			}
+			hijos[num_hijos] = nuevo_hijo;
+			num_hijos+=1;
+		}	
 	}
 	
 	void Clase::agregar_propiedad(string n_p, int posicion){
+				
 		put_var(vt, StringAChar(n_p), &x);
 		propi->insert(Cuadro::value_type(n_p, posicion + 1) );//le sumo 1, porque cuando la posicion es 0, y la propiedad no exista, devolvera 0 igual, y se presta para confusiones
 		num_propiedades+=1;

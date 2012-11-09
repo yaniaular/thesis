@@ -462,7 +462,7 @@ class OA{
 			int num_padres = padre->get_num_padres(); //Consultar ancestros del padre
 			if(num_padres > 0){
 				for(int i = 0; i < num_padres; i++){//Agregar los ancestros del padre al hijo
-					Clase *p = padre->get_padre(i);
+					Clase *p = get_clase( padre->get_padre(i)->get_nombre() );
 					hijo->agregar_padre( p );
 					p->agregar_hijo( hijo );
 				}
@@ -471,7 +471,7 @@ class OA{
 			int num_hijos = hijo->get_num_hijos();//Consultar descendientes del hijo
 			if(num_hijos > 0){
 				for(int i = 0; i < num_hijos; i++){//Agregar los descendientes del hijo al padre
-					Clase *p = hijo->get_hijo(i);
+					Clase *p = get_clase( hijo->get_hijo(i)->get_nombre() );
 					padre->agregar_hijo( p );
 					p->agregar_padre( padre );
 				}
@@ -496,7 +496,7 @@ class OA{
     			
     			//Tambien agrego las propiedades a los descendientes del hijo
 				for(int i = 0; i < num_hijos; i++){//Agregar propiedades del padre a los descendientes del hijo
-					Clase *p = hijo->get_hijo(i);
+					Clase *p = get_clase( hijo->get_hijo(i)->get_nombre() );
 					p->agregar_propiedad((string)it->first, (int)it->second);//Clave y Valor
 				
 					 //Inicializar nueva propiedad a las instancias de la clase
@@ -763,27 +763,35 @@ class OA{
 	//Activar eventos
 	bool OA::activar_eventos(string nom_clase, string nom_evento){
 	
-		Clase *cl;
+		Clase *cl,*cl_padre;
 		Instancia *i;
 		Evento *e, *evento;
 		valor_r *va;
-		int k, m;
+		int k, m, num_clases, j;
 		bool cumple = false, cumple_una_expresion;
-		string arreglo_evento[100];
+		string arreglo_evento[V];
 				
 		cl = get_clase(nom_clase); //Obtengo el apuntador a la clase donde se activarán los eventos
+		cl_padre = cl;		
 		evento = get_evento(nom_evento); //Obtengo el apuntador al evento que se activará
 		
 		if( cl !=NULL && evento !=NULL ){
+			j = 0;
+			num_clases = cl_padre->get_num_hijos();
+
+			do{
+			
 			Cuadro::const_iterator it; //Iterador
 			Cuadro *portMap; //apuntador a hash
 			portMap = cl->get_instancias(); //consulto las instancias de esa clase
-		
+			
+
 			for(it = portMap->begin(); it != portMap->end(); ++it){//Iterando por todas las instancias de la clase
 				//Validar que el evento padre pertenezca a la misma clase
+				
 				i = get_instancia(nom_clase, (string) it->first); //Obtengo el apuntador a la instancia en donde se investigara si existe el evento
-					
-					//cout << "Instancia: " << it->first << ", Posicion: " << instancias[(int)it->second - 1]->get_nombre() << endl;//Clave y Valor
+				cout << i->get_nombre() << endl;				
+//cout << "Instancia: " << it->first << ", Posicion: " << instancias[(int)it->second - 1]->get_nombre() << endl;//Clave y Valor
 		    	int eventos_padres = evento->get_num_padres(); //Numero de padres del evento principal
 		    	int e_padres = 0;
 		    	e = get_evento(nom_evento); //El evento principal se activa primero
@@ -797,16 +805,17 @@ class OA{
 
 				//Organizar los eventos padres 
 				bool activar_ancestros = organizar_eventos( arreglo_evento, eventos_padres, nom_clase );
-
+			
 		    	cumple = false;
 		    	do{ //Recorre los eventos padres
 				
-		    		if( e != NULL && i != NULL){
+		    		if( e != NULL && i != NULL & i->existe_propiedad(e->get_nombre_propiedad())  ){
 							
 						cumple_una_expresion = false;
 						k = 0;
 						//Ciclar todas las expresiones del evento que se podrian cumplir
 						while( k < e->get_num_expr_y_prop_activ() && !cumple_una_expresion){//Mientras haya expresiones del mismo evento y ninguna ha cumplido
+						
 							if( i->validar_expresion( e->get_expresion(k) ) ) {
 								va = e->get_valor_nuevo(k);
 						
@@ -838,6 +847,14 @@ class OA{
 			
 				}while( e_padres <= eventos_padres && cumple && activar_ancestros);
 			}
+				
+				if(j < num_clases){
+					cl = cl_padre->get_hijo(j);
+					nom_clase = cl->get_nombre();
+					cout << j << cl->get_nombre() << endl;
+				}
+				j = j + 1;
+			}while(j <= num_clases );
 		}
 		else{
 			cout << "La clase " <<  nom_clase << " o el evento dado " <<  nom_evento << " no existe" << endl;
@@ -848,7 +865,7 @@ class OA{
 	
 	bool OA::existencia_consulta_reactiva(string events[V], int n, string cl){
 		bool band = true;
-		int i; //Iterador
+		int i;
 		
 		if(get_clase(cl)== NULL){
 			band = false;
@@ -911,7 +928,7 @@ class OA{
 		Evento *ev,*ev2;
 		string variables[V], variables2[V], aux;
 		
-		int c_v, c_v2, j = 0, k, i, m;
+		int c_v, c_v2, j, k, i, m;
 		cl = get_clase( clase );
 
 		j = 0;
