@@ -1,0 +1,5 @@
+(P,  [EcharAgua, OcurreDesastreNatural, BomberosActivados, huboMuerte], Clase2)
+(P,  [EcharAgua, OcurreDesastreNatural, EcharAgua, BomberosActivados, huboMuerte], Clase2)
+(P,  [EcharAgua, OcurreDesastreNatural, DonanComida, BomberosActivados, RecogerRecursos, huboMuerte], Clase2)
+
+(P,  [HuboMuerte, aumentoViento], fenomeno)
