@@ -29,6 +29,8 @@ class Propiedad{
 		string get_nombre();
 		Propiedad* get_padre(int n);
 		Propiedad* get_hijo(int n);
+		bool existe_hijo(string h);
+		bool existe_padre(string h);
 		int get_tipo();
 
 		//Agregar
@@ -87,18 +89,48 @@ class Propiedad{
 		return tipo;
 	}
 	
+	bool Propiedad::existe_hijo(string h){
+		int j;
+		bool band = true;
+		j = 0;
+		while(j < num_hijos && band){
+			if( prop_hijas[j]->get_nombre() == h ){
+				band = false;
+			}
+			j++;
+		}
+		return band;//Si retornar verdad, no existe el hijo
+	}
+
+	bool Propiedad::existe_padre(string h){
+		int j;
+		bool band = true;
+		j = 0;
+		while(j < num_padres && band){
+			if( prop_padres[j]->get_nombre() == h ){
+				band = false;
+			}
+			j++;
+		}
+		return band;//Si retornar verdad, no existe el hijo
+	}
+
 	//Agregar ancestro a la propiedad
 	void Propiedad::agregar_padre(Propiedad *nuevo_padre){
 	//Ver primero si el padre a conectar existe 
-		prop_padres[num_padres] = nuevo_padre;
-		num_padres+=1;
+		if( existe_padre( nuevo_padre->get_nombre() ) ){		
+			prop_padres[num_padres] = nuevo_padre;
+			num_padres+=1;
+		}
 	}
 
 	//Agregar descendiente a la propiedad
 	void Propiedad::agregar_hijo(Propiedad *nuevo_hijo){
 	//Ver primero si el padre a conectar existe 
-		prop_hijas[num_hijos] = nuevo_hijo;
-		num_hijos+=1;
+		if( existe_hijo( nuevo_hijo->get_nombre() ) ){
+			prop_hijas[num_hijos] = nuevo_hijo;
+			num_hijos+=1;
+		}
 	}
 
 # endif

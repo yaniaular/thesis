@@ -161,8 +161,11 @@ class Clase{
 	//Agregar un ancestro a la clase
 	void Clase::agregar_padre(Clase *nuevo_padre){
 	//Ver primero si el padre a conectar existe 
+	
 		padres.push_back( *nuevo_padre ); 
 		num_padres+=1;
+	
+
 	}
 
 	//Agregar un descendiente a la clase
@@ -170,26 +173,22 @@ class Clase{
 	//Ver primero si el padre a conectar existe 
 	
 		if( existe_hijo(nuevo_hijo->get_nombre()) ){
-	
-			if(nombre == "fenomeno"){
-
-				cout << "** " << nuevo_hijo->get_nombre() << " " << nombre <<" "<< num_hijos << endl;
-			}
 			hijos[num_hijos] = nuevo_hijo;
 			num_hijos+=1;
 		}	
 	}
 	
 	void Clase::agregar_propiedad(string n_p, int posicion){
-				
+		
 		put_var(vt, StringAChar(n_p), &x);
 		propi->insert(Cuadro::value_type(n_p, posicion + 1) );//le sumo 1, porque cuando la posicion es 0, y la propiedad no exista, devolvera 0 igual, y se presta para confusiones
 		num_propiedades+=1;
+	
 	}
 	
 	void Clase::agregar_instancia(string n_i, int posicion){
 		instancias->insert( Cuadro::value_type(n_i, posicion + 1) );//le sumo 1, porque cuando la posicion es 0, y la propiedad no exista, devolvera 0 igual, y se presta para confusiones
 		num_instancias+=1;
 	}
-	
+
 # endif

@@ -1,3 +1,13 @@
+En pertenece_a se coloco un (cl != NULL)
+
+
+
+
+
+
+
+
+
 === modified file 'OA.h'
 --- OA.h	2012-08-18 23:16:45 +0000
 +++ OA.h	2012-08-19 00:08:44 +0000

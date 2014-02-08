@@ -483,7 +483,7 @@ class OA{
 			portMap = padre->get_propiedades(); //consulto tabla hash de las propiedades del padre
 			for(it = portMap->begin(); it != portMap->end(); ++it){//Iterando
 					//Voy agregando las propiedades del padre al hijo
-	    			hijo->agregar_propiedad(it->first, it->second);//Agrego propiedad al hijo, y abajo a sus descendientes
+	    			hijo->agregar_propiedad((string)it->first, (int)it->second);//Agrego propiedad al hijo, y abajo a sus descendientes
 	    			tipo_propiedad = get_propiedad( (string)it->first )->get_tipo();
 	    			
 	    			//Inicializar nueva propiedad a las instancias de la clase
@@ -834,6 +834,7 @@ class OA{
 							}
 							else{
 								cout << "NO Cumple con la condicion" << endl << endl;
+								
 							}
 									k+=1;
 						}
@@ -851,7 +852,6 @@ class OA{
 				if(j < num_clases){
 					cl = cl_padre->get_hijo(j);
 					nom_clase = cl->get_nombre();
-					cout << j << cl->get_nombre() << endl;
 				}
 				j = j + 1;
 			}while(j <= num_clases );
@@ -893,28 +893,30 @@ class OA{
 			cl = get_clase(nom_clase);
 			int i, num_clases_hijas;
 			
-			i = 0;
-			num_clases_hijas = cl->get_num_hijos();
+			if(cl != NULL){
+				i = 0;
+				num_clases_hijas = cl->get_num_hijos();
 			
-			while(i < num_clases_hijas && !pertenece){
+				while(i < num_clases_hijas && !pertenece){
 				
-				c_i = cl->get_hijo(i);
+					c_i = cl->get_hijo(i);
 				
-				Cuadro::const_iterator it; //Iterador
-				Cuadro *portMap; //apuntador a hash
+					Cuadro::const_iterator it; //Iterador
+					Cuadro *portMap; //apuntador a hash
 					
-				portMap = c_i->get_instancias(); //consulto las instancias de esa clase
-				it = portMap->begin();
+					portMap = c_i->get_instancias(); //consulto las instancias de esa clase
+					it = portMap->begin();
 				
-				while( it != portMap->end() && !pertenece ){//Iterando por todas las instancias de la clase
+					while( it != portMap->end() && !pertenece ){//Iterando por todas las instancias de la clase
 						
-					if( (string)it->first == nom_instancia ){
-						pertenece = true;
-						}
-					++it;
-				}
+						if( (string)it->first == nom_instancia ){
+							pertenece = true;
+							}
+						++it;
+					}
 				
-			i+=1;
+				i+=1;
+				}
 			}
 		}
 				

@@ -196,6 +196,8 @@ int main(){
 
 	cout << "******** oa_bd->agregar_valorApropiedad(huracan, ike, velocidadViento, 125)" << endl;
 		cout << oa_bd->agregar_valorApropiedad("huracan", "ike", "velocidadViento", 125)<< endl;
+	cout << "******** oa_bd->agregar_valorApropiedad(huracan, ike, NumMuertos, 0)" << endl;
+		cout << oa_bd->agregar_valorApropiedad("huracan", "ike", "NumMuertos", 0)<< endl;
 	cout << "******** oa_bd->consultar_propiedad_instancia(huracan, ike, velocidadViento)" << endl;
 		cout << oa_bd->consultar_propiedad_instancia("huracan", "ike", "velocidadViento") << endl;
 
@@ -205,9 +207,9 @@ int main(){
 
 	cout << "******************* ACTIVAR EVENTOS **********************" << endl;
 		
-	cout << "******** oa_bd->activar_eventos(fenomeno, HuboMuerte)" << endl;
+	//cout << "******** oa_bd->activar_eventos(fenomeno, HuboMuerte)" << endl;
 	//	cout << oa_bd->activar_eventos("fenomeno", "HuboMuerte") << endl;
-	cout << "******** oa_bd->activar_eventos(huracan, aumentoViento)" << endl;
+	//cout << "******** oa_bd->activar_eventos(huracan, aumentoViento)" << endl;
 	//	cout << oa_bd->activar_eventos("huracan", "aumentoViento") << endl;
 
 
@@ -354,7 +356,7 @@ int main(){
 
 	cout << "******** HuboPerdidaHumana: " << oa_bd->consultar_propiedad_instancia("Lluvia", "desastreVargas", "HuboPerdidaHumana") << endl;
 
-	cout << "******************* VERIFICAR INCLUSION ENTRE PROPIEDADES **********************" << endl;
+	cout << "******************* VERIFICAR INCLUSION ENTRE CLASES Y PROPIEDADES **********************" << endl;
 
 	cout << "******** oa_bd->es_subclase_de(huracan, fenomeno)" << endl;
 		cout << oa_bd->es_subclase_de("huracan", "fenomeno") << endl;
@@ -375,6 +377,23 @@ int main(){
 		cout << oa_bd->pertenece_a("ike", "Lluvia") << endl;
 	cout << "******** oa_bd->pertenece_a(ike, fenNatural)" << endl;
 		cout << oa_bd->pertenece_a("ike", "fenNatural") << endl;
+
+	cout << "******** oa_bd->pertenece_a(desastreVargas, huracan)" << endl;
+		cout << oa_bd->pertenece_a("desastreVargas", "huracan") << endl;
+	cout << "******** oa_bd->pertenece_a(desastreVargas, fenMeteorologico)" << endl;
+		cout << oa_bd->pertenece_a("desastreVargas", "fenMeteorologico") << endl;
+	cout << "******** oa_bd->pertenece_a(desastreVargas, fenClimatico)" << endl;
+		cout << oa_bd->pertenece_a("desastreVargas", "fenClimatico") << endl;
+	cout << "******** oa_bd->pertenece_a(desastreVargas, fenAtmosferico)" << endl;
+		cout << oa_bd->pertenece_a("desastreVargas", "fenAtmosferico") << endl;
+	cout << "******** oa_bd->pertenece_a(desastreVargas, fenNatural)" << endl;
+		cout << oa_bd->pertenece_a("desastreVargas", "fenNatural") << endl;
+	cout << "******** oa_bd->pertenece_a(desastreVargas, fenomeno)" << endl;
+		cout << oa_bd->pertenece_a("desastreVargas", "fenomeno") << endl;
+	cout << "******** oa_bd->pertenece_a(desastreVargas, Lluvia)" << endl;
+		cout << oa_bd->pertenece_a("desastreVargas", "Lluvia") << endl;
+
+
 
 	//////////////////////////////////////////////////////////////		
 
